@@ -5,9 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.prix.homepage.user.dao.DatabaseDAO;
-import com.prix.homepage.user.dto.databaseDto.DatabaseResponseDto;
-import com.prix.homepage.user.entity.Database;
+import com.prix.homepage.user.domain.Database;
+import com.prix.homepage.user.repository.DatabaseRepository;
 import com.prix.homepage.user.service.DatabaseService;
 
 import lombok.AllArgsConstructor;
@@ -17,17 +16,17 @@ import lombok.AllArgsConstructor;
 public class DatabaseServiceImpl implements DatabaseService{
 
   
-  private final DatabaseDAO databaseDAO;
+  private final DatabaseRepository databaseRepository;
 
   @Override
-  public List<DatabaseResponseDto> getAllDatabase() {
-    List<Database> databases = databaseDAO.getAllDatabase();
+  public List<Database> getAllDatabase() {
+    List<Database> databases = databaseRepository.getAllDatabase();
 
-    List<DatabaseResponseDto> listDatabaseResponseDto = new ArrayList<>();
+    List<Database> listDatabase = new ArrayList<>();
 
     for(Database database : databases){
-      listDatabaseResponseDto.add(
-        DatabaseResponseDto.builder()
+      listDatabase.add(
+        Database.builder()
             .id(database.getId())
             .name(database.getName())
             .file(database.getName())
@@ -36,6 +35,6 @@ public class DatabaseServiceImpl implements DatabaseService{
       );
     }
 
-    return listDatabaseResponseDto;
+    return listDatabase;
   }
 }

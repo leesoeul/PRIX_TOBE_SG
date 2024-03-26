@@ -5,9 +5,8 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
-import com.prix.homepage.user.dao.SoftwareMsgDAO;
-import com.prix.homepage.user.dto.softwareMsgDto.SoftwareMsgResponseDto;
-import com.prix.homepage.user.entity.SoftwareMsg;
+import com.prix.homepage.user.domain.SoftwareMsg;
+import com.prix.homepage.user.repository.SoftwareMsgRepository;
 import com.prix.homepage.user.service.SoftwareMsgService;
 
 import lombok.AllArgsConstructor;
@@ -16,23 +15,23 @@ import lombok.AllArgsConstructor;
 @Service
 public class SoftwareMsgServiceImpl implements SoftwareMsgService{
 
-  private final SoftwareMsgDAO softwareMsgDAO;
+  private final SoftwareMsgRepository softwareMsgRepository;
 
   @Override
-  public List<SoftwareMsgResponseDto> getAllSoftwareMsgById(String id) {
-    List<SoftwareMsg> listsSoftwareMsgs = softwareMsgDAO.getAllSoftwareMsgById(id);
+  public List<SoftwareMsg> getAllSoftwareMsgById(String id) {
+    List<SoftwareMsg> listsSoftwareMsgs = softwareMsgRepository.getAllSoftwareMsgById(id);
     
-    List<SoftwareMsgResponseDto> listSoftwareMsgResponseDto = new ArrayList<>();
+    List<SoftwareMsg> listSoftwareMsg = new ArrayList<>();
     for(SoftwareMsg softwareMsg : listsSoftwareMsgs){
-      listSoftwareMsgResponseDto.add(
-        SoftwareMsgResponseDto.builder()
+      listSoftwareMsg.add(
+        SoftwareMsg.builder()
             .id(softwareMsg.getId())
             .message(softwareMsg.getMessage())
             .build()
       );
     }
 
-    return listSoftwareMsgResponseDto;
+    return listSoftwareMsg;
   }
 
   

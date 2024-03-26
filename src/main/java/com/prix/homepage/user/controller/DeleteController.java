@@ -29,7 +29,7 @@ public class DeleteController {
   }
 
   @PostMapping("/deleteAccount")
-  public String deleteAccount(Model model, @RequestParam(required = false) Map<String, String> paramsMap,
+  public String deleteAccount(Model model, @RequestParam(required = true) Map<String, String> paramsMap,
       HttpServletRequest request) {
   
     if (paramsMap.containsKey("action") && paramsMap.get("action").equalsIgnoreCase("delete")) {
@@ -55,11 +55,8 @@ public class DeleteController {
         logger.warn("세션에 'id' 속성이 없습니다.");
 
         return "redirect:/deleteAccount";
-
-
       }
     }
-  
     return "redirect:/";
   }
   

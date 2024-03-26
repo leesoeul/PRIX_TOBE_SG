@@ -5,9 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.prix.homepage.livesearch.entity.Enzyme;
-import com.prix.homepage.user.dao.EnzymeDAO;
-import com.prix.homepage.user.dto.enzymeDto.EnzymeResponseDto;
+import com.prix.homepage.user.domain.Enzyme;
+import com.prix.homepage.user.repository.EnzymeRepository;
 import com.prix.homepage.user.service.EnzymeService;
 
 import lombok.AllArgsConstructor;
@@ -16,17 +15,17 @@ import lombok.AllArgsConstructor;
 @Service
 public class EnzymeServiceImpl implements EnzymeService{
   
-  private final EnzymeDAO enzymeDAO;
+  private final EnzymeRepository enzymeRepository;
 
   @Override
-  public List<EnzymeResponseDto> getAllEnzymeByUserId(Integer userId) {
-    List<Enzyme> listEnzymes =  enzymeDAO.getAllEnzymeByUserId(userId);
+  public List<Enzyme> getAllEnzymeByUserId(Integer userId) {
+    List<Enzyme> listEnzymes =  enzymeRepository.getAllEnzymeByUserId(userId);
 
-    List<EnzymeResponseDto> listEnzymeResponseDto = new ArrayList<>();
+    List<Enzyme> listEnzyme = new ArrayList<>();
 
     for(Enzyme enzyme : listEnzymes){
-      listEnzymeResponseDto.add(
-        EnzymeResponseDto.builder()
+      listEnzyme.add(
+        Enzyme.builder()
             .id(enzyme.getId())
             .name(enzyme.getName())
             .user_id(enzyme.getUser_id())
@@ -36,7 +35,7 @@ public class EnzymeServiceImpl implements EnzymeService{
       );
     }
 
-    return listEnzymeResponseDto;
+    return listEnzyme;
   }
 
 }

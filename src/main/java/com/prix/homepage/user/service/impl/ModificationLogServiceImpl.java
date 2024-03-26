@@ -5,9 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.prix.homepage.user.dao.ModificationLogDAO;
-import com.prix.homepage.user.dto.modificationLogDto.ModificationLogResponseDto;
-import com.prix.homepage.user.entity.ModificationLog;
+import com.prix.homepage.user.domain.ModificationLog;
+import com.prix.homepage.user.repository.ModificationLogRepository;
 import com.prix.homepage.user.service.ModificationLogService;
 
 import lombok.AllArgsConstructor;
@@ -16,16 +15,16 @@ import lombok.AllArgsConstructor;
 @Service
 public class ModificationLogServiceImpl implements ModificationLogService{
 
-  private final ModificationLogDAO modificationLogDAO;
+  private final ModificationLogRepository modificationLogRepository;
 
   @Override
-  public List<ModificationLogResponseDto> getAllModificationLog() {
-    List<ModificationLog> listModificationLogs = modificationLogDAO.getAllModificationLog();
+  public List<ModificationLog> getAllModificationLog() {
+    List<ModificationLog> listModificationLogs = modificationLogRepository.getAllModificationLog();
 
-    List<ModificationLogResponseDto> listModificationLogResponseDto = new ArrayList<>();
+    List<ModificationLog> listModificationLog = new ArrayList<>();
     for(ModificationLog modificationLog : listModificationLogs){
-      listModificationLogResponseDto.add(
-        ModificationLogResponseDto.builder()
+      listModificationLog.add(
+        ModificationLog.builder()
             .id(modificationLog.getId())
             .date(modificationLog.getDate())
             .version(modificationLog.getVersion())
@@ -34,7 +33,7 @@ public class ModificationLogServiceImpl implements ModificationLogService{
       );
     }
 
-    return listModificationLogResponseDto;
+    return listModificationLog;
   }
   
 }

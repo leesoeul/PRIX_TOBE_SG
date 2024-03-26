@@ -2,10 +2,11 @@ package com.prix.homepage.user.service;
 
 import java.util.List;
 
-import com.prix.homepage.user.dto.enzymeDto.EnzymeResponseDto;
+import com.prix.homepage.user.domain.Enzyme;
+
 
 public interface EnzymeService {
   
-  List<EnzymeResponseDto> getAllEnzymeByUserId(Integer userId);
+  List<Enzyme> getAllEnzymeByUserId(Integer userId);
   
 }

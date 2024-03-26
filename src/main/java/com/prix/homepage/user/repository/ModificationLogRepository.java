@@ -1,12 +1,9 @@
 package com.prix.homepage.user.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.List;
 
-import com.prix.homepage.user.entity.ModificationLog;
+import com.prix.homepage.user.domain.ModificationLog;
 
-@Repository
-public interface ModificationLogRepository extends JpaRepository<ModificationLog, Integer>{
-  
-
+public interface ModificationLogRepository {
+    List<ModificationLog> getAllModificationLog();
 }

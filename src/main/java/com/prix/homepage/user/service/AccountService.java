@@ -1,17 +1,16 @@
 package com.prix.homepage.user.service;
 
-import com.prix.homepage.user.dto.accountDto.AccountDto;
-import com.prix.homepage.user.dto.accountDto.AccountResponseDto;
+import com.prix.homepage.user.domain.Account;
 
 public interface AccountService {
 
-  AccountResponseDto getAccount(int number);
+  void saveAccount(Account accountDto);
 
-  AccountResponseDto saveAccount(AccountDto accountDto);
+  Account getAccount(int id);
 
-  void deleteAccount(int number) throws Exception;
+  void deleteAccount(int id) throws Exception;
 
   boolean isEmailExists(String email);
   
-  AccountResponseDto findByEmailAndPassword(String email, String password);
+  Account findByEmailAndPassword(String email, String password);
 }

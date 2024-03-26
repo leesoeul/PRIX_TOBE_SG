@@ -1,20 +1,19 @@
 package com.prix.homepage.user.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-import com.prix.homepage.user.entity.Account;
+import java.util.Optional;
 
-@Repository
-public interface AccountRepository extends JpaRepository<Account, Integer>{
+import com.prix.homepage.user.domain.Account;
+
+public interface AccountRepository {
   
-  //회원가입시 아이디 중복 체크
-  boolean existsByEmail(String email);
+  void insertAccount(Account account);
 
-  // //로그인
-  // Account findByEmailAndPassword(String email, String password);
+  Optional<Account> selectAccount(int id);
 
-  //로그인
-  Account findByEmail(String email);
+  void deleteAccount(int id) throws Exception;
 
+  boolean isEmailExists(String email);
+
+  Optional<Account> findByEmail(String email);
 }

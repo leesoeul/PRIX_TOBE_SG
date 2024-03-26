@@ -9,8 +9,8 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.prix.homepage.user.dto.accountDto.AccountDto;
-import com.prix.homepage.user.dto.accountDto.NewAccountDto;
+import com.prix.homepage.user.domain.Account;
+import com.prix.homepage.user.domain.NewAccount;
 import com.prix.homepage.user.service.AccountService;
 
 import jakarta.validation.Valid;
@@ -31,7 +31,7 @@ public class RegisterController {
   @GetMapping("/registration")
   public String gotoRegistrationPage(Model model) {
 
-    NewAccountDto newAccountDto = NewAccountDto.builder()
+    NewAccount newAccountDto = NewAccount.builder()
         .userid(null)
         .password("")
         .name(null)
@@ -41,22 +41,20 @@ public class RegisterController {
         .confirmedPassword("")
         .build();
 
-    // newAccountDto 값을 로그로 출력
-    logger.info("NewAccountDto: {}", newAccountDto.getLevel());
-
     model.addAttribute("newAccountDto", newAccountDto);
 
     return "registration";
   }
 
   @PostMapping("/registration")
-  public String registerNewUser(Model model, @Valid NewAccountDto newAccountDto, BindingResult result) {
+  public String registerNewUser(Model model, @Valid NewAccount newAccountDto, BindingResult result) {
     if (result.hasErrors()) {
       logger.warn("유효성 검사에서 탈락");
       // 유효성 검사 실패 이유 확인
       for (ObjectError error : result.getAllErrors()) {
         logger.warn("유효성 실패 원인: " + error.getDefaultMessage());
       }
+      model.addAttribute("newAccountDto", newAccountDto);
       return "registration";
     }
 
@@ -64,14 +62,14 @@ public class RegisterController {
     if (!newAccountDto.getPassword().equals(newAccountDto.getConfirmedPassword())) {
       result.rejectValue("confirmedPassword", "password.mismatch", "Passwords do not match");
       logger.warn("비번 검사에서 탈락");
-
+      model.addAttribute("newAccountDto", newAccountDto);
       return "registration";
     }
     // 이메일 중복 확인
     if (accountService.isEmailExists(newAccountDto.getEmail())) {
       result.rejectValue("email", "email.exists", "Email already exists");
       logger.warn("이메일 검사에서 탈락");
-
+      model.addAttribute("newAccountDto", newAccountDto);
       return "registration";
     }
 
@@ -79,7 +77,7 @@ public class RegisterController {
     String job = "";
 
     // db 저장용으로 변환
-    AccountDto accountDto = AccountDto.builder()
+    Account accountDto = Account.builder()
         .userid(newAccountDto.getUserid())
         .password(newAccountDto.getPassword())
         .name(name)

@@ -2,10 +2,11 @@ package com.prix.homepage.user.service;
 
 import java.util.List;
 
-import com.prix.homepage.user.dto.softwareMsgDto.SoftwareMsgResponseDto;
+import com.prix.homepage.user.domain.SoftwareMsg;
+
 
 public interface SoftwareMsgService {
   
-  List<SoftwareMsgResponseDto> getAllSoftwareMsgById(String id);
+  List<SoftwareMsg> getAllSoftwareMsgById(String id);
   
 }

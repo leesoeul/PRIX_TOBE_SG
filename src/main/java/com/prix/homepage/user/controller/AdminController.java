@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.prix.homepage.user.dto.accountDto.AccountDto;
-import com.prix.homepage.user.dto.accountDto.AccountResponseDto;
+import com.prix.homepage.user.domain.Account;
 import com.prix.homepage.user.service.AccountService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,7 +51,7 @@ public class AdminController {
             }
         }
 
-        AccountDto accountDto = AccountDto.builder()
+        Account accountDto = Account.builder()
                 .userid(null)
                 .password("")
                 .name(null)
@@ -66,7 +65,7 @@ public class AdminController {
     }
 
     @PostMapping("/admin/adlogin")
-    public String adlogin(Model model, @Valid AccountDto accountDto, BindingResult result,
+    public String adlogin(Model model, @Valid Account accountDto, BindingResult result,
             HttpServletRequest request) {
 
         if (result.hasErrors()) {
@@ -75,25 +74,27 @@ public class AdminController {
             for (ObjectError error : result.getAllErrors()) {
                 logger.warn("유효성 실패 원인: " + error.getDefaultMessage());
             }
-            return "redirect: admin/adlogin";
+            model.addAttribute("accountDto", accountDto);
+            return "admin/adlogin";
         }
-        AccountResponseDto accountResponseDto = accountService.findByEmailAndPassword(accountDto.getEmail(),
+        Account account = accountService.findByEmailAndPassword(accountDto.getEmail(),
                 accountDto.getPassword());
-
-        if (accountResponseDto == null) {
+        
+        if (account == null) {
             logger.warn("존재하지 않는 계정");
+            model.addAttribute("accountDto", accountDto);
             return "admin/adlogin";
         }
 
         // 세션에 id(PK) 와 level 저장
         HttpSession session = request.getSession();
-        session.setAttribute("id", accountResponseDto.getId());
-        session.setAttribute("level", accountResponseDto.getLevel());
+        session.setAttribute("id", account.getId());
+        session.setAttribute("level", account.getLevel());
 
         // 세션에 등록된 id를 로그에 출력
         logger.info("세션에 등록된 id: " + session.getAttribute("id"));
 
-        if (accountResponseDto.getLevel() > 1) {
+        if (account.getLevel() > 1) {
             return "redirect:/admin/configuration";
         }
         return "redirect:/";

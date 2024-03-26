@@ -1,9 +1,10 @@
 package com.prix.homepage.user.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
-import com.prix.homepage.user.entity.Database;
+import com.prix.homepage.user.domain.Database;
 
-public interface DatabaseRepository extends JpaRepository<Database, Integer> {
-  
+
+public interface DatabaseRepository {
+  List<Database> getAllDatabase();
 }

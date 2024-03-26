@@ -2,9 +2,10 @@ package com.prix.homepage.user.service;
 
 import java.util.List;
 
-import com.prix.homepage.user.dto.softwareLogDto.SoftwareLogResponseDto;
+import com.prix.homepage.user.domain.SoftwareLog;
+
 
 public interface SoftwareLogService {
   
-  List<SoftwareLogResponseDto> getAllSoftwareLog();
+  List<SoftwareLog> getAllSoftwareLog();
 }

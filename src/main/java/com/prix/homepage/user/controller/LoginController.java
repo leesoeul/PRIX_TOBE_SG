@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.prix.homepage.user.dto.accountDto.AccountDto;
-import com.prix.homepage.user.dto.accountDto.AccountResponseDto;
+import com.prix.homepage.user.domain.Account;
 import com.prix.homepage.user.service.AccountService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +27,6 @@ public class LoginController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final AccountService accountService;
 
-
     @GetMapping("/login")
     public String gotoLoginPage(Model model, @RequestParam(required = false) Map<String, String> paramsMap,
             HttpServletRequest request) {
@@ -39,7 +37,7 @@ public class LoginController {
             return "redirect:/login";
         }
 
-        AccountDto accountDto = AccountDto.builder()
+        Account accountDto = Account.builder()
                 .userid(null)
                 .password("")
                 .name(null)
@@ -53,7 +51,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(Model model, @Valid AccountDto accountDto, BindingResult result,
+    public String login(Model model, @Valid Account accountDto, BindingResult result,
             HttpServletRequest request) {
 
         if (result.hasErrors()) {
@@ -61,19 +59,21 @@ public class LoginController {
             for (ObjectError error : result.getAllErrors()) {
                 logger.warn("유효성 실패 원인: " + error.getDefaultMessage());
             }
+            model.addAttribute("accountDto", accountDto);
             return "login";
         }
-        AccountResponseDto accountResponseDto = accountService.findByEmailAndPassword(accountDto.getEmail(),
+        Account account = accountService.findByEmailAndPassword(accountDto.getEmail(),
                 accountDto.getPassword());
 
-        if (accountResponseDto == null) {
+        if (account == null) {
             logger.warn("존재하지 않는 계정");
+            model.addAttribute("accountDto", accountDto);
             return "login";
         }
         // 세션에 id(PK) 저장
         HttpSession session = request.getSession();
-        session.setAttribute("id", accountResponseDto.getId());
-        session.setAttribute("level", accountResponseDto.getLevel());
+        session.setAttribute("id", account.getId());
+        session.setAttribute("level", account.getLevel());
 
         // 세션에 등록된 id를 로그에 출력
         logger.info("세션에 등록된 id: " + session.getAttribute("id"));

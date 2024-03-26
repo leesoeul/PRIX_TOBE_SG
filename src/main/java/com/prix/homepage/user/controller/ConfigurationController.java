@@ -6,11 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.prix.homepage.user.dto.databaseDto.DatabaseResponseDto;
-import com.prix.homepage.user.dto.enzymeDto.EnzymeResponseDto;
-import com.prix.homepage.user.dto.modificationLogDto.ModificationLogResponseDto;
-import com.prix.homepage.user.dto.softwareLogDto.SoftwareLogResponseDto;
-import com.prix.homepage.user.dto.softwareMsgDto.SoftwareMsgResponseDto;
+import com.prix.homepage.user.domain.Database;
+import com.prix.homepage.user.domain.Enzyme;
+import com.prix.homepage.user.domain.ModificationLog;
+import com.prix.homepage.user.domain.SoftwareLog;
+import com.prix.homepage.user.domain.SoftwareMsg;
 import com.prix.homepage.user.service.DatabaseService;
 import com.prix.homepage.user.service.EnzymeService;
 import com.prix.homepage.user.service.ModificationLogService;
@@ -45,26 +45,26 @@ public class ConfigurationController {
         }
         
         // 1. px_database : id, name, file  # 비었으면 빈 List []
-        List<DatabaseResponseDto> listDatabaseResponseDto = databaseService.getAllDatabase();
+        List<Database> listDatabaseResponseDto = databaseService.getAllDatabase();
         model.addAttribute("listDatabaseResponseDto", listDatabaseResponseDto);
     
         // 2. px_enzyme : id, name, nt_cleave, ct_cleave where user_id = 0
-        List<EnzymeResponseDto> listEnzymeResponseDto = enzymeService.getAllEnzymeByUserId(0);
+        List<Enzyme> listEnzymeResponseDto = enzymeService.getAllEnzymeByUserId(0);
         model.addAttribute("listEnzymeResponseDto", listEnzymeResponseDto);
     
         // 3. px_modification_log :  date, version, file 
-        List<ModificationLogResponseDto> listModificationLogResponseDto = modificationLogService.getAllModificationLog();
+        List<ModificationLog> listModificationLogResponseDto = modificationLogService.getAllModificationLog();
         model.addAttribute("listModificationLogResponseDto", listModificationLogResponseDto);
     
         // 4. px_software_log :  name, date, version, file order by date, id
-        List<SoftwareLogResponseDto> listSoftwareLogResponseDto = softwareLogService.getAllSoftwareLog();
+        List<SoftwareLog> listSoftwareLogResponseDto = softwareLogService.getAllSoftwareLog();
         model.addAttribute("listSoftwareLogResponseDto", listSoftwareLogResponseDto);
     
         // 5. px_software_msg :  message where id = 'mode', 'dbond', 'nextsearch', 'signature'
-        List<SoftwareMsgResponseDto> listSoftwareMsgMode= softwareMsgService.getAllSoftwareMsgById("mode");
-        List<SoftwareMsgResponseDto> listSoftwareMsgDbond = softwareMsgService.getAllSoftwareMsgById("dbond");
-        List<SoftwareMsgResponseDto> listSoftwareMsgNextsearch = softwareMsgService.getAllSoftwareMsgById("nextsearch");
-        List<SoftwareMsgResponseDto> listSoftwareMsgSignature = softwareMsgService.getAllSoftwareMsgById("signature");
+        List<SoftwareMsg> listSoftwareMsgMode= softwareMsgService.getAllSoftwareMsgById("mode");
+        List<SoftwareMsg> listSoftwareMsgDbond = softwareMsgService.getAllSoftwareMsgById("dbond");
+        List<SoftwareMsg> listSoftwareMsgNextsearch = softwareMsgService.getAllSoftwareMsgById("nextsearch");
+        List<SoftwareMsg> listSoftwareMsgSignature = softwareMsgService.getAllSoftwareMsgById("signature");
         model.addAttribute("listSoftwareMsgMode", listSoftwareMsgMode);
         model.addAttribute("listSoftwareMsgDbond", listSoftwareMsgDbond);
         model.addAttribute("listSoftwareMsgNextsearch", listSoftwareMsgNextsearch);

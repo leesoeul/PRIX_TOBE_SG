@@ -5,9 +5,8 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
-import com.prix.homepage.user.dao.SoftwareLogDAO;
-import com.prix.homepage.user.dto.softwareLogDto.SoftwareLogResponseDto;
-import com.prix.homepage.user.entity.SoftwareLog;
+import com.prix.homepage.user.domain.SoftwareLog;
+import com.prix.homepage.user.repository.SoftwareLogRepository;
 import com.prix.homepage.user.service.SoftwareLogService;
 
 import lombok.AllArgsConstructor;
@@ -16,16 +15,16 @@ import lombok.AllArgsConstructor;
 @Service
 public class SoftwareLogServiceImpl implements SoftwareLogService{
 
-  private final SoftwareLogDAO softwareLogDAO;
+  private final SoftwareLogRepository softwareLogRepository;
 
   @Override
-  public List<SoftwareLogResponseDto> getAllSoftwareLog() {
-    List<SoftwareLog> listSoftwareLogs = softwareLogDAO.getAllSoftwareLog();
+  public List<SoftwareLog> getAllSoftwareLog() {
+    List<SoftwareLog> listSoftwareLogs = softwareLogRepository.findAll();
 
-    List<SoftwareLogResponseDto> listSoftwareLogResponseDto = new ArrayList<>();
+    List<SoftwareLog> listSoftwareLog = new ArrayList<>();
     for(SoftwareLog softwareLog : listSoftwareLogs){
-      listSoftwareLogResponseDto.add(
-        SoftwareLogResponseDto.builder()
+      listSoftwareLog.add(
+        SoftwareLog.builder()
             .id(softwareLog.getId())
             .name(softwareLog.getName())
             .date(softwareLog.getDate())
@@ -36,7 +35,7 @@ public class SoftwareLogServiceImpl implements SoftwareLogService{
     }
 
 
-    return listSoftwareLogResponseDto;
+    return listSoftwareLog;
   }
 
 }

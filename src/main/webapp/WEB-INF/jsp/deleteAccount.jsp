@@ -1,9 +1,11 @@
-<%@ page import="javax.naming.Context" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%-- <%@ page import="javax.naming.Context" %>
 <%@ page import="javax.naming.InitialContext" %>
 <%@ page import="javax.sql.DataSource" %>
 <%@ page import="java.sql.Connection" %>
 <%@ page import="java.sql.Statement" %>
-<%@ page import="java.sql.ResultSet" %>
+<%@ page import="java.sql.ResultSet" %> --%>
 
 <%-- ????
 <%
@@ -54,7 +56,7 @@
     </table></td>
   </tr>
   
-  <form method="post" action="deleteAccount?action=delete">
+  <form:form method="post" action="deleteAccount?action=delete">
   <tr>
     <td align="center" valign="top" style="padding:10px;"><img src="/images/tit03_deleteAccount.gif" width="178" height="40">
         <div id="container" style="background: #fff; width:400px;" > <b class="rtop"><b class="r1"></b><b class="r2"></b><b class="r3"></b><b class="r4"></b></b>
@@ -64,12 +66,12 @@
 				It does not recover when you delete your acount once.</H3><br>
 			<% } %>
 			<input value="cancel" type="button" class="btn" onClick="history.go(-1);">
-            <input type="submit" class="btn" value="delete" onClick="submit()">
+            <input type="submit" class="btn" value="delete">
             </div>
 
           <b class="rbottom"><b class="r4"></b><b class="r3"></b><b class="r2"></b><b class="r1"></b></b></div></td>
   </tr>
-  </form>
+  </form:form>
 </table>
 
 <jsp:include page="./inc/footer.jsp" flush="true" />
