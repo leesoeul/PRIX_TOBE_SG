@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.prix.homepage.user.domain.Enzyme;
-import com.prix.homepage.user.repository.EnzymeRepository;
+import com.prix.homepage.user.dao.EnzymeMapper;
+import com.prix.homepage.user.pojo.Enzyme;
 import com.prix.homepage.user.service.EnzymeService;
 
 import lombok.AllArgsConstructor;
@@ -15,11 +15,11 @@ import lombok.AllArgsConstructor;
 @Service
 public class EnzymeServiceImpl implements EnzymeService{
   
-  private final EnzymeRepository enzymeRepository;
+  private final EnzymeMapper enzymeMapper;
 
   @Override
   public List<Enzyme> getAllEnzymeByUserId(Integer userId) {
-    List<Enzyme> listEnzymes =  enzymeRepository.getAllEnzymeByUserId(userId);
+    List<Enzyme> listEnzymes =  enzymeMapper.findByUserId(userId);
 
     List<Enzyme> listEnzyme = new ArrayList<>();
 

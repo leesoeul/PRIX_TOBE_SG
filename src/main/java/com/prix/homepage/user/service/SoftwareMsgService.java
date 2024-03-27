@@ -2,7 +2,7 @@ package com.prix.homepage.user.service;
 
 import java.util.List;
 
-import com.prix.homepage.user.domain.SoftwareMsg;
+import com.prix.homepage.user.pojo.SoftwareMsg;
 
 
 public interface SoftwareMsgService {

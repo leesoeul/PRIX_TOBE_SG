@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.prix.homepage.user.domain.ModificationLog;
-import com.prix.homepage.user.repository.ModificationLogRepository;
+import com.prix.homepage.user.dao.ModificationLogMapper;
+import com.prix.homepage.user.pojo.ModificationLog;
 import com.prix.homepage.user.service.ModificationLogService;
 
 import lombok.AllArgsConstructor;
@@ -15,11 +15,11 @@ import lombok.AllArgsConstructor;
 @Service
 public class ModificationLogServiceImpl implements ModificationLogService{
 
-  private final ModificationLogRepository modificationLogRepository;
+  private final ModificationLogMapper modificationLogMapper;
 
   @Override
   public List<ModificationLog> getAllModificationLog() {
-    List<ModificationLog> listModificationLogs = modificationLogRepository.getAllModificationLog();
+    List<ModificationLog> listModificationLogs = modificationLogMapper.findAll();
 
     List<ModificationLog> listModificationLog = new ArrayList<>();
     for(ModificationLog modificationLog : listModificationLogs){

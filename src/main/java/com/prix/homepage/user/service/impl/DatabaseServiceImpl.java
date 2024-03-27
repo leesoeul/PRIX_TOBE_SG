@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.prix.homepage.user.domain.Database;
-import com.prix.homepage.user.repository.DatabaseRepository;
+import com.prix.homepage.user.dao.DatabaseMapper;
+import com.prix.homepage.user.pojo.Database;
 import com.prix.homepage.user.service.DatabaseService;
 
 import lombok.AllArgsConstructor;
@@ -16,11 +16,11 @@ import lombok.AllArgsConstructor;
 public class DatabaseServiceImpl implements DatabaseService{
 
   
-  private final DatabaseRepository databaseRepository;
+  private final DatabaseMapper databaseMapper;
 
   @Override
   public List<Database> getAllDatabase() {
-    List<Database> databases = databaseRepository.getAllDatabase();
+    List<Database> databases = databaseMapper.findAll();
 
     List<Database> listDatabase = new ArrayList<>();
 

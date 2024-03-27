@@ -5,8 +5,8 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
-import com.prix.homepage.user.domain.SoftwareLog;
-import com.prix.homepage.user.repository.SoftwareLogRepository;
+import com.prix.homepage.user.dao.SoftwareLogMapper;
+import com.prix.homepage.user.pojo.SoftwareLog;
 import com.prix.homepage.user.service.SoftwareLogService;
 
 import lombok.AllArgsConstructor;
@@ -15,11 +15,11 @@ import lombok.AllArgsConstructor;
 @Service
 public class SoftwareLogServiceImpl implements SoftwareLogService{
 
-  private final SoftwareLogRepository softwareLogRepository;
+  private final SoftwareLogMapper softwareLogMapper;
 
   @Override
   public List<SoftwareLog> getAllSoftwareLog() {
-    List<SoftwareLog> listSoftwareLogs = softwareLogRepository.findAll();
+    List<SoftwareLog> listSoftwareLogs = softwareLogMapper.findAll();
 
     List<SoftwareLog> listSoftwareLog = new ArrayList<>();
     for(SoftwareLog softwareLog : listSoftwareLogs){

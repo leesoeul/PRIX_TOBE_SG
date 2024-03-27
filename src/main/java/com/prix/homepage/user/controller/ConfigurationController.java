@@ -6,11 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.prix.homepage.user.domain.Database;
-import com.prix.homepage.user.domain.Enzyme;
-import com.prix.homepage.user.domain.ModificationLog;
-import com.prix.homepage.user.domain.SoftwareLog;
-import com.prix.homepage.user.domain.SoftwareMsg;
+import com.prix.homepage.user.pojo.Database;
+import com.prix.homepage.user.pojo.Enzyme;
+import com.prix.homepage.user.pojo.ModificationLog;
+import com.prix.homepage.user.pojo.SoftwareLog;
+import com.prix.homepage.user.pojo.SoftwareMsg;
 import com.prix.homepage.user.service.DatabaseService;
 import com.prix.homepage.user.service.EnzymeService;
 import com.prix.homepage.user.service.ModificationLogService;

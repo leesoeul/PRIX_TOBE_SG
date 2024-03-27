@@ -9,8 +9,8 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import com.prix.homepage.user.domain.Account;
-import com.prix.homepage.user.domain.NewAccount;
+import com.prix.homepage.user.pojo.Account;
+import com.prix.homepage.user.pojo.NewAccount;
 import com.prix.homepage.user.service.AccountService;
 
 import jakarta.validation.Valid;

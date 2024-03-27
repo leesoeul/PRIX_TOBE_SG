@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.prix.homepage.user.mapper.EnzymeMapper">
+<mapper namespace="com.prix.homepage.user.dao.EnzymeMapper">
 
-  <select id="getAllEnzymeByUserId" resultType="com.prix.homepage.user.domain.Enzyme">
+  <select id="findByUserId" resultType="com.prix.homepage.user.pojo.Enzyme">
     SELECT  name, nt_cleave, ct_cleave, id FROM px_enzyme WHERE user_id = #{userId}
   </select>
 

@@ -2,7 +2,7 @@ package com.prix.homepage.user.service;
 
 import java.util.List;
 
-import com.prix.homepage.user.domain.Enzyme;
+import com.prix.homepage.user.pojo.Enzyme;
 
 
 public interface EnzymeService {

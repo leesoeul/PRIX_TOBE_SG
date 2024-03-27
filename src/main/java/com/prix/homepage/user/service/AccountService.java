@@ -1,6 +1,6 @@
 package com.prix.homepage.user.service;
 
-import com.prix.homepage.user.domain.Account;
+import com.prix.homepage.user.pojo.Account;
 
 public interface AccountService {
 
