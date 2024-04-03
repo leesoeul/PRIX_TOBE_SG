@@ -1,0 +1,36 @@
+일단 한 부분은 로그인, 새계정 등록, 어드민 로그인, 어드민 설정에서 get만
+
+구조
+                  dto        dto     entity       entity
+view - controller --- service --- DAO --- repository - database
+           responseDto   responseDto   entity      entity
+
+jsp는 webapp폴더, 주석처리 한 부분들 중에 앞에 ㅈㅅ ㅈㅍㅈㅅ wt 이런건 제가 한 거임 원본이 주석처리된 부분들이 꽤 많음
+
+DAO와 repository를 굳이 나눠서 하지 않아도 될 것 같음
+service와 DAO를 interface를 따로 만들어 줬는데 굳이 인터페이스를 만들지 않아도 될 것 같음
+좀 단계를 줄이면
+view - controller - service - dao(repository) - db 
+로 구현해도 될 것 같긴 함
+뭔가 쓸데없이 구간을 늘린 것 같기도 하고
+
+dto를 굳이 만든 이유는 entity는 db와 직접적으로 연결이 될 떄만 사용하는게 좋을 것 같아서 만듦, dto랑 reponseDto랑 나눈 이유는 
+그냥 그렇게들 하는 것 같아서 나눔
+
+constants 폴더에는 그냥 어디다 배치해야 될지 모르겠는 파일들을 넣음
+
+기존 jsp 파일의 논리를 그대로 옮기려고 했고 
+로그인 방식에 JWT를 넣어야 하나 고민했었는데 SSR방식에 굳이 필요한가 싶어서 안함
+
+고민인게 thymeleaf로 view를 구성하라는건가 인데,
+이걸로 할 경우 기존 jsp 방식이 아니라 templates 폴더에 임시로 만든 것처럼 html로 구성하고 css도 따로 
+분리해줘야 할 것 같음. css, image파일들은 복붙함
+
+applcation.properties에서 db 설정해야함
+mysql db 사용시 vpn해서 접속해야함 
+px_account에 저장된 계정은 prix, prixadmin 2개고 비밀번호는 제가 바꿨는데 메일로 온 비밀번호로 설정함
+근데 사실 제대로 바뀐건지는 모르겠음
+귀찮으면 h2로 해도 되고 data.sql은 h2 사용할때 초기 데이터 세팅용 h2 사용할 경우 build.gradle 도 봐야함
+
+lombok은 getter setter 하는게 편해서 추가
+spring-security는 비밀번호 암호화할려고 추가

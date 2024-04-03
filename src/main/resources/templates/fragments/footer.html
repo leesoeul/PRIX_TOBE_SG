@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <body>
+
+      <table width="100%" border="0" cellpadding="0" cellspacing="0" class="copy" th:fragment="footer">
+        <tr>
+          <td class="copy">
+            Copyright &copy; 2012
+            <a
+              href="http://bislab.hanyang.ac.kr/"
+              class="under"
+              target="_blank"
+              th:href="@{http://bislab.hanyang.ac.kr/}"
+              >Bioinformatics &amp; Intelligent Systems Lab</a
+            >,
+            <a
+              href="http://www.hanyang.ac.kr/english/"
+              class="under"
+              target="_blank"
+              th:href="@{http://www.hanyang.ac.kr/english/}"
+              >Hanyang University</a
+            >, Korea. All rights reserved.<br />
+            <a
+              href="/inc/policy.jsp"
+              class="under"
+              target="_blank"
+              th:href="@{/inc/policy.jsp}"
+              >Personal Information Policy</a
+            >
+          </td>
+        </tr>
+    </table>
+
+  </body>
+</html>
