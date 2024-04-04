@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <body>
+
+        <table class="header-table zero-padding-table" th:fragment="header">
+            <tr>
+                <td class="header-contents-wrapper">
+                    <table class="header-contents zero-padding-table">
+                        <tr>
+                            <td class="header-logo-wrapper">
+                                <a th:href="@{/}"><img src="/images/ci.gif" /></a>
+                            </td>
+                            <td>
+                                <table class="header-support-bar-wrapper zero-padding-table">
+                                    <tr>
+                                        <td class="header-support-bar">
+                                            <table class="zero-padding-table">
+                                                <tr>
+                                                    <td width="62" class="header-top-dot">&nbsp;</td>
+                                                    <td width="105"class="header-top-dot" th:remove="${#ctx.session.id != null and #ctx.session.id == '4'} ? none : all">&nbsp;</td>
+                                                    <td width="45" class="header-top-dot">&nbsp;</td>
+                                                    <td width="68" class="header-top-dot">&nbsp;</td>
+                                                    <td width="50" class="header-top-dot">&nbsp;</td>
+                                                    <td width="60" class="header-top-dot">&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td th:remove="${#ctx.session.id != null and #ctx.session.id == '4'} ? all : none"><img src="/images/top_icon_01.gif" /> &nbsp;<a th:href="@{/login}" class="top_menu">LOG&nbsp;&nbsp;I&nbsp;N</a></td>
+                                                    <td th:remove="${#ctx.session.id == null or #ctx.session.id != '4'} ? all : none "><img src="/images/top_icon_01.gif" />&nbsp;<a th:href="@{/login?action=logout}" class="top_menu">LOGOUT</a></td>
+                                                    <td th:remove="${#ctx.session.id == null or #ctx.session.id != '4'} ? all : none"><img src="/images/top_icon_01.gif"  />&nbsp;<a th:href="@{/deleteAccount}" class="top_menu">DELETE ACCOUNT</a></td>
+                                                    <td><img src="/images/top_icon_01.gif" />&nbsp;&nbsp;<a th:href="@{/help}" class="top_menu">HELP</a></td>
+                                                    <td><img src="/images/top_icon_01.gif" />&nbsp;&nbsp;<a th:href="@{/contact}" class="top_menu">CONTACT</a></td>
+                                                    <td><img src="/images/top_icon_01.gif" />&nbsp;&nbsp;<a th:href="@{/admin/adlogin}" class="top_menu">ADMIN</a></td>
+                                                    <td>&nbsp;</td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="bottom">
+                                            <table class="zero-padding-table">
+                                                <!-- introudction page 일때 -->
+                                                <tr th:if="${currentUri == '/'}">
+                                                    <td><a th:href="@{/}">
+                                                        <img src="/images/menu01_01.gif" class="header-introduction">
+                                                    </a></td>
+                                                    <td><a th:href="@{/livesearch}">
+                                                        <img src="/images/menu01_02.gif" class="header-livesearch">
+                                                    </a></td>
+                                                    <td><a th:href="@{/download}">
+                                                        <img src="/images/menu01_03.gif" class="header-download">
+                                                    </a></td>
+                                                    <td><a th:href="@{/publications}">
+                                                        <img src="/images/menu01_04.gif" class="header-publications">
+                                                    </a></td>
+                                                </tr>
+                                                <!-- livesearch page 일때 -->
+                                                <tr th:if="${#strings.startsWith(currentUri, '/livesearch')}">
+                                                    <td><a th:href="@{/}">
+                                                        <img src="/images/menu02_01.gif" class="header-introduction">
+                                                    </a></td>
+                                                    <td><img src="/images/menu02_02.gif" class="header-livesearch"></td>
+                                                    <td><a th:href="@{/download}">
+                                                        <img src="/images/menu02_03.gif" class="header-download">
+                                                    </a></td>
+                                                    <td><a th:href="@{/publications}">
+                                                        <img src="/images/menu02_04.gif" class="header-publications">
+                                                    </a></td>
+                                                </tr>
+                                                <!-- download page -->
+                                                <tr th:if="${#strings.startsWith(currentUri, '/download') or #strings.startsWith(currentUri, '/request')}">
+                                                    <td><a th:href="@{/}">
+                                                        <img src="/images/menu03_01.gif" class="header-introduction"
+                                                    </a></td>
+                                                    <td><a th:href="@{/livesearch}">
+                                                        <img src="/images/menu03_02.gif" class="header-livesearch">
+                                                    </a></td>
+                                                    <td><a th:href="@{/download}">
+                                                        <img src="/images/menu03_03.gif" class="header-download">
+                                                    </a></td>
+                                                    <td><a th:href="@{/publications}">
+                                                        <img src="/images/menu03_04.gif" class="header-publications">
+                                                    </a></td>
+                                                </tr>
+                                                <!-- publications page -->
+                                                <tr th:if="${#strings.startsWith(currentUri, '/publications')}">
+                                                    <td><a th:href="@{/}">
+                                                        <img src="/images/menu04_01.gif" class="header-introduction">
+                                                    </a></td>
+                                                    <td><a th:href="@{/livesearch}">
+                                                        <img src="/images/menu04_02.gif" class="header-livesearch">
+                                                    </a></td>
+                                                    <td><a th:href="@{/download}">
+                                                        <img src="/images/menu04_03.gif" class="header-download">
+                                                    </a></td>
+                                                    <td><a th:href="@{/publications}">
+                                                        <img src="/images/menu04_04.gif" class="header-publications">
+                                                    </a></td>
+                                                </tr>
+                                                <!-- login || help || contact || admin || confirm_personalInfo || registration page -->
+                                                <tr th:if="${#strings.startsWith(currentUri, '/login') or 
+                                                    #strings.startsWith(currentUri, '/help') or 
+                                                    #strings.startsWith(currentUri, '/admin') or 
+                                                    #strings.startsWith(currentUri, '/confirm_personalInfo') or 
+                                                    #strings.startsWith(currentUri, '/registration')}"
+                                                >
+                                                    <td><a href="/"><img src="/images/menu03_01.gif" class="header-introduction"></a></td>
+                                                    <td><a href="/livesearch"><img src="/images/menu04_02.gif" class="header-livesearch"></a></td>
+                                                    <td><a href="/download"><img src="/images/menu01_03.gif" class="header-download"></a></td>
+                                                    <td><a href="/publications"><img src="/images/menu01_04.gif" class="header-publications"></a></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td class="header-bottom-red-line"><img src="/images/menu_bg3.gif" /></td>
+            </tr>
+            <tr>
+                <td class="header-bottom-white-line"></td>
+            </tr>
+        </table>
+
+    </body>
+</html>

@@ -8,11 +8,11 @@ public class LivesearchController {
 
   @GetMapping("/livesearch")
   public String gotoLivesearchPage() {
-      return "livesearch";
+      return "/livesearch/livesearch";
   }
 
   @GetMapping("/modplus/search")
   public String gotoModplusSearchPage() {
-      return "modplus/search";
+      return "/livesearch/modplus/search";
   }
 }

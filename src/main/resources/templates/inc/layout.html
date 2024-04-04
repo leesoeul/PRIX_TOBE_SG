@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html th:fragment="layout (content)" xmlns:th="http://www.thymeleaf.org">
+<html th:fragment="layout(content, links)" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragments/introduction::head}">
-  <!-- layout header -->
+<head th:replace="~{inc/head::head(links=${links})}">
+  <!-- layout head -->
 </head>
 
 <body>
-  <nav th:replace="~{fragments/navbar::navbar}">
-    <!-- layout navbar -->
-  </nav>
+  <header th:replace="~{inc/header::header}">
+    <!-- layout header: logo, (login,help,contact,admin), (introduction, livesearch, download, publications) -->
+  </header>
   <div th:replace="${content}">
     <!-- layout content -->
   </div>
-  <footer th:replace="~{fragments/footer::footer}">
+  <footer th:replace="~{inc/footer::footer}">
     <!-- layout footer -->
   </footer>
 </body>
