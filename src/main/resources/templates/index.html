@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<!-- layout에 해당하는 content, links로 각각 selector로 table과 empty fragment를 보냄 -->
-<html th:replace="~{inc/layout::layout(~{::table}, ~{})}" xmlns:th="http://www.thymeleaf.org">
+<!-- layout에 해당하는 content, links, scripts로 각각 selector table과 empty fragment, empty fragment를 보냄 -->
+<html th:replace="~{inc/layout::layout(~{::table}, ~{}, ~{})}" xmlns:th="http://www.thymeleaf.org">
 
     <table width="990" border="0" cellpadding="0" cellspacing="0">
       <tr>

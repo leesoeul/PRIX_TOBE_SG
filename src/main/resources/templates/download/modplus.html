@@ -1,10 +1,18 @@
 <!DOCTYPE html>
-<!-- layout의 content로 table 을, links에는 link들을 넘긴다 -->
-<html th:replace="~{inc/layout::layout(~{::table}, ~{::link})}" xmlns:th="http://www.thymeleaf.org">
+<!-- layout의 content로 table 을, links에는 link들을, scripts에는 script들을 넘긴다. 필요 없을 경우 ~{} empty fragment-->
+<html th:replace="~{inc/layout::layout(~{::table}, ~{::link}, ~{::script})}" xmlns:th="http://www.thymeleaf.org">
 
   <!-- 페이지 개별 css를 어떻게 추가하는지 예시 -->
   <link href="/css/example.css" th:href="@{/css/example.css}" rel="stylesheet" type="text/css" />
   <link href="/css/example2.css" th:href="@{/css/example2.css}" rel="stylesheet" type="text/css" />
+
+  <!-- 페이지 개별 javascript 등 기타 script를 추가하는 예시 -->
+  <script>
+    let a = 12;  
+  </script>
+  <script>
+    let b = "hi";
+  </script>
 
   <table width="1090" border="0" cellpadding="0" cellspacing="0">
     <tr>
