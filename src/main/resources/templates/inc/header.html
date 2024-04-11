@@ -17,16 +17,16 @@
                                             <table class="zero-padding-table">
                                                 <tr>
                                                     <td width="62" class="header-top-dot">&nbsp;</td>
-                                                    <td width="105"class="header-top-dot" th:remove="${#ctx.session.id != null and #ctx.session.id == '4'} ? none : all">&nbsp;</td>
+                                                    <td width="105"class="header-top-dot" th:remove="${#session.id != null and #session.id == '4'} ? none : all">&nbsp;</td>
                                                     <td width="45" class="header-top-dot">&nbsp;</td>
                                                     <td width="68" class="header-top-dot">&nbsp;</td>
                                                     <td width="50" class="header-top-dot">&nbsp;</td>
                                                     <td width="60" class="header-top-dot">&nbsp;</td>
                                                 </tr>
                                                 <tr>
-                                                    <td th:remove="${#ctx.session.id != null and #ctx.session.id == '4'} ? all : none"><img src="/images/top_icon_01.gif" /> &nbsp;<a th:href="@{/login}" class="top_menu">LOG&nbsp;&nbsp;I&nbsp;N</a></td>
-                                                    <td th:remove="${#ctx.session.id == null or #ctx.session.id != '4'} ? all : none "><img src="/images/top_icon_01.gif" />&nbsp;<a th:href="@{/login?action=logout}" class="top_menu">LOGOUT</a></td>
-                                                    <td th:remove="${#ctx.session.id == null or #ctx.session.id != '4'} ? all : none"><img src="/images/top_icon_01.gif"  />&nbsp;<a th:href="@{/deleteAccount}" class="top_menu">DELETE ACCOUNT</a></td>
+                                                    <td th:remove="${session.id != null and session.id == '4'} ? all : none"><img src="/images/top_icon_01.gif" /> &nbsp;<a th:href="@{/login}" class="top_menu">LOG&nbsp;&nbsp;I&nbsp;N</a></td>
+                                                    <td th:remove="${session.id == null or session.id != '4'} ? all : none "><img src="/images/top_icon_01.gif" />&nbsp;<a th:href="@{/login?action=logout}" class="top_menu">LOGOUT</a></td>
+                                                    <td th:remove="${session.id == null or session.id != '4'} ? all : none"><img src="/images/top_icon_01.gif"  />&nbsp;<a th:href="@{/deleteAccount}" class="top_menu">DELETE ACCOUNT</a></td>
                                                     <td><img src="/images/top_icon_01.gif" />&nbsp;&nbsp;<a th:href="@{/help}" class="top_menu">HELP</a></td>
                                                     <td><img src="/images/top_icon_01.gif" />&nbsp;&nbsp;<a th:href="@{/contact}" class="top_menu">CONTACT</a></td>
                                                     <td><img src="/images/top_icon_01.gif" />&nbsp;&nbsp;<a th:href="@{/admin/adlogin}" class="top_menu">ADMIN</a></td>
