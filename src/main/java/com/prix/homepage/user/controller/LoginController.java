@@ -47,7 +47,7 @@ public class LoginController {
                 .build();
 
         model.addAttribute("accountDto", accountDto);
-        return "login";
+        return "login/login";
     }
 
     @PostMapping("/login")
@@ -60,7 +60,7 @@ public class LoginController {
                 logger.warn("유효성 실패 원인: " + error.getDefaultMessage());
             }
             model.addAttribute("accountDto", accountDto);
-            return "login";
+            return "login/login";
         }
         Account account = accountService.findByEmailAndPassword(accountDto.getEmail(),
                 accountDto.getPassword());
@@ -68,7 +68,7 @@ public class LoginController {
         if (account == null) {
             logger.warn("존재하지 않는 계정");
             model.addAttribute("accountDto", accountDto);
-            return "login";
+            return "login/login";
         }
         // 세션에 id(PK) 저장
         HttpSession session = request.getSession();

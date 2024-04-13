@@ -10,7 +10,7 @@ public class PublicationsController {
 
   @GetMapping("")
   public String gotoPublicationsPage() {
-      return "publications";
+      return "publications/publications";
   }
 
 }

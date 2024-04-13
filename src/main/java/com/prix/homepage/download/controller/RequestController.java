@@ -11,6 +11,6 @@ public class RequestController {
   @GetMapping("/request")
   public String gotoRequestSoftwaredPage(@RequestParam String software , Model model) {
       model.addAttribute("software", software);
-      return "request";
+      return "/download/request";
   }
 }
