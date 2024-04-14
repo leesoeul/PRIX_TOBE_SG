@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!-- layout에 해당하는 content, links, scripts로 각각 selector table과 empty fragment, empty fragment를 보냄 -->
+<html th:replace="~{inc/layout::layout(~{::table}, ~{::link}, ~{})}" xmlns:th="http://www.thymeleaf.org">
+
+<!-- css 파일 -->
+<link href="/css/login/confirm-personalInfo.css" th:href="@{/css/login/confirm-personalInfo.css}" rel="stylesheet" type="text/css" />
+
+<!-- content -->
+<table class="table-container zero-padding-table">
+
+	<tr>
+		<td class="tittable-wrapper">
+			<table class="zero-padding-table" id="TitTable">
+				<tr>
+					<td>
+						<font class="drakBR">REGISTRATION
+					</td>
+					<td class="bottom-padding">&nbsp;</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	
+	<form name="reg" method="post" action="registration">
+		<tr>
+			<td class="member-join"><img src="/images/tit_join.gif">
+				<div id="container" class="policy-container"> <b class="rtop"><b class="r1"></b><b
+							class="r2"></b><b class="r3"></b><b class="r4"></b></b>
+					<div class="box">
+						<table class="zero-padding-table" id="gray">
+							<tr>
+								<div>
+									<H2>Personal Information Policy</H2>
+									<H3>In accordance with the Personal Information Protection Act, we will inform you of the purpose of
+										collecting and using the following personal information.</H3><br>
+
+									<b>1. Purpose of collecting personal information</b><br>
+									The PRIX service is provided through the account and we collect ID and password to create these
+									accounts.<br><br>
+									<b>2. Personal information items to collect</b><br>
+									ID and Password<br><br>
+									<b>3. Personal Information Retention and Use Period</b><br>
+									We will permanently retain your ID and password unless you opt out of PRIX.<br><br>
+									<b>4. You may refuse to consent to the collection, use, or provision of personal information, but you
+										may be restricted from using the website.</b><br><br>
+								</div>
+							</tr>
+						</table>
+						<div class="bottom-line" />
+						<input type="button" class="btn" value="Decline" onClick="window.location='login'" />
+						<input type="submit" class="btn" value="Accept" />
+					</div>
+					<b class="rbottom"><b class="r4"></b><b class="r3"></b><b class="r2"></b><b class="r1"></b></b>
+				</div>
+			</td>
+		</tr>
+	</form>
+</table>
+
+</html>
