@@ -27,8 +27,57 @@ public class DownloadController {
    * @return download/modplus.html 렌더링
    */
   @GetMapping("/modplus")
-  public String gotoModplusPage() {
+  public String modplusPage() {
     return "download/modplus";
   }
 
+  @GetMapping("/ACTG")
+  public String actgPage() {
+    return "download/ACTG";
+  }
+
+  @GetMapping("/cifter")
+  public String cifterPage() {
+    return "download/cifter";
+  }
+
+  @GetMapping("/dbond")
+  public String dbondPage() {
+    return "download/dbond";
+  }
+
+  @GetMapping("/demix")
+  public String demixPage() {
+    return "download/demix";
+  }
+
+  @GetMapping("/DDPSearch")
+  public String ddpSearchPage() {
+    return "download/DDPSearch";
+  }
+
+  @GetMapping("/nextsearch")
+  public String nextSearchPage() {
+    return "download/nextsearch";
+  }
+
+  @GetMapping("/moda")
+  public String modaPage() {
+    return "download/moda";
+  }
+
+  @GetMapping("/mutcombinator")
+  public String mutcombinatorPage() {
+    return "download/mutcombinator";
+  }
+
+  @GetMapping("/PatternMatchFrm")
+  public String patternMatchPage() {
+    return "download/PatternMatchFrm";
+  }
+
+  @GetMapping("/viewer")
+  public String spectralViewerPage() {
+    return "download/viewer";
+  }
 }
