@@ -1,0 +1,17 @@
+/* CSS for Livesearch*/
+
+.content-wrapper{
+    width:"990";
+    border:"0";
+    cellpadding:"0";
+    cellspacing:"0";
+}
+
+.content-body{
+    width:"190";
+    height:"100%";
+    rowspan:"2";
+    align:"right";
+    valign:"top";
+    style:"padding-right:15px"
+}
