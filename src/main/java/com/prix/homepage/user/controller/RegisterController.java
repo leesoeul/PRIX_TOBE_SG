@@ -32,11 +32,11 @@ public class RegisterController {
   /**
    * 로그인 페이지에서 register 클릭시 사용자 동의 받는 용도
    * 
-   * @return confirm_personalInfo.html 렌더링
+   * @return login/confirm_personalInfo.html 렌더링
    */
   @GetMapping("/confirm_personalInfo")
   public String gotoConfirmPersonalInfoPage() {
-    return "confirm_personalInfo";
+    return "login/confirm_personalInfo";
   }
 
   /**
