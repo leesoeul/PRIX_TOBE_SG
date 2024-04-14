@@ -22,7 +22,7 @@ public class IntroductionController {
      */
   @GetMapping("/help")
   public String gotoHelpPage() {
-      return "help";
+      return "help/help";
   }
 
     /**

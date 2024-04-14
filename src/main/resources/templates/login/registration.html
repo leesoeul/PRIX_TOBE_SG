@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<!-- layout의 content로 table 을, links에는 link들을, scripts에는 script들을 넘긴다. 필요 없을 경우 ~{} empty fragment-->
+<html th:replace="~{inc/layout::layout(~{::table}, ~{::link}, ~{::script})}" xmlns:th="http://www.thymeleaf.org">
+
+  <!-- 페이지 개별 css를 어떻게 추가하는지 예시 -->
+  <link href="/css/example.css" th:href="@{/css/example.css}" rel="stylesheet" type="text/css" />
+  <link href="/css/example2.css" th:href="@{/css/example2.css}" rel="stylesheet" type="text/css" />
+
+  <!-- 페이지 개별 javascript 등 기타 script를 추가하는 예시 -->
+  <script>
+    let a = 12;  
+  </script>
+  <script>
+    let b = "hi";
+  </script>
+    <!-- Main content -->
+    <table width="95%" border="0" cellpadding="0" cellspacing="0" align="center">
+        <tr>
+            <td height="10" valign="top">
+                <table border="0" cellspacing="0" cellpadding="0" id="TitTable">
+                    <tr>
+                        <td align="left"><font class="drakBR" size="3">REGISTRATION</font></td>
+                        <td align="right" valign="bottom" style="padding-right:5px;">&nbsp;</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <!-- Form for registration -->
+        <form method="post" action="registration">
+            <tr>
+                <td align="center" valign="top" style="padding:10px;">
+                    <img src="/images/tit_join.gif" alt="Join">
+                    <!-- Display registration error message -->
+                    <!--
+                    <div th:if="${!success}">
+                        <br/><font color="red">The ID "${email}" already exists.</font>
+                    </div>
+                    -->
+                    <div id="container" style="background: #fff; width:400px">
+                        <b class="rtop"><b class="r1"></b><b class="r2"></b><b class="r3"></b><b class="r4"></b></b>
+                        <div class="box">
+                            <table width="80%" border="0" cellpadding="0" cellspacing="0" id="gray"
+                                style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
+                                <!-- Input fields for registration -->
+                                <!--
+                                <tr>
+                                    <th>Name</th>
+                                    <td><input name="name" type="text" size="30"></td>
+                                </tr>
+                                <tr>
+                                    <th>Affiliation</th>
+                                    <td><input name="job" type="text" size="30"></td>
+                                </tr>
+                                -->
+                                <tr>
+                                    <th>User ID</th>
+                                    <td><input name="email" type="text" size="30" required></td>
+                                </tr>
+                                <tr>
+                                    <th>Password</th>
+                                    <td><input name="password" type="password" size="30" required></td>
+                                </tr>
+                                <tr>
+                                    <th>Password (confirm)</th>
+                                    <td><input name="confirmedPassword" type="password" size="30" required></td>
+                                    <input type="hidden" name="level" value=""/>
+                                </tr>
+                            </table>
+                            <br>
+                            <!-- Buttons for registration -->
+                            <input name="Submit2223" type="button" class="btn" value="Cancel" onclick="window.location='login'" />
+                            <input name="Submit22222" type="submit" class="btn" value="Register" />
+                        </div>
+                        <b class="rbottom"><b class="r4"></b><b class="r3"></b><b class="r2"></b><b class="r1"></b></b>
+                    </div>
+                </td>
+            </tr>
+        </form>
+    </table>
+</html>
