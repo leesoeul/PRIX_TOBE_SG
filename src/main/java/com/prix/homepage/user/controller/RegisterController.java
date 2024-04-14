@@ -60,7 +60,7 @@ public class RegisterController {
 
     model.addAttribute("newAccountDto", newAccountDto);
 
-    return "registration";
+    return "login/registration";
   }
 
   /**
@@ -78,7 +78,7 @@ public class RegisterController {
         logger.warn("reasons for validation failure: " + error.getDefaultMessage());
       }
       model.addAttribute("newAccountDto", newAccountDto);
-      return "registration";
+      return "login/registration";
     }
 
     // 비밀번호 확인
@@ -86,14 +86,14 @@ public class RegisterController {
       result.rejectValue("confirmedPassword", "password.mismatch", "Passwords do not match");
       logger.warn("Failed in the match test between password and confirmation password");
       model.addAttribute("newAccountDto", newAccountDto);
-      return "registration";
+      return "login/registration";
     }
     // 이메일 중복 확인
     if (accountService.isEmailExists(newAccountDto.getEmail())) {
       result.rejectValue("email", "email.exists", "Email already exists");
       logger.warn("Failed in email duplication check");
       model.addAttribute("newAccountDto", newAccountDto);
-      return "registration";
+      return "login/registration";
     }
 
     // 기존 prix의 jsp파일의 로직 그대로 이용
