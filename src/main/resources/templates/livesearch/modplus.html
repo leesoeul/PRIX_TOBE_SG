@@ -208,11 +208,11 @@ function stateChanged() {
     <td height="10" valign="top"><table border="0" cellspacing="0" cellpadding="0" id="TitTable">
       <tr>
         <td style="padding-left:15px;"><font color="#0033FF" size="3"><b>MODPlus</b>&nbsp;&nbsp;&nbsp;</font>ms/ms search 
-          <!-- ( <font color="#000000">version <%=version%></font> ) -->
+					( <font color="#000000">version [[${userSetting.version}]]</font> )
         </td>
         <td align="right" valign="bottom" style="padding-right:5px;"><table border="0" cellspacing="0" cellpadding="0">
 
-          <tr th:if="${#ctx.session.id != null and #ctx.session.id ne '4'}">
+          <tr th:if="${session.id != null and session.id ne 4}">
             <td><img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="history" class="menu">History</a> &nbsp; &nbsp;</td>
             <td><img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="/login?action=logout" class="menu">Logout</a> &nbsp; &nbsp;</td>
           </tr>
@@ -238,69 +238,61 @@ function stateChanged() {
 	    <th><div align="right"><a href="/help#DATA_FORMAT" class="thmenu">Data Format</a> </div></th>
 			<td><select name="ms_format">
 				<option value="">Select -------------</option>
-				<!-- <%-- 졸프주석 
-				<option value="mgf" <% if (dataFormat.compareTo("mgf") == 0) out.print("selected"); %>>Mascot (*.mgf)</option>
-				<option value="dta" <% if (dataFormat.compareTo("dta") == 0) out.print("selected"); %>>Sequest (*.dta)</option>
-				<option value="pkl" <% if (dataFormat.compareTo("pkl") == 0) out.print("selected"); %>>Micromass (*.pkl)</option>  --%> -->
+
+				<option value="mgf" th:selected="${userSetting.dataFormat == 'mgf'}">Mascot (*.mgf)</option>
+				<option value="dta" th:selected="${userSetting.dataFormat == 'dta'}">Sequest (*.dta)</option>
+				<option value="pkl" th:selected="${userSetting.dataFormat == 'pkl'}">Micromass (*.pkl)</option>
+
 			</select></td>
-        <th><div align="right"><a href="/help.jsp#INST" class="thmenu">MS Resolution</a> </div></th>
+        <th><div align="right"><a href="/help#INST" class="thmenu">MS Resolution</a> </div></th>
         <td><select name="ms_resolution">
 			<option value="high">High</option>
-			<!-- <%-- 졸프 주석 <option value="low" <% if (msResolution.compareTo("low") == 0) out.print("selected"); %>>Low</option> --%> -->
+			<option value="low" th:selected="${userSetting.msResolution == 'low'}">Low</option>
           </select></td>
       </tr>
 	  
 	  <tr>
-        <th><div align="right"><a href="/help.jsp#INST" class="thmenu">MS/MS Instrument</a> </div></th>
+        <th><div align="right"><a href="/help#INST" class="thmenu">MS/MS Instrument</a> </div></th>
         <td><select name="ms_instrument">
 			<option value="">Select ---</option>
-			<!-- <%-- 졸프주석  <option value="ESI-ION-TRAP" <% if (instrument.compareTo("ESI-ION-TRAP") == 0) out.print("selected"); %>>ESI-TRAP</option> --%>
-			<%-- 졸프주석 <option value="QTOF" <% if (instrument.compareTo("QTOF") == 0) out.print("selected"); %>>HCD/QTOF</option> --%> -->
+			<option value="ESI-ION-TRAP" th:selected="${userSetting.instrument == 'ESI-ION-TRAP'}">ESI-TRAP</option>
+			<option value="QTOF" th:selected="${userSetting.instrument == 'QTOF'}">HCD/QTOF</option>
+			
           </select>
         </td>
-		<th><div align="right"><a href="/help.jsp#INST" class="thmenu">MS/MS Resolution</a> </div></th>
+		<th><div align="right"><a href="/help#INST" class="thmenu">MS/MS Resolution</a> </div></th>
         <td><select name="msms_resolution">
 			<option value="high">High</option>
-			<!-- <%-- ㅈㅍㅈㅅ<option value="low" <% if (msmsResolution.compareTo("low") == 0) out.print("selected"); %>>Low</option>			 --%> -->
+			<option value="low" th:selected="${userSetting.msmsResolution == 'low'}">Low</option>
           </select></td>
       </tr>
      
 	  <tr>
-        <th><div align="right"><a href="/help.jsp#MSMS" class="thmenu">MS/MS Data</a> </div></th>
+        <th><div align="right"><a href="/help#MSMS" class="thmenu">MS/MS Data</a> </div></th>
         <td colspan="3"><input name="ms_file" type="file" size="45" /> &nbsp; File size limit : 500MB</td>            
       </tr>
       <tr>
-        <th><div align="right"><a href="/help.jsp#DB" class="thmenu">Database</a> </div></th>
+        <th><div align="right"><a href="/help#DB" class="thmenu">Database</a> </div></th>
         <td colspan="3"><select name="database" onchange="changeDB()">
             <option value="">Select ------------------------</option>
-<!-- <%-- 졸프 주석처리 
-<%
-	if (state != null) {
-		ResultSet rs = state.executeQuery("select id, name from px_database");
-		while (rs.next()) {
-%>
-			<option value="<%=rs.getInt(1)%>"><%=rs.getString(2)%></option>
-<%
-		}
-		rs.close();
-	}
-%> --%> -->
+						
+						<option th:each="database : ${listDatabase}"
+						th:value="${database.name}" 
+						th:text="${database.file}">
+						</option>
 
         </select>&nbsp;&nbsp;</td>    
       </tr>
       <tr>	  
-        <th rowspan="1"><div align="right"><a href="/help.jsp#DB" class="thmenu">Local  DB</a> </div></th>
-		<td colspan="3"><input name="fasta" type="file" size="45" /> &nbsp; File size limit : 100MB&nbsp;&nbsp;<!--input name="fasta_decoy" type="checkbox" class="CHECK" value="O" /><font size="2" color="blue"> Search with decoy<font--></td>
+        <th rowspan="1"><div align="right"><a href="/help#DB" class="thmenu">Local  DB</a> </div></th>
+		<td colspan="3"><input name="fasta" type="file" size="45" /> &nbsp; File size limit : 100MB&nbsp;&nbsp;</td>
 	  </tr>	  
-	  <!--tr>
-		  <td colspan="3"><input name="user_decoy" type="file" size="45" />&nbsp;&nbsp;<font size="2" color="blue">or upload user's decoy</font></td>
-      </tr-->
 	  <tr>	  
-        <th><div align="right"><a href="/help.jsp#TARDEC" class="thmenu">Target-Decoy </div></th>
+        <th><div align="right"><a href="/help#TARDEC" class="thmenu">Target-Decoy </div></th>
 		<td colspan="3"><input name="decoy" type="checkbox" class="CHECK" value="O" /><font size="2" color="blue"> Search with decoy proteins<font></td>
 	  </tr> 
       <tr>
-        <th><div align="right"><a href="/help.jsp#ENZYME" class="thmenu">Enzyme</a> </div></th>
+        <th><div align="right"><a href="/help#ENZYME" class="thmenu">Enzyme</a> </div></th>
         <!-- <%--ㅈㅍㅈㅅ <td colspan="3"><select name="enzyme" onclick="enzymeList();"> --%>
 <%-- 
 졸프 주석처리
