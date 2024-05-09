@@ -12,7 +12,9 @@ import com.prix.homepage.livesearch.pojo.UserSettingDto;
 import com.prix.homepage.livesearch.service.UserModificationService;
 import com.prix.homepage.livesearch.service.UserSettingService;
 import com.prix.homepage.user.pojo.Database;
+import com.prix.homepage.user.pojo.Enzyme;
 import com.prix.homepage.user.service.DatabaseService;
+import com.prix.homepage.user.service.EnzymeService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -28,6 +30,7 @@ public class LivesearchController {
   private final UserSettingService userSettingService;
   private final UserModificationService userModificationService;
   private final DatabaseService databaseService;
+  private final EnzymeService enzymeService;
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -65,14 +68,14 @@ public class LivesearchController {
         .enzyme(null)
         .missedCleavage(null)
         .minNumEnzTerm(null)
-        .pTolerance(null)
+        .pTolerance("10")
         .minChar(null)
         .pUnit(null)
-        .fTolerance(null)
+        .fTolerance("0.05")
         .minIE(null)
         .maxIE(null)
-        .minMM(null)
-        .maxMM(null)
+        .minMM("-150")
+        .maxMM("+250")
         .dataFormat(null)
         .instrument(null)
         .msResolution(null)
@@ -104,7 +107,15 @@ public class LivesearchController {
     // px_database : id, name, file # 비었으면 빈 List []
     List<Database> listDatabaseResponseDto = databaseService.getAllDatabase();
     model.addAttribute("listDatabase", listDatabaseResponseDto);
-    
+
+    // px_enzyme : id, name where user_id = 0
+    List<Enzyme> listEnzymeZeroResponseDto = enzymeService.getAllEnzymeByUserId(0);
+    model.addAttribute("listEnzymeId0", listEnzymeZeroResponseDto);
+
+    // px_enzyme : id, name where user_id = id
+    List<Enzyme> listEnzymeResponseDto = enzymeService.getAllEnzymeByUserId(id);
+    model.addAttribute("listEnzymeId", listEnzymeResponseDto);
+
     return "livesearch/modplus";
   }
 }

@@ -293,110 +293,90 @@ function stateChanged() {
 	  </tr> 
       <tr>
         <th><div align="right"><a href="/help#ENZYME" class="thmenu">Enzyme</a> </div></th>
-        <!-- <%--ㅈㅍㅈㅅ <td colspan="3"><select name="enzyme" onclick="enzymeList();"> --%>
-<%-- 
-졸프 주석처리
-<%
-	if (state != null)
-	{
-		ResultSet rs = state.executeQuery("select id, name from px_enzyme where user_id=0;");
-		while (rs.next())
-		{
-%>
-			<option value="<%=rs.getInt(1)%>" <% if (enzyme.compareTo("" + rs.getInt(1)) == 0) out.print("selected"); %>><%=rs.getString(2)%></option>
-<%
-		}
-		rs.close();
-		rs = state.executeQuery("select id, name from px_enzyme where user_id=" + id + ";");
-		while (rs.next())
-		{
-%>
-			<option value="<%=rs.getInt(1)%>" <% if (enzyme.compareTo("" + rs.getInt(1)) == 0) out.print("selected"); %>><%=rs.getString(2)%> *</option>
-<%
-		}
-		rs.close();
-	}
-%>             --%> -->
-			<!--option selected="selected">Trypsin</option>
-			<option>Pepsin</option>
-			<option>Glu-C</option-->
+        <!-- <%--ㅈㅍㅈㅅ <td colspan="3"><select name="enzyme" onclick="enzymeList();"> --%>=========================================나중에 꼭 하기 -->
+      	<td colspan="3"><select name="enzyme">
+				<!-- listEnzymeId0에 대해 반복 -->
+				<th:block th:each="enzymeObj : ${listEnzymeId0}">
+						<option th:value="${enzymeObj.id}"
+										th:selected="${enzyme != null} ? (${enzyme} == ${enzymeObj.id}) : false">
+								<span th:text="${enzymeObj.name}"></span>
+						</option>
+				</th:block>
+
+				<!-- listEnzymeId에 대해 반복 -->
+				<th:block th:each="enzymeObj : ${listEnzymeId}">
+						<option th:value="${enzymeObj.id}"
+										th:selected="${enzyme != null} ? (${enzyme} == ${enzymeObj.id}) : false">
+								<span th:text="${enzymeObj.name}"></span>
+								<span th:text="' *'"></span>
+						</option>
+				</th:block>
+				</select>
+
         <!-- <%-- 졸프 주석처리
 				</select>&nbsp;&nbsp;<input name="add_enzyme" type="button" class="btnBlueSmall" value=" + " <%if (id.compareTo(anony) != 0) {%>onclick="window.open('enzyme_list.jsp', '', 'resizable=0, width=500, height=500, scrollbars=yes')"<%}%> />&nbsp;&nbsp;<font size="2" color="blue"><%if (id.compareTo(anony) == 0) {%>Login<%} else {%>Click<%}%> to add a new enzyme rule</font></td> --%> -->
 	  </tr>
 	  <tr>
-        <th><div align="right"><a href="/help.jsp#MISSCLEAVE" class="thmenu">Max No. of Missed Cleavages</a> </div></th>
+        <th><div align="right"><a href="/help#MISSCLEAVE" class="thmenu">Max No. of Missed Cleavages</a> </div></th>
         <td><select name="missed_cleavage">
-            
-			<!-- <%-- ㅈㅍㅈㅅ
-			<option <% if (missedCleavage.compareTo("0") == 0) out.print("selected"); %>>0</option>
-			<option <% if (missedCleavage.compareTo("1") == 0) out.print("selected"); %>>1</option>
-			<option <% if (missedCleavage.compareTo("2") == 0) out.print("selected"); %>>2</option>
-			<option <% if (missedCleavage.compareTo("3") == 0) out.print("selected"); %>>3</option>
-			<option <% if (missedCleavage.compareTo("4") == 0) out.print("selected"); %>>4</option>
-			<option <% if (missedCleavage.compareTo("5") == 0) out.print("selected"); %>>5</option>
-        </select></td>
-		<th><div align="right"><a href="/help.jsp#NTT" class="thmenu">Min No. of Enzyme Termini</a> </div></th>
-        <td><select name="ntt">           
-			<option <% if (minNumEnzTerm.compareTo("1") == 0) out.print("selected"); %>>1</option>
-			<option <% if (minNumEnzTerm.compareTo("2") == 0) out.print("selected"); %>>2</option> --%> -->
-        </select></td>
+					<option th:value="0" th:selected="${userSetting.missedCleavage == '0'}">0</option>
+					<option th:value="1" th:selected="${userSetting.missedCleavage == '1'}">1</option>
+					<option th:value="2" th:selected="${userSetting.missedCleavage == '2'}">2</option>
+					<option th:value="3" th:selected="${userSetting.missedCleavage == '3'}">3</option>
+					<option th:value="4" th:selected="${userSetting.missedCleavage == '4'}">4</option>
+					<option th:value="5" th:selected="${userSetting.missedCleavage == '5'}">5</option>
+			</select>
+			<th><div align="right"><a href="/help#NTT" class="thmenu">Min No. of Enzyme Termini</a> </div></th>
+				<td>
+					<select name="ntt">           
+						<option th:value="4" th:selected="${userSetting.minNumEnzTerm == '1'}">4</option>
+						<option th:value="5" th:selected="${userSetting.minNumEnzTerm == '2'}">5</option>
+       		</select>
+				</td>
       </tr>
       <tr>
-        <th><div align="right"><a href="/help.jsp#PEPTTOL" class="thmenu">Peptide  Tol.</a> </div></th>
-        <!-- <%-- ㅈㅍㅈㅅ <td>&#177; <input name="pept_tolerance" type="text" size="10" value="<%=pTolerance%>" /> <select name="unit"> --%>
-            <%-- ㅈㅍㅈㅅ <option <% if (pUnit.compareTo("Da") == 0) out.print("selected"); %>>Da</option> --%>
-			<%-- ㅈㅍㅈㅅ <option <% if (pUnit.compareTo("ppm") == 0) out.print("selected"); %>>ppm</option>			 --%> -->
+        <th><div align="right"><a href="/help#PEPTTOL" class="thmenu">Peptide  Tol.</a> </div></th>
+       	<td>&#177; <input name="pept_tolerance" type="text" size="10" th:value="${userSetting.pTolerance}" /> <select name="unit"> 
+					<option th:selected="${userSetting.pUnit == 'Da'}">Da</option>
+					<option th:selected="${userSetting.pUnit == 'ppm'}">ppm</option> 
         </select></td>
-		<th><div align="right"><a href="/help.jsp#ISOERR" class="thmenu">#<sup>13</sup>C (Isotope error)</a> </div></th>
+		<th><div align="right"><a href="/help#ISOERR" class="thmenu">#<sup>13</sup>C (Isotope error)</a> </div></th>
         <td>&nbsp;&nbsp;Min	
 		<select name="min_isotope">
-		    <!-- <%-- ㅈㅍㅈㅅ <option <% if (minIE.compareTo("-1") == 0) out.print("selected"); %>>-1</option>
-		    <option <% if (minIE.compareTo("0") == 0) out.print("selected"); %>>0</option>
-			 --%> -->
+			<option th:selected="${userSetting.minIE == '-1'}">-1</option>
+			<option th:selected="${userSetting.minIE == '0'}">0</option>
 		</select>
 		&nbsp;&nbsp;Max
 		<select name="max_isotope">		    
-		    <!-- <%-- ㅈㅍㅈㅅ <option <% if (maxIE.compareTo("0") == 0) out.print("selected"); %>>0</option>
-			<option <% if (maxIE.compareTo("1") == 0) out.print("selected"); %>>1</option>
-			<option <% if (maxIE.compareTo("2") == 0) out.print("selected"); %>>2</option>
-			<option <% if (maxIE.compareTo("3") == 0) out.print("selected"); %>>3</option> --%> -->
+			<option th:selected="${userSetting.maxIE == '0'}">0</option>
+			<option th:selected="${userSetting.maxIE == '1'}">1</option>
+			<option th:selected="${userSetting.maxIE == '2'}">2</option>
+			<option th:selected="${userSetting.maxIE == '3'}">3</option>
 		</select>
 		</td>
         <td></td>
         
       </tr>
-	    <th><div align="right"><a href="/help.jsp#FRAGTOL" class="thmenu">Fragment Tol.</a> </div></th>
-        <!-- <%-- ㅈㅍㅈㅅ <td colspan="3">&#177; <input name="frag_tolerance" type="text" size="10" value="<%=fTolerance%>" /> Da</td> --%> -->
+	    <th><div align="right"><a href="/help#FRAGTOL" class="thmenu">Fragment Tol.</a> </div></th>
+			<td colspan="3">&#177; <input name="frag_tolerance" type="text" size="10" th:value="${userSetting.fTolerance}" /> Da</td>
 	  <tr>
 	  </tr>
       <tr>
-        <th><div align="right"><a href="/help.jsp#MODRANGE" class="thmenu">Modified  Mass</a> </div></th>
-        <!-- <%--ㅈㅍㅈㅅ 
-				<td>Min&nbsp;&nbsp;&nbsp;<input name="min_modified_mass" type="text" size="10" value="<%=minMM%>" /> Da</td>
-        <td colspan="2">Max&nbsp;&nbsp;&nbsp;<input name="max_modified_mass" type="text" size="10" value="<%=maxMM%>" /> Da</td> --%> -->
+        <th><div align="right"><a href="/help#MODRANGE" class="thmenu">Modified  Mass</a> </div></th>
+					<td>Min&nbsp;&nbsp;&nbsp;<input name="min_modified_mass" type="text" size="10" th:value="${userSetting.minMM}" /> Da</td>
+					<td colspan="2">Max&nbsp;&nbsp;&nbsp;<input name="max_modified_mass" type="text" size="10" th:value="${userSetting.maxMM}" /> Da</td>
       </tr>
       <tr>
-	  <!--tr>
-        <th><div align="right"><a href="/help.jsp#ALKYLATION" class="thmenu">Cysteine alkylation</a> </div></th>
-        <td><select name="cysteine alkylation">
-            <option value="">Select -------------</option>
-			<option value="Carbamidomethyl">Carbamidomethyl</option>
-			<option value="Carboxymethyl">Carboxymethyl</option>
-			<option value="Direct input">Direct input</option>
-        </select></td>
-		<td colspan="2">Name&nbsp;&nbsp;<input name="alkylation_name" type="text" size="10" />
-		&nbsp;&nbsp;Mass&nbsp;&nbsp;<input name="alkylation_mass" type="text" size="10" /> Da </td>    
-      </tr-->
+				
 
-		
-        <th><div align="right"><a href="/help.jsp#FIXMOD" class="thmenu">Fixed Modifications</a> </div></th>
+        <th><div align="right"><a href="/help#FIXMOD" class="thmenu">Fixed Modifications</a> </div></th>
         <td  height="auto" style="word-break:break-all;"><iframe  frameborder="0" height="23" width="150" marginheight="0" marginwidth="0" src="fix_ptms.jsp?engine=0"></iframe>
 
 		</td>
 
 
 
-        <th><div align="right"><a href="/help.jsp#VARMOD" class="thmenu">Variable Modifications</a> </div></th>
+        <th><div align="right"><a href="/help#VARMOD" class="thmenu">Variable Modifications</a> </div></th>
         <td><iframe frameborder="0" height="23" style="word-break:break-all;" width="150" scrolling="no" marginheight="0" marginwidth="0" src="var_ptms.jsp?engine=0"></iframe></td>
       </tr>
 
@@ -405,19 +385,20 @@ function stateChanged() {
       <br>
       <table width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
-<!-- <%-- 졸프 주석처리
-<%
-	if ( true ) // id.compareTo(anony) == 0)
-	{
-%>
-		<td align="left"><a href="result.jsp?file=50l4Gh80mJ1Q4o5FgSMnPo647UD217oh4E35174ln46038SP2125">Run sample data<a/>&nbsp;&nbsp;(<a class="under" href="/download/test_data.zip"> Download sample data <a/>)
-<%
-	}
-%> --%> -->
+
+			<th:block>
+				<td align="left">
+						<a th:href="@{/result?file=50l4Gh80mJ1Q4o5FgSMnPo647UD217oh4E35174ln46038SP2125}">Run sample data</a>
+						&nbsp;&nbsp;
+						(<a class="under" th:href="@{/download/test_data.zip}">Download sample data</a>)
+				</td>
+			</th:block>
 
           <td align="right"> 
 			  <!-- <%-- ㅈㅍㅈㅅ <input name="Reset" type="reset" class="btn" onClick="javascript:reset()" value="Reset">
 		      <input name="Submit" type="button" class="btn" onClick="process()" value="Submit"></td> --%> -->
+					<input name="Reset" type="reset" class="btn" value="Reset">
+		      <input name="Submit" type="button" class="btn" value="Submit"></td> 
         </tr>
       </table></td>
   </tr>
