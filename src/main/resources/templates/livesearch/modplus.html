@@ -135,6 +135,22 @@ var fixed = <%
 	else
 		out.print("0");
 %>;
+
+</script> --%> -->
+
+<script language="javascript">
+	
+  function handleButtonClick(sessionId) {
+    /* 이게 원래 진짜 코드
+		if (sessionId != 4) {
+      window.open('/modplus/enzyme_list', '', 'resizable=0, width=500, height=500, scrollbars=yes');
+    }
+		*/
+		//테스트용
+      window.open('/modplus/enzyme_list', '', 'resizable=0, width=500, height=500, scrollbars=yes');
+  }
+		
+
 function enzymeList() {
 	if (xmlhttp == null)
 	{
@@ -147,7 +163,7 @@ function enzymeList() {
 		return;
 	
 	//xmlhttp.onreadystatechange = stateChanged;
-	xmlhttp.open("GET", "user_enzyme.jsp", false);
+	xmlhttp.open("GET", "user_enzyme", false);
 	xmlhttp.send(null);
 	stateChanged();
 }
@@ -196,7 +212,8 @@ function stateChanged() {
 		//obj.options.add(new Option("added", "0"));
 	}
 }
-</script> --%> -->
+
+</script>
 
 <table>
 <table width="990" border="0" cellpadding="0" cellspacing="0">
@@ -293,28 +310,54 @@ function stateChanged() {
 	  </tr> 
       <tr>
         <th><div align="right"><a href="/help#ENZYME" class="thmenu">Enzyme</a> </div></th>
-        <!-- <%--ㅈㅍㅈㅅ <td colspan="3"><select name="enzyme" onclick="enzymeList();"> --%>=========================================나중에 꼭 하기 -->
-      	<td colspan="3"><select name="enzyme">
-				<!-- listEnzymeId0에 대해 반복 -->
-				<th:block th:each="enzymeObj : ${listEnzymeId0}">
-						<option th:value="${enzymeObj.id}"
-										th:selected="${enzyme != null} ? (${enzyme} == ${enzymeObj.id}) : false">
-								<span th:text="${enzymeObj.name}"></span>
-						</option>
-				</th:block>
 
-				<!-- listEnzymeId에 대해 반복 -->
-				<th:block th:each="enzymeObj : ${listEnzymeId}">
-						<option th:value="${enzymeObj.id}"
-										th:selected="${enzyme != null} ? (${enzyme} == ${enzymeObj.id}) : false">
-								<span th:text="${enzymeObj.name}"></span>
-								<span th:text="' *'"></span>
-						</option>
-				</th:block>
+        <td colspan="3"><select name="enzyme" onclick="enzymeList();">
+
+					<!-- listEnzymeId0에 대해 반복 -->
+					<th:block th:each="enzymeObj : ${listEnzymeId0}">
+							<option th:value="${enzymeObj.id}"
+											th:selected="${enzyme != null} ? (${enzyme} == ${enzymeObj.id}) : false">
+									<span th:text="${enzymeObj.name}"></span>
+							</option>
+					</th:block>
+
+					<!-- listEnzymeId에 대해 반복 -->
+					<th:block th:each="enzymeObj : ${listEnzymeId}">
+							<option th:value="${enzymeObj.id}"
+											th:selected="${enzyme != null} ? (${enzyme} == ${enzymeObj.id}) : false">
+									<span th:text="${enzymeObj.name}"></span>
+									<span th:text="' *'"></span>
+							</option>
+					</th:block>
 				</select>
+				&nbsp;&nbsp;
+				<!-- session.id가 4가 아닌 경우  임시로 밑에랑 조건 바꿈 원래는 4가 아니면 click 가능-->
+				<input 
+						name="add_enzyme" 
+						type="button" 
+						class="btnBlueSmall" 
+						value=" + " 
+						th:onclick="window.open('enzyme_list', '', 'resizable=0, width=500, height=500, scrollbars=yes')" 
+						th:if="${session.id == 4}" 
+				/>
 
-        <!-- <%-- 졸프 주석처리
-				</select>&nbsp;&nbsp;<input name="add_enzyme" type="button" class="btnBlueSmall" value=" + " <%if (id.compareTo(anony) != 0) {%>onclick="window.open('enzyme_list.jsp', '', 'resizable=0, width=500, height=500, scrollbars=yes')"<%}%> />&nbsp;&nbsp;<font size="2" color="blue"><%if (id.compareTo(anony) == 0) {%>Login<%} else {%>Click<%}%> to add a new enzyme rule</font></td> --%> -->
+				<!-- session.id가 4인 경우 -->
+				<input 
+						name="add_enzyme" 
+						type="button" 
+						class="btnBlueSmall" 
+						value=" + " 
+						onclick="" 
+						th:if="${session.id != 4}" 
+				/>
+				&nbsp;&nbsp;
+				<font size="2" color="blue">
+						<span th:if="${session.id == 4}">Login</span>
+						<span th:if="${session.id != 4}">Click</span>
+						to add a new enzyme rule
+				</font>
+		</td>
+		
 	  </tr>
 	  <tr>
         <th><div align="right"><a href="/help#MISSCLEAVE" class="thmenu">Max No. of Missed Cleavages</a> </div></th>
