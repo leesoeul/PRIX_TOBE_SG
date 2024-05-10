@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- CSS 링크 -->
+<link th:href="@{/css/home.css}" rel="stylesheet" type="text/css"/>
+
+<!-- 텍스트 입력 필드 -->
+<input name="variable_mod" type="text" size="10" th:value="${varMods}" disabled />&nbsp;&nbsp;
+
+<!-- 버튼 및 onclick 이벤트 -->
+<input 
+    name="add_variable_mod" 
+    type="button" 
+    class="btnOrgSmall" 
+    value=" + " 
+    th:onclick="'window.open(\'var_ptms_list?var=1&amp;engine=' + ${engine} + '\', \'\', \'resizable=1, width=900, height=600, scrollbars=yes\')'" 
+/>
+</html>

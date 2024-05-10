@@ -12,4 +12,22 @@
     DELETE FROM px_user_modification WHERE variable=0 and user_id= #{id}
   </delete>
 
+  <select id="countModifications" resultType="Integer">
+    SELECT count(1) 
+    FROM px_user_modification 
+    WHERE user_id = #{userId} 
+      AND variable = 1 
+      AND engine = #{engine}
+  </select>
+
+  <delete id="deleteByUserAndEngine">
+    DELETE FROM px_user_modification
+    WHERE user_id = #{userId}
+    AND engine = #{engine}
+    AND mod_id IN 
+    <foreach item='modId' collection='modIds' open='(' separator=',' close=')'>
+        #{modId}
+    </foreach>
+  </delete>
+
 </mapper>

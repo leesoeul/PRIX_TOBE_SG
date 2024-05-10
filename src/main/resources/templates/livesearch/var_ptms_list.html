@@ -1,0 +1,221 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>PRIX - PRoteome InformatiX</title>
+<link href="/css/home.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+function checkAll(obj, flag) {
+	if (obj != null)
+	{
+		if (obj.length > 0)
+		{
+			for (i = 0; i < obj.length; i++)
+				obj[i].checked = flag;
+		}
+		else
+			obj.checked = flag;
+	}
+}
+
+var checkAllClick = false;
+function checkAllMods() {
+	checkAllClick = !checkAllClick;
+	var obj = document.mod_list.mod;
+	checkAll(obj, checkAllClick);
+	return true;
+}
+
+function uncheck(obj) {
+	if (checkAllClick && !obj.checked)
+	{
+		checkAllClick = false;
+		document.mod_list.check_all.checked = false;
+	}
+}
+
+function sortBy(by) {
+	document.mod_list.sort.value = by;
+	document.mod_list.action = "var_ptms_list";
+	document.mod_list.method = "get";
+	document.mod_list.submit();
+}
+
+function doSubmit() {
+	document.mod_list.action = "var_ptms_list";
+	document.mod_list.method = "post";
+	document.mod_list.submit();
+}
+
+//졸프 따로 추가한 코드
+function openUnimod(button) {
+    var varParam = button.getAttribute("data-var");
+    var engineParam = button.getAttribute("data-engine");
+    window.open('unimod_ptms_list?var=' + varParam + '&engine=' + engineParam, '', 'resizable=1, width=900, height=600, scrollbars=yes');
+}
+
+function openUserList(button) {
+    var varParam = button.getAttribute("data-var");
+    var engineParam = button.getAttribute("data-engine");
+    window.open('user_ptms_list?var=' + varParam + '&engine=' + engineParam, '', 'resizable=0, width=800, height=600, scrollbars=yes');
+}
+</script>
+</head>
+
+<!--ㅈㅍㅈㅅ 이건 일단 보류. 원래 prix 홈페이지에서도 작동안하는듯
+	<body A <% if (id == null) out.print("onload='opener.location = \"../login.jsp?url=modplus/search.jsp\"; window.close();'"); else if (reloadParent) out.print("onload='opener.location.href = opener.document.URL;'"); %>> -->
+<body>
+<form name="mod_list" method="get" action="javascript:doSubmit();">
+	<input type="hidden" name="sort" th:value="${sortBy}"/>
+	<input type="hidden" name="var" th:value="${var}"/>
+	<input type="hidden" name="engine" th:value="${engine}"/>
+<table border="0" cellspacing="0" cellpadding="0" id="TitTable">
+	<tr>
+    <td style="padding-left:15px;">
+        <span class="blueB" th:text="${engine == '1' ? 'dbond' : 'modplus'}"></span>
+        <font size="3">ms/ms search</font> _
+        <span th:text="${var == '1' ? 'Variable' : 'Fixed'}"></span>
+        modification list
+        <span th:if="${engine == '1' and var == '1'}">
+            ( <font color="red">DBond allows up to 20 variable modifications to be specified.</font> )
+        </span>
+    </td>
+</tr>
+</table>
+<table cellpadding="1" width="95%" align="center" border="0">
+  <tbody>
+    <tr>
+
+			<!-- id 따라 달라지는 추가 버튼 -->
+			<td>
+				<input
+						name="button23322"
+						type="button"
+						data-var="${var}"
+						data-engine="${engine}"
+						value="Add from Unimod"
+						onclick="openUnimod(this)"
+				/>
+				
+				<input
+						name="button2123"
+						type="button"
+						th:if="${id != null and id != 4}"
+						data-var="${var}"
+						data-engine="${engine}"
+						value="Add from User list"
+						onclick="openUserList(this)"
+				/>
+			</td>
+		
+          <input type="submit" value=" Remove from search list " />
+      <td><div align="right">
+        <input name="button3322" type="button" onClick="window.close()" value=" Close " />
+      </div></td>
+    </tr>
+  </tbody>
+</table>
+<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
+    <tr>
+      <td class="grayTH"><div align="center">
+		<input name="check_all" type="checkbox" class="CHECK" onclick="checkAllMods();" />
+	  </div></td>      
+      <td class="grayTH" ><div align="left">
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+
+						<td rowspan="2" style="padding-right:10px">
+							Name
+							<span th:if="${sortBy == 'name asc'}">&uarr;</span>
+							<span th:if="${sortBy == 'name desc'}">&darr;</span>
+							<span th:unless="${sortBy == 'name asc' or sortBy == 'name desc'}">&nbsp;</span>
+						</td>
+
+            <td><a href="#" onclick="sortBy('name asc')"><img src="/images/sortup.gif" width="10" height="10" border="0"></a></td>
+          </tr>
+          <tr>
+            <td><a href="#" onclick="sortBy('name desc')"><img src="/images/sortdown_cur.gif" width="10" height="10" border="0"></a></td>
+          </tr>
+        </table>
+      </div></td>
+      <td class="grayTH"><div align="right">
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+
+						<td rowspan="2" style="padding-right:10px">
+							Mass
+							<span th:if="${sortBy == 'mass_diff asc'}">&uarr;</span>
+							<span th:if="${sortBy == 'mass_diff desc'}">&darr;</span>
+							<span th:unless="${sortBy == 'mass_diff asc' or sortBy == 'mass_diff desc'}">&nbsp;</span>
+						</td>
+					
+            <td><a href="#" onclick="sortBy('mass_diff asc')"><img src="/images/sortup.gif" width="10" height="10" border="0"></a></td>
+          </tr>
+          <tr>
+            <td><a href="#" onclick="sortBy('mass_diff desc')"><img src="/images/sortdown_cur.gif" width="10" height="10" border="0"></a></td>
+          </tr>
+        </table>
+      </div></td>
+      <td class="grayTH"><div align="center">
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+
+						<td rowspan="2" style="padding-right:10px">
+							Site
+							<span th:if="${sortBy == 'residue asc'}">&uarr;</span>
+							<span th:if="${sortBy == 'residue desc'}">&darr;</span>
+							<span th:unless="${sortBy == 'residue asc' or sortBy == 'residue desc'}">&nbsp;</span>
+						</td>
+
+            <td><a href="#" onclick="sortBy('residue asc')"><img src="/images/sortup.gif" width="10" height="10"></td>
+          </tr>
+          <tr>
+            <td><a href="#" onclick="sortBy('residue desc')"><img src="/images/sortdown_cur.gif" width="10" height="10"></td>
+          </tr>
+        </table>
+      </div></td>
+      <td class="grayTH"><div align="center">
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+
+						<td rowspan="2" style="padding-right:10px">
+							Position
+							<span th:if="${sortBy == 'position asc'}">&uarr;</span>
+							<span th:if="${sortBy == 'position desc'}">&darr;</span>
+							<span th:unless="${sortBy == 'position asc' or sortBy == 'position desc'}">&nbsp;</span>
+						</td>
+
+            <td><a href="#" onclick="sortBy('position asc')"><img src="/images/sortup.gif" width="10" height="10"></td>
+          </tr>
+          <tr>
+            <td><a href="#" onclick="sortBy('position desc')"><img src="/images/sortdown_cur.gif" width="10" height="10"></td>
+          </tr>
+        </table>
+      </div></td>
+    </tr>
+        <tr th:each="modification : ${listModification}" 
+            onmouseover="this.style.backgroundColor='#f7f7f7'"
+            onmouseout="this.style.backgroundColor='#ffffff'">
+            <td class="grayTD" align="center">
+                <input type="checkbox" class="CHECK" th:value="${modification.id}" onclick="uncheck(this);" />
+            </td>
+            <td class="grayTD" align="left">
+                <span th:text="${modification.name}"></span>
+            </td>
+            <td class="grayTD" align="right">
+                <span th:text="${modification.mass_diff}"></span>
+            </td>
+            <td class="grayTD" align="center">
+                <span th:text="${modification.residue}"></span>
+            </td>
+            <td class="grayTD" align="center">
+                <span th:text="${modification.position}"></span>
+            </td>
+        </tr>
+
+</table>
+</form>
+<br/>
+
+<footer th:replace="~{inc/pop_footer::footer}">
+</body>
+</html>

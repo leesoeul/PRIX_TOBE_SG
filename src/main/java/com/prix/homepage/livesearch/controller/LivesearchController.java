@@ -1,12 +1,14 @@
 package com.prix.homepage.livesearch.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.prix.homepage.livesearch.pojo.UserSettingDto;
 import com.prix.homepage.livesearch.service.UserModificationService;
@@ -100,6 +102,14 @@ public class LivesearchController {
         logger.error("Error deleting UserModification with var0 for ID {}: {}", id, e.getMessage());
       }
     }
+
+    
+    Boolean engine = false;
+    Integer varMods = userModificationService.countModifications(id, engine);
+    if(varMods == null) varMods = 0;
+
+    //Variable Modifications의 표기 숫자 varmods전달
+    model.addAttribute("varMods", varMods);
 
     // id에 해당하는 userSetting전달, 없으면 더미 전달
     model.addAttribute("userSetting", userSettingDto);
