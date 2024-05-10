@@ -78,8 +78,8 @@
 <link href="/css/home.css" rel="stylesheet" type="text/css" />
 </head>
 
-<!-- <body <% if (id == null) out.print("onload='opener.location = \"../login.jsp?url=modplus/search.jsp\"; window.close();'"); /*else if (reloadOpener) out.print("onload=\"opener.location.reload();\"");*/ %>> -->
-  <body>
+<body>
+
 <table border="0" cellspacing="0" cellpadding="0" id="TitTable">
   <tr>
     <td style="padding-left:15px;"><font class="blueB" size="3">ms/ms search </font> _ User enzyme list</td>
@@ -97,8 +97,11 @@
       <td class="grayTH">Cterm Cleave</td>
       <td class="grayTH"><div align="right">Add&nbsp;&nbsp;&nbsp;</div></td>
     </tr>
-<form id="enzyme_add" method="post" action="enzyme_list">
-<input type="hidden" name="action" value="add"/>
+
+		<form id="enzyme_add" th:method="post" th:action="@{/modplus/enzyme_list}">
+
+		<input type="hidden" name="action" value="add"/>
+
     <tr>      
       <td class="grayTD"><input name="enzyme_name" type="text" size=10/>&nbsp;&nbsp;</td>
       <td class="grayTD"><input name="nt_cleave" type="text" size=10/>&nbsp;&nbsp;</td>
@@ -131,39 +134,15 @@
     </tr>;
 </form>
 </table>
-<!-- ㅈㅍㅈㅅ
-  <% 
-    if ( addState == 1 )
-	{
-%>
-	<font class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add : enzyme name is empty.</font>
-<%
-	} 
-	else if ( addState == 5 )
-	{
-%>
-	<font class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add : Character ' | ' cannot also be used in name.</font>
-<%
-	} 
-	else if ( addState == 2 )
-	{
-%>
-	<font class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add : cleave is empty.</font>
-<%  
-	} 
-	else if ( addState == 3 )
-	{
-%>
-	<font class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add : cleave should be the sequence of amino acids.</font>
-<%  
-	}
-	else if ( addState == 4 )
-	{
-%>
-	<font class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add : enzyme name duplication.</font>
-<%   
-	}
-%> -->
+
+<div th:switch="${addState}">
+	<span th:case="1" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add: enzyme name is empty.</span>
+	<span th:case="5" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add: Character ' | ' cannot be used in name.</span>
+	<span th:case="2" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add: cleave is empty.</span>
+	<span th:case="3" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add: cleave should be a sequence of amino acids.</span>
+	<span th:case="4" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add: enzyme name duplication.</span>
+</div>
+
 <br/>
 <br/>
 <table width="95%" border="0" align="center" cellpadding="1">
@@ -178,27 +157,17 @@
       <td class="grayTH"><div align="center">Cterm Cleave</div></td>
       <td class="grayTH"><div align="right">Delete</div></td>
     </tr>
-<!-- ㅈㅍㅈㅅ
-  <%
-	if (id != null && conn != null)
-	{
-		Statement state = conn.createStatement();
-		ResultSet rs = state.executeQuery("select * from px_enzyme where user_id=" + id + ";");
-		while (rs.next())
-		{
-%>
-	<tr>
-		<td class="grayTD"><%=rs.getString(3)%></td>
-		<td class="grayTD" align="center"><%=rs.getString(4)%></td>
-		<td class="grayTD" align="center"><%=rs.getString(5)%></td>
-		<td class="grayTD" align="right"><input type="button" class="btnBlueSmall" value=" del " onclick="document.location = 'enzyme_list.jsp?action=del&id=<%=rs.getInt(1)%>';"/></td>
+
+		<!-- 로그인 이후 제대로 작동하는지 확인 필요 -->
+		<tr th:each="enzyme : ${listEnzyme}">
+			<td class="grayTD" th:text="${enzyme.name}"></td>
+			<td class="grayTD" align="center" th:text="${enzyme.nt_cleave}"></td>
+			<td class="grayTD" align="center" th:text="${enzyme.ct_cleave}"></td>
+			<td class="grayTD" align="right">
+					<input type="button" class="btnBlueSmall" value="del"
+							th:onclick="'document.location = \'enzyme_list?action=del&id=' + ' + ${enzyme.id} + ';'"/>
+			</td>
 	</tr>
-<%
-		}
-		rs.close();
-		state.close();
-	}
-%> -->
 
 </table>
 <br/>
@@ -216,12 +185,6 @@
 	</tr>
   </tbody>
 </table>
-<jsp:include page="/inc/pop_footer.jsp" flush="true" />
+<footer th:replace="~{inc/pop_footer::footer}">
 </body>
 </html>
-
-<!--ㅈㅍㅈㅅ
-  <%
-	if (conn != null)
-		conn.close();
-%> -->

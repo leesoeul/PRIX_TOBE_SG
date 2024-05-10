@@ -119,12 +119,6 @@ public class LivesearchController {
     return "livesearch/modplus";
   }
 
-  /**
-   * /livesearch/modplus에서 enzyme rule 추가 버튼 클릭시 뜨는 창
-   */
-  @GetMapping("/modplus/enzyme_list")
-  public String modplusEnzymeList() {
-    return "livesearch/enzyme_list";
-  }
+
 
 }
