@@ -223,15 +223,15 @@ public class PtmsListController {
 
 
     //user modification에 없는 modification의 list
-    Boolean engineBool = !(engine == "0");
-    List<Modification> listModNotInUserMod = modificationService.selectModListNotInUserMod(id, var, engineBool);
+    Boolean engineBool = engine.equals("1");
+    List<Modification> listMod= modificationService.selectModListNotInUserMod(id, var, engineBool);
 
     model.addAttribute("finished", finished);
     model.addAttribute("id", id);
     model.addAttribute("var", var);
     model.addAttribute("engine", engine);
     model.addAttribute("addState", addState);
-    model.addAttribute("listModNotInUserMod", listModNotInUserMod);
+    model.addAttribute("listMod", listMod);
 
 
     return "livesearch/user_ptms_list";
