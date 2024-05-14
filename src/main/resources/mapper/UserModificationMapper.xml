@@ -30,4 +30,12 @@
     </foreach>
   </delete>
 
+  <insert id="insertWithModIds">
+    INSERT INTO px_user_modification (user_id, mod, var, engine)
+    VALUES
+    <foreach collection="modIds" item="mod" separator=",">
+        (#{userId}, #{mod}, #{var}, #{engine})
+    </foreach>
+</insert>
+
 </mapper>

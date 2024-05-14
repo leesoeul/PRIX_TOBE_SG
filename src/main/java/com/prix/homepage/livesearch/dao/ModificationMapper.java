@@ -12,10 +12,12 @@ import com.prix.homepage.livesearch.pojo.Modification;
 public interface ModificationMapper {
   
   //var_ptms_list에서 사용
-  //"select id, name, mass_diff, residue, position from px_modification 
-  //where id in 
-  //(select mod_id from px_user_modification 
-  // where user_id=" + id + " and variable=" + var + " and engine=" + engine + ")" + ((sortBy == null || sortBy.length() == 0) ? ";" : (" order by " + sortBy + ";"));
   List<Modification> findModListByUserMod(Integer userId, Integer variable, Integer engine, String sortBy);
 
+  void insert(Integer userId, String name, double massDiff, String residue, String position);
+
+  void deleteById(Integer id);
+
+  List<Modification> selectModListNotInUserMod(Integer userId, String var, Boolean engine);
+  
 }

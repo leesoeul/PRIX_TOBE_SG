@@ -1,0 +1,219 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>PRIX - PRoteome InformatiX</title>
+<link href="/css/home.css" rel="stylesheet" type="text/css" />
+<!-- 졸프 원래 있던 자바스크립트 -->
+<script type="text/javascript">
+function checkAll(obj, flag) {
+	if (obj != null)
+	{
+		if (obj.length > 0)
+		{
+			for (i = 0; i < obj.length; i++)
+				obj[i].checked = flag;
+		}
+		else
+			obj.checked = flag;
+	}
+}
+
+var checkAllClick = false;
+function checkAllMods() {
+	checkAllClick = !checkAllClick;
+	var obj = document.mod_list.mod;
+	checkAll(obj, checkAllClick);
+	return true;
+}
+
+function uncheck(obj) {
+	if (checkAllClick && !obj.checked)
+	{
+		checkAllClick = false;
+		document.mod_list.check_all.checked = false;
+	}
+}
+
+function doDelete(id) {
+	document.mod_list.act.value = id;
+	document.mod_list.action = 'user_ptms_list';
+	document.mod_list.submit();
+	return true;
+}
+
+function doSubmit() {
+	var obj = document.mod_list.mod;
+	var filled = false;
+	if (obj != null)
+	{
+		if (obj.length > 0)
+		{
+			for (i = 0; i < obj.length; i++)
+				if (obj[i].checked)
+					filled = true;
+		}
+		else
+		{
+			if (obj.checked)
+				filled = true;
+		}
+	}
+	if (filled)
+	{
+		document.mod_list.action = 'user_ptms_list';
+		document.mod_list.submit();
+	}
+	else
+	{
+		//alert('Please select modifications.');
+	}
+}
+</script>
+</head>
+<!-- ㅈㅍㅈㅅ
+	<body <% if (id == null) out.print("onload='opener.opener.location = \"../login.jsp?url=modplus/search.jsp\"; opener.close(); window.close();'"); else if (finished) out.print("onload='opener.location = \"var_ptms_list.jsp?var=" + var + "&engine=" + engine + "\"; opener.opener.location.reload();'"); %>> -->
+<body>
+<table border="0" cellspacing="0" cellpadding="0" id="TitTable">
+  <tr>
+    <td style="padding-left:15px;"><font class="blueB" size="3">ms/ms search </font> _ User modification list</td>
+  </tr>
+</table>
+<table width="95%" border="0" align="center" cellpadding="1">
+ 	<tr>
+      <td align="left"><font class="blue"><em>Define new modification</em></font></td>
+	</tr>
+</table>
+
+<!-- Define new modification 에서 add용 post -->
+<form method="post" action="user_ptms_list" th:method="post" th:action="@{/modplus/user_ptms_list}">
+
+<input type="hidden" name="act" value="add"/>
+<input type="hidden" name="var" th:value="${var}"/>
+<input type="hidden" name="engine" th:value="${engine}"/>
+<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" id="gray" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
+<tbody>
+      <tr>
+        <td class="grayTH">Name</td>
+		<td><input id="name" name="name" size="60"/></td>
+      </tr>
+      <tr>
+        <td class="grayTH">Mass Difference</td>
+		<td><input id="massDiff" name="mass" /></td>
+      </tr>
+      <tr>
+        <td class="grayTH">Site</td>
+		<td ><select id="residue" name="residue">
+			<option value="N-term">N-term</option>
+			<option value="C-term">C-term</option>
+			<option value="A">A</option>
+			<option value="C">C</option>
+			<option value="D">D</option>
+			<option value="E">E</option>
+			<option value="F">F</option>
+			<option value="G">G</option>
+			<option value="H">H</option>
+			<option value="I">I</option>
+			<option value="K">K</option>
+			<option value="L">L</option>
+			<option value="M">M</option>
+			<option value="N">N</option>
+			<option value="P">P</option>
+			<option value="Q">Q</option>
+			<option value="R">R</option>
+			<option value="S">S</option>
+			<option value="T">T</option>
+			<option value="V">V</option>
+			<option value="W">W</option>
+			<option value="Y">Y</option>
+        </select></td>
+      </tr>    
+
+<tr th:if="${var eq '1'}">
+	<td class="grayTH">Position</td>
+	<td>
+			<select id="position" name="position">
+					<option value="ANYWHERE" selected="selected">ANYWHERE</option>
+					<option value="ANY_N_TERM">ANY_N_TERM</option>
+					<option value="ANY_C_TERM">ANY_C_TERM</option>
+					<option value="PROTEIN_N_TERM">PROTEIN_N_TERM</option>
+					<option value="PROTEIN_C_TERM">PROTEIN_C_TERM</option>
+			</select>
+	</td>
+</tr>
+
+        </select></td>
+      </tr>
+	  <tr>
+	    <td class="grayTH">&nbsp;</td>
+		<td align="right"><input name="btn145" type="submit" class="btnOrgSmall" value=" add " /></td>
+	  </tr>
+    </tbody>
+  </table>
+</form>
+
+<div th:switch="${addState}">
+	<p th:case="1" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add : modification name is empty.</p>
+	<p th:case="5" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add : Character '|' and white space cannot be used in name.</p>
+	<p th:case="2" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add : mass difference is empty.</p>
+	<p th:case="3" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add : mass difference should be real number.</p>
+	<p th:case="4" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add : site is inconsistent with its position.<br>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If site is N-term, its position should be either ANY_N_TERM or PROTEIN_N_TERM.</p>
+</div>
+
+ <br/>
+ <br/>
+
+ <!-- User-defined modification list에 add to search list 용 -->
+<form name="mod_list" method="post" action="javascript:doSubmit();">
+<input type="hidden" name="act" value="submit"/>
+<input type="hidden" name="var" th:value="${var}"/>
+<input type="hidden" name="engine" th:value="${engine}"/>
+<table width="95%" border="0" align="center" cellpadding="1">
+ 	<tr>
+      <td align="left"><font class="blue"><em>User-defined modification list</em></font></td>
+	  <td align="right">
+		  <input name="button222" type="submit" value=" Add to search list " />	  
+		  <input name="button3322" type="button" onClick="window.close()" value=" Close " />
+	  </td>
+	</tr>
+</table>
+<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
+    <tr>
+      <td class="grayTH"><div align="center"><input name="check_all" type="checkbox" class="CHECK" onclick="checkAllMods()" /></div></td>      
+      <td class="grayTH" >Name </div></td>
+      <td class="grayTH"><div align="right">Mass </div></td>
+      <td class="grayTH"><div align="center">Site </div></td>
+      <td class="grayTH"><div align="center">Position </div></td>
+      	  <td class="grayTH"><div align="right">Delete </div></td>
+          </tr>
+						<tr th:each="modItem : ${listMod}" 
+											onmouseover="this.style.backgroundColor='#f7f7f7'"
+											onmouseout="this.style.backgroundColor='#ffffff'">
+								<td class="grayTD">
+										<div align="center">
+												<input name="mod" type="checkbox" class="CHECK" th:value="${modItem.id}" onclick="uncheck(this);" />
+										</div>
+								</td>
+								<td class="grayTD" th:text="${modItem.name != null ? modItem.name : ''}"></td>
+								<td class="grayTD">
+										<div align="right" th:text="${modItem.massDiff != null ? modItem.massDiff : ''}"></div>
+								</td>
+								<td class="grayTD">
+										<div align="center" th:text="${modItem.residue != null ? modItem.residue : ''}"></div>
+								</td>
+								<td class="grayTD">
+										<div align="center" th:text="${modItem.position != null ? modItem.position : ''}"></div>
+								</td>
+								<td align="right" class="grayTD">
+										<input type="button" class="btnBlueSmall" value="del" onclick="doDelete('${modItem.id}');" />
+								</td>
+						</tr>
+
+
+				</tr>
+
+</table>
+</form>
+
+</body>
+</html>

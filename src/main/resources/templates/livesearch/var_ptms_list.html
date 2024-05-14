@@ -3,6 +3,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
 <title>PRIX - PRoteome InformatiX</title>
 <link href="/css/home.css" rel="stylesheet" type="text/css" />
+
+<!-- 졸프 원래 있던 자바스크립트 -->
 <script type="text/javascript">
 function checkAll(obj, flag) {
 	if (obj != null)
@@ -90,18 +92,16 @@ function openUserList(button) {
 				<input
 						name="button23322"
 						type="button"
-						data-var="${var}"
-						data-engine="${engine}"
+            th:attr="data-var=${var}, data-engine=${engine}"
 						value="Add from Unimod"
-						onclick="openUnimod(this)"
+						onclick="openUserList(this)"
 				/>
 				
 				<input
 						name="button2123"
 						type="button"
 						th:if="${id != null and id != 4}"
-						data-var="${var}"
-						data-engine="${engine}"
+            th:attr="data-var=${var}, data-engine=${engine}"
 						value="Add from User list"
 						onclick="openUserList(this)"
 				/>

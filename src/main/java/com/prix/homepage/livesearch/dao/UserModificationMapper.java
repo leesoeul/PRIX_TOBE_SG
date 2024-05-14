@@ -15,4 +15,6 @@ public interface UserModificationMapper {
 
   void deleteByUserIdAndModId(Integer userId, String engine, String[] modIds);
 
+  void insertWithModIds(Integer userId, String[] modIds, String var, String engine);
+
 }

@@ -1,9 +1,5 @@
 package com.prix.homepage.livesearch.service;
 
-import java.util.List;
-
-import com.prix.homepage.livesearch.pojo.Modification;
-
 public interface UserModificationService {
 
   void deleteByUserId(int userId) throws Exception;
@@ -14,5 +10,6 @@ public interface UserModificationService {
 
   void deleteByUserIdAndModId(Integer userId, String engine, String[] modIds) throws Exception;
 
-  List<Modification> findModListByUserMod(Integer userId, Integer variable, Integer engine, String sortBy);
+  void insertWithModIds(Integer userId, String[] modIds, String var, String engine) throws Exception;
+
 }

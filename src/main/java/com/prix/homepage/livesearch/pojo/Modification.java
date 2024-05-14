@@ -15,7 +15,7 @@ public class Modification {
   private Integer id;
 
   @NotNull
-  private Integer user_id;
+  private Integer userId;
 
   @NotNull
   private String name;
@@ -25,9 +25,9 @@ public class Modification {
   private Integer columnClass;
 
   @NotNull
-  private Double mass_diff;
+  private Double massDiff;
 
-  private Double avg_mass_diff;
+  private Double avgMassDiff;
 
   @NotNull
   private String residue;
