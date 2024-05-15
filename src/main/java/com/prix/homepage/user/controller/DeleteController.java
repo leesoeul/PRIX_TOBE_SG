@@ -28,7 +28,7 @@ public class DeleteController {
 
   @GetMapping("/deleteAccount")
   public String gotoDeleteAccountPage() {
-    return "deleteAccount";
+    return "login/deleteAccount";
   }
 
   /**
