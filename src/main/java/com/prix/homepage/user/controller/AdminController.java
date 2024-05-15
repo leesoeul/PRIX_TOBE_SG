@@ -95,6 +95,7 @@ public class AdminController {
             for (ObjectError error : result.getAllErrors()) {
                 logger.warn("reasons for validation failure: " + error.getDefaultMessage());
             }
+            model.addAttribute("loginFailed", true);
             model.addAttribute("accountDto", accountDto);
             return "admin/adlogin";
         }
@@ -105,6 +106,7 @@ public class AdminController {
 
         if (account == null) {
             logger.warn("account does not exist");
+            model.addAttribute("loginFailed", true);
             model.addAttribute("accountDto", accountDto);
             return "admin/adlogin";
         }

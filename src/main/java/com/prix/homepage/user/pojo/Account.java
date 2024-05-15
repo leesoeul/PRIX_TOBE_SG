@@ -24,6 +24,9 @@ public class Account {
   private String password;
 
   private String name;
+  public String getPassword(){
+    return password;
+  }
 
   // @Email
   private String email;

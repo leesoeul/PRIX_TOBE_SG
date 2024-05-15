@@ -86,6 +86,7 @@ public class LoginController {
 
         if (account == null) {
             logger.warn("account does not exist");
+            model.addAttribute("loginFailed", true);
             model.addAttribute("accountDto", accountDto);
             return "login/login";
         }
