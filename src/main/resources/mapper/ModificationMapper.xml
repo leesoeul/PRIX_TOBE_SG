@@ -13,7 +13,7 @@
         AND variable = #{variable}
         AND engine = #{engine}
     )
-    <if test="sortBy != null and sortBy != ''">
+    <if test='sortBy != null and sortBy != ""'>
         ORDER BY ${sortBy}
     </if>
   </select>
@@ -31,7 +31,7 @@
     SELECT id, name, mass_diff, residue, position
     FROM px_modification
     WHERE user_id = #{userId}
-    <if test="var.equals('1')">
+    <if test='var.equals("1")'>
         AND id NOT IN (
             SELECT mod_id FROM px_user_modification WHERE user_id = #{userId} AND engine = #{engine}
         )

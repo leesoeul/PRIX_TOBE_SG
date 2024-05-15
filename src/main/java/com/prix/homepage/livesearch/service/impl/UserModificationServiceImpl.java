@@ -34,7 +34,7 @@ public class UserModificationServiceImpl implements UserModificationService{
   }
 
   @Override
-  public void insertWithModIds(Integer userId, String[] modIds, String var, String engine) throws Exception {
+  public void insertWithModIds(Integer userId, String[] modIds, Boolean var, Boolean engine) throws Exception {
     userModificationMapper.insertWithModIds(userId, modIds, var, engine);
   }
 }

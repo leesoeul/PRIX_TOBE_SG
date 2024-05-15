@@ -36,7 +36,7 @@ function uncheck(obj) {
 
 function doDelete(id) {
 	document.mod_list.act.value = id;
-	document.mod_list.action = 'user_ptms_list';
+		document.mod_list.action = 'user_ptms_list';
 	document.mod_list.submit();
 	return true;
 }
@@ -164,7 +164,7 @@ function doSubmit() {
  <br/>
 
  <!-- User-defined modification list에 add to search list 용 -->
-<form name="mod_list" method="post" action="javascript:doSubmit();">
+<form name="mod_list" method="post"  th:action="@{/modplus/user_ptms_list}" onsubmit="return doSubmit();">
 <input type="hidden" name="act" value="submit"/>
 <input type="hidden" name="var" th:value="${var}"/>
 <input type="hidden" name="engine" th:value="${engine}"/>
@@ -205,7 +205,7 @@ function doSubmit() {
 										<div align="center" th:text="${modItem.position != null ? modItem.position : ''}"></div>
 								</td>
 								<td align="right" class="grayTD">
-										<input type="button" class="btnBlueSmall" value="del" onclick="doDelete('${modItem.id}');" />
+										<input type="button" class="btnBlueSmall" value="del" th:onclick="'doDelete(\'' + ${modItem.id} + '\');'" />
 								</td>
 						</tr>
 

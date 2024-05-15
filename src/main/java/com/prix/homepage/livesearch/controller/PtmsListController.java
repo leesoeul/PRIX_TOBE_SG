@@ -1,6 +1,5 @@
 package com.prix.homepage.livesearch.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +48,7 @@ public class PtmsListController {
     if (sortBy == null)
       sortBy = "";
 
-    boolean reloadParant = false;
+    boolean reloadParant = false;///
     if (id != null) {
       String[] values = request.getParameterValues("mod");
       if (values != null) {
@@ -176,7 +175,6 @@ public class PtmsListController {
             }			
           }
         }
-
         if(addState == 0){
           String position = "ANYWHERE";
           if(paramsMap.get("residue").equals("N-term")){
@@ -204,8 +202,11 @@ public class PtmsListController {
       else if(action.compareTo("submit") == 0)
       {
         String[] modIds = request.getParameterValues("mod");
+        Boolean varBool = var.equals("1");
+        Boolean engineBool = engine.equals("1");
+
         try{
-          userModificationService.insertWithModIds(id, modIds, var, engine);
+          userModificationService.insertWithModIds(id, modIds, varBool, engineBool);
         }catch(Exception e){
           logger.error("Error inserting UserModification : {}", e.getMessage());
         }

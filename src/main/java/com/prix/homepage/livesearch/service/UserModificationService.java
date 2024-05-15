@@ -10,6 +10,6 @@ public interface UserModificationService {
 
   void deleteByUserIdAndModId(Integer userId, String engine, String[] modIds) throws Exception;
 
-  void insertWithModIds(Integer userId, String[] modIds, String var, String engine) throws Exception;
+  void insertWithModIds(Integer userId, String[] modIds, Boolean var, Boolean engine) throws Exception;
 
 }
