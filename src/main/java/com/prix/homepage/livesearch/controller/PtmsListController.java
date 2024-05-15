@@ -47,13 +47,16 @@ public class PtmsListController {
     String sortBy = paramsMap.get("sort");
     if (sortBy == null)
       sortBy = "";
+    Boolean varBool = var.equals("1");
+    Boolean engineBool = engine.equals("1");
 
-    boolean reloadParant = false;///
+    boolean reloadParant = false;
     if (id != null) {
       String[] values = request.getParameterValues("mod");
       if (values != null) {
         try {
           userModificationService.deleteByUserIdAndModId(id, engine, values);
+          logger.info("delete done in var_ptms_list");
         } catch (Exception e) {
           logger.error("Error deleting UserModification with mod_id for ID {} : {}", id, e.getMessage());
         }
@@ -61,9 +64,16 @@ public class PtmsListController {
       }
     }//여기까지 일단 jsp 초기 
 
-    //id에 해당하는 usermodification을 바탕으로 modification 정보를 list로 받아냄(일단 userModificationService에 구현): var_ptms_list 170줄 주변
-    List<Modification> listModification = modificationService.findModListByUserMod(id, anony, id, sortBy);
 
+
+    //id에 해당하는 usermodification을 바탕으로 modification 정보를 list로 받아냄
+    List<Modification> listModification = modificationService.findModListByUserMod(id, varBool, engineBool, sortBy);
+    // logger.info("List of Modifications:");
+    // for (Modification modification : listModification) {
+    //     logger.info("Modification ID: {}", modification.getId());
+    // }
+
+    model.addAttribute("reloadParent", reloadParant);
     model.addAttribute("id", id);
     model.addAttribute("sortBy", sortBy);
     model.addAttribute("var", var);
@@ -299,8 +309,8 @@ public class PtmsListController {
     logger.info("id: {}, var: {}, engineBit: {}, filter: {}, sortBy: {}", id, var, engineBit, filter, sortBy);
 
     List<Modification> listModJoinClass= modificationService.selectModJoinClass(id, var, engineBit, filter, sortBy);
-    logger.info("listModJoinClass: {}", listModJoinClass);
 
+    model.addAttribute("finished", finished);//var_ptms_list 업데이트 용도
     model.addAttribute("id", id);
     model.addAttribute("var", var);
     model.addAttribute("engine", engine);
@@ -342,13 +352,6 @@ public class PtmsListController {
     int max = 0;
     boolean finished = false;
     String[] modIds = request.getParameterValues("mod");
-    if (modIds != null) {
-      StringBuilder modValues = new StringBuilder();
-      for (String modId : modIds) {
-          modValues.append(modId).append(", ");
-      }
-      logger.info("dd modvalues: {}", modValues.toString());
-  }
 
     if(id != null)
     {
@@ -359,6 +362,7 @@ public class PtmsListController {
             Boolean varBool = var.equals("1");
             Boolean engineBool = engine.equals("1");
               userModificationService.insertWithModIds(id, modIds,varBool , engineBool);
+              logger.info("insert done");
               finished = true;
           } catch (Exception e) {
             logger.error("Error insert Modification : {}", e.getMessage());
@@ -373,11 +377,9 @@ public class PtmsListController {
 
     Integer engineBit = Integer.parseInt(engine);
 
-    logger.info("id: {}, var: {}, engineBit: {}, filter: {}, sortBy: {}", id, var, engineBit, filter, sortBy);
-
     List<Modification> listModJoinClass= modificationService.selectModJoinClass(id, var, engineBit, filter, sortBy);
-    logger.info("listModJoinClass: {}", listModJoinClass);
 
+    model.addAttribute("finished", finished);//var_ptms_list 업데이트 용도
     model.addAttribute("id", id);
     model.addAttribute("var", var);
     model.addAttribute("engine", engine);

@@ -61,11 +61,33 @@ function openUserList(button) {
     window.open('user_ptms_list?var=' + varParam + '&engine=' + engineParam, '', 'resizable=0, width=800, height=600, scrollbars=yes');
 }
 </script>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  function handlePageLoad() {
+      var id = /*[[${id}]]*/ null;
+      var finished = /*[[${finished}]]*/ false;
+      var varValue = /*[[${var}]]*/ null;
+      var engineValue = /*[[${engine}]]*/ null;
+      var reloadParent = /*[[${reloadParent}]]*/ false;
+      
+      if (id == null) {
+          opener.opener.location = '../login?url=modi/search';
+          opener.close();
+          window.close();
+      } else if (finished) {
+          opener.location = 'var_ptms_list?var=' + varValue + '&engine=' + engineValue;
+          if (reloadParent) {
+              opener.opener.location.href = opener.opener.document.URL;
+          }
+      }
+  }
+  /*]]>*/
+</script>
 </head>
 
-<!--ㅈㅍㅈㅅ 이건 일단 보류. 원래 prix 홈페이지에서도 작동안하는듯
-	<body A <% if (id == null) out.print("onload='opener.location = \"../login.jsp?url=modplus/search.jsp\"; window.close();'"); else if (reloadParent) out.print("onload='opener.location.href = opener.document.URL;'"); %>> -->
-<body>
+<!--ㅈㅍㅈㅅ 
+	<body A <% if (id == null) out.print("onload='opener.location = \"../login?url=modplus/search\"; window.close();'"); else if (reloadParent) out.print("onload='opener.location.href = opener.document.URL;'"); %>> -->
+<body onload="handlePageLoad()">
 <form name="mod_list" method="get" action="javascript:doSubmit();">
 	<input type="hidden" name="sort" th:value="${sortBy}"/>
 	<input type="hidden" name="var" th:value="${var}"/>
@@ -202,7 +224,7 @@ function openUserList(button) {
                 <span th:text="${modification.name}"></span>
             </td>
             <td class="grayTD" align="right">
-                <span th:text="${modification.mass_diff}"></span>
+                <span th:text="${modification.massDiff}"></span>
             </td>
             <td class="grayTD" align="center">
                 <span th:text="${modification.residue}"></span>

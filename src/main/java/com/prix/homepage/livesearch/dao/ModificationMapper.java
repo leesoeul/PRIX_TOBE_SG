@@ -12,7 +12,7 @@ import com.prix.homepage.livesearch.pojo.Modification;
 public interface ModificationMapper {
   
   //var_ptms_list에서 사용
-  List<Modification> findModListByUserMod(Integer userId, Integer variable, Integer engine, String sortBy);
+  List<Modification> findModListByUserMod(Integer userId, Boolean variable, Boolean engine, String sortBy);
 
   void insert(Integer userId, String name, double massDiff, String residue, String position);
 

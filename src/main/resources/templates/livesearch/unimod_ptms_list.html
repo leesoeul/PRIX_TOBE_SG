@@ -148,11 +148,36 @@ function showFiltered() {
 	}
 }
 </script>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  function handlePageLoad() {
+      let id = /*[[${id}]]*/ null;
+      let finished = /*[[${finished}]]*/ false;
+      let varValue = /*[[${var}]]*/ null;
+      let engineValue = /*[[${engine}]]*/ null;
+
+      if (id == null) {
+          opener.opener.location = '../login?url=modi/search';
+          opener.close();
+          window.close();
+      } else if (finished) {
+          //modplus/var_ptms_list 새로고침
+          opener.location = 'var_ptms_list?var=' + varValue + '&engine=' + engineValue;
+          // (/modplus/search, 함수는 var_ptms.html)부모부모 window의 loadVarNods함수를 호출해서 카운트를 갱신한다.
+          window.opener.opener.loadVarMods(id, engineValue);
+
+          //원래 있던 코드지만 타임리프에서 부모부모창 modplus/search마저 불필요하게 새로고침 되서
+          // modification 카운트만 변경시키고자 함
+          // opener.opener.location.href = opener.opener.document.URL; 
+      }
+  }
+  /*]]>*/
+</script>
 </head>
 
-<!-- ㅈㅍㅈㅅ
-  <body <% if (id == null) out.print("onload='opener.opener.location = \"../login.jsp?url=modi/search.jsp\"; opener.close(); window.close();'"); else if (finished) out.print("onload='opener.location = \"var_ptms_list.jsp?var=" + var + "&engine=" + engine + "\"; opener.opener.location.href = opener.opener.document.URL;'"); %>> -->
-<body>
+<body onload="handlePageLoad()">
+  <!-- <body> -->
+
 <form name="mod_list" method="post" th:action="@{/modplus/unimod_ptms_list}">
 
   <input type="hidden" name="sort" th:value="${sortBy}"/>
@@ -328,7 +353,7 @@ function showFiltered() {
         <br>
       </div></td>
       <td width="57%"><div align="right">
-        <input name="button22322" type="button" th:action="@{/modplus/unimod_ptms_list}" onClick="doSave()" value=" Add to search list" />
+        <input name="button22322" type="button"  onClick="doSave()" value=" Add to search list" />
         <input name="button3324" type="button" onClick="window.close()" value=" Close " />
       </div></td>
     </tr>

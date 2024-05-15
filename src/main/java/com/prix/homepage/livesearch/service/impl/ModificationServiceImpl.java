@@ -17,7 +17,7 @@ public class ModificationServiceImpl implements ModificationService {
   private final ModificationMapper modificationMapper;
 
   @Override
-  public List<Modification> findModListByUserMod(Integer userId, Integer variable, Integer engine, String sortBy) {
+  public List<Modification> findModListByUserMod(Integer userId, Boolean variable, Boolean engine, String sortBy) {
     return modificationMapper.findModListByUserMod(userId, variable, engine, sortBy);
   }
 

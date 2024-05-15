@@ -83,19 +83,24 @@ public class LivesearchController {
         .build();
 
     // id와 일치하는 usersetting을 가져오거나 reuqest param에 따라 delete usermodification 수행
-    if (id.compareTo(anony) != 0) {
+    if (id.compareTo(anony) != 0) 
+    {
       userSettingDto = userSettingService.getUsersettingById(id);
-    } else if (request.getParameter("entry") == null) {
+    } 
+    else if (request.getParameter("entry") == null) 
+    {
       try {
         // delete modification data for the anonymous user
-        userModificationService.deleteByUserId(id);
+        userModificationService.deleteByUserId(anony);
+        logger.info("delete done in modplus search by anony");
       } catch (Exception e) {
-        logger.error("Error deleting UserModification for ID {}: {}", id, e.getMessage());
+        logger.error("Error deleting UserModification for ID {}: {}", anony, e.getMessage());
       }
     } else if (request.getParameter("act") != null) {
       String re_id = request.getParameter("act");
       try {
         userModificationService.deleteByUserIdVar0(re_id);
+        logger.info("delete done in modplus search");
       } catch (Exception e) {
         logger.error("Error deleting UserModification with var0 for ID {}: {}", id, e.getMessage());
       }

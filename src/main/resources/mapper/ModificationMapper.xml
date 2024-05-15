@@ -26,7 +26,7 @@
         AND engine = #{engine}
     )
     <if test='sortBy != null and sortBy != ""'>
-        ORDER BY ${sortBy}
+        ORDER BY #{sortBy}
     </if>
   </select>
 
@@ -54,7 +54,7 @@
     SELECT c.class, m.id, m.name, m.mass_diff, m.residue, m.position
     FROM px_modification m
     JOIN px_classification c ON c.id = m.class
-    WHERE m.user_id = #{userId}
+    WHERE m.user_id = 0
     <if test='var.equals("1")'>
         <if test='engine == 0'>
             AND (position = 'ANYWHERE'
