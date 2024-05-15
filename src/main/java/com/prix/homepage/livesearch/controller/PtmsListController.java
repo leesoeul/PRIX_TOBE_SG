@@ -259,7 +259,7 @@ public class PtmsListController {
     private String[] modValues;
   }
 
-    /**
+  /**
    *  var_ptms_list 팝업창에서 Add form Unimod 클릭시 뜨는 팝업창
    * @param paramsMap var, engine, act request parameter
    * @param request 세션 접근 용도
@@ -289,22 +289,6 @@ public class PtmsListController {
     int max = 0;
     boolean finished = false;
     String[] modValues = request.getParameterValues("mod");
-    if(id != null)
-    {
-      if(request.getParameter("submit") != null && modValues != null)
-      {
-        if (modValues != null && modValues.length > 0) {
-          try {
-            Boolean varBool = var.equals("1");
-            Boolean engineBool = engine.equals("1");
-              userModificationService.insertWithModIds(id, modValues,varBool , engineBool);
-              finished = true;
-          } catch (Exception e) {
-            logger.error("Error insert Modification : {}", e.getMessage());
-          }
-        }
-      }
-    }
 
     if(sortBy == null) sortBy = "name asc";
 
@@ -321,6 +305,84 @@ public class PtmsListController {
     model.addAttribute("var", var);
     model.addAttribute("engine", engine);
     model.addAttribute("sortBy", sortBy);
+    model.addAttribute("filter", filter);
+    model.addAttribute("modFinder", modFinder);
+    model.addAttribute("listModJoinClass", listModJoinClass);
+
+    return "livesearch/unimod_ptms_list";
+  }
+
+  /**
+   *  var_ptms_list 팝업창에서 Add form Unimod 클릭시 뜨는 팝업창
+   * @param paramsMap var, engine, act request parameter
+   * @param request 세션 접근 용도
+   */
+  @PostMapping("/modplus/unimod_ptms_list")
+  public String postUnimodPtmsListPopUp(Model model, @RequestParam Map<String, String> paramsMap,
+      HttpServletRequest request) {
+
+    // 세션에서 id 확인. request param도 확인
+    HttpSession session = request.getSession();
+    Integer id = (Integer) session.getAttribute("id");
+    String var = paramsMap.get("var");
+    if (var == null)
+      var = "1";
+    String engine = paramsMap.get("engine");
+    if (engine == null)
+      engine = "0";
+    String topClass = paramsMap.get("top");
+    int top = 1;
+    if(topClass != null)
+      top = Integer.parseInt(topClass);
+    String sortBy = paramsMap.get("sort");
+    String filter = paramsMap.get("filter");
+    if(filter == null)
+      filter = "default";
+    
+    int max = 0;
+    boolean finished = false;
+    String[] modIds = request.getParameterValues("mod");
+    if (modIds != null) {
+      StringBuilder modValues = new StringBuilder();
+      for (String modId : modIds) {
+          modValues.append(modId).append(", ");
+      }
+      logger.info("dd modvalues: {}", modValues.toString());
+  }
+
+    if(id != null)
+    {
+      if(request.getParameter("submit") != null && modIds != null)
+      {
+        if (modIds != null && modIds.length > 0) {
+          try {
+            Boolean varBool = var.equals("1");
+            Boolean engineBool = engine.equals("1");
+              userModificationService.insertWithModIds(id, modIds,varBool , engineBool);
+              finished = true;
+          } catch (Exception e) {
+            logger.error("Error insert Modification : {}", e.getMessage());
+          }
+        }
+      }
+    }
+
+    if(sortBy == null) sortBy = "name asc";
+
+    ModFinder modFinder = new ModFinder(modIds);
+
+    Integer engineBit = Integer.parseInt(engine);
+
+    logger.info("id: {}, var: {}, engineBit: {}, filter: {}, sortBy: {}", id, var, engineBit, filter, sortBy);
+
+    List<Modification> listModJoinClass= modificationService.selectModJoinClass(id, var, engineBit, filter, sortBy);
+    logger.info("listModJoinClass: {}", listModJoinClass);
+
+    model.addAttribute("id", id);
+    model.addAttribute("var", var);
+    model.addAttribute("engine", engine);
+    model.addAttribute("sortBy", sortBy);
+    model.addAttribute("filter", filter);
     model.addAttribute("modFinder", modFinder);
     model.addAttribute("listModJoinClass", listModJoinClass);
 

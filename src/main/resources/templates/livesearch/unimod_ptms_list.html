@@ -133,12 +133,13 @@ function doSave() {
 	}
 	if (filled)
 	{
-		document.mod_list.action = "unimod_ptms_list.jsp?submit=true";
+		document.mod_list.action = "unimod_ptms_list?submit=true";
 		document.mod_list.submit();
 	}
 }
 
-// ㅈㅍㅈㅅ var currentFilter = <%=(filter.compareTo("default") == 0) ? 0 : 1%>;
+let currentFilter = "[[${filter == 'default' ? 0 : 1}]]";
+
 function showFiltered() {
 	if (!document.mod_list.filter[currentFilter].checked)
 	{
@@ -295,7 +296,7 @@ function showFiltered() {
                 <tr id="list_${modification.id}" onmouseover="this.style.backgroundColor='#f7f7f7'" onmouseout="this.style.backgroundColor='#ffffff'">
                     <td class="grayTD">
                         <div align="center">
-                            <input name="mod" value="${modification.id}" type="checkbox" class="CHECK" th:checked="${modFinder.findMod(modification.id.toString())}" onclick="uncheckTop(this);"/>
+                            <input name="mod" th:value="${modification.id}" type="checkbox" class="CHECK" th:checked="${modFinder.findMod(modification.id.toString())}" onclick="uncheckTop(this);"/>
                         </div>
                     </td>
                     <td class="grayTD">
@@ -327,7 +328,7 @@ function showFiltered() {
         <br>
       </div></td>
       <td width="57%"><div align="right">
-        <input name="button22322" type="button" onClick="doSave()" value=" Add to search list" />
+        <input name="button22322" type="button" th:action="@{/modplus/unimod_ptms_list}" onClick="doSave()" value=" Add to search list" />
         <input name="button3324" type="button" onClick="window.close()" value=" Close " />
       </div></td>
     </tr>
