@@ -12,4 +12,6 @@ public interface ModificationService {
   void deleteById(Integer id) throws Exception;
 
   List<Modification> selectModListNotInUserMod(Integer userId, String var, Boolean engine);
+
+  List<Modification> selectModJoinClass(Integer userId, String var, Integer engine, String filter, String sortBy);
 }

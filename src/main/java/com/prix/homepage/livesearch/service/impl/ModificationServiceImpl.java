@@ -35,6 +35,12 @@ public class ModificationServiceImpl implements ModificationService {
   public List<Modification> selectModListNotInUserMod(Integer userId, String var, Boolean engine) {
     return modificationMapper.selectModListNotInUserMod(userId, var, engine);
   }
+
+  @Override
+  public List<Modification> selectModJoinClass(Integer userId, String var, Integer engine, String filter,
+      String sortBy) {
+      return modificationMapper.selectModJoinClass(userId, var, engine, filter, sortBy);
+  }
   
   
 }

@@ -1,0 +1,341 @@
+<!-- ㅈㅍㅈㅅ
+<%
+	String id = (String)session.getAttribute("id");
+	String var = request.getParameter("var");
+	if (var == null)
+		var = "1";
+	String engine = request.getParameter("engine");
+	if (engine == null)
+		engine = "0";
+	String topClass = request.getParameter("top");
+	int top = 1;
+	if (topClass != null)
+		top = Integer.parseInt(topClass);
+	String sortBy = request.getParameter("sort");
+	String filter = request.getParameter("filter");
+	if (filter == null)
+		filter = "default";
+	
+	Context initContext = new InitialContext();
+	Context envContext = (Context)initContext.lookup("java:/comp/env");
+	DataSource ds = (DataSource)envContext.lookup("jdbc/PrixDB");
+	Connection conn = ds.getConnection();
+	
+	int max = 0;
+	boolean finished = false;
+	String[] modValues = request.getParameterValues("mod");
+	Statement state = null;
+	if (id != null && conn != null)
+	{
+		state = conn.createStatement();
+		if (request.getParameter("submit") != null && modValues != null)
+		{
+			String sql = "insert into px_user_modification values ";
+			int length = sql.length();
+			boolean first = true;
+			for (int j = 0; j < modValues.length; j++)
+			{
+				if (!first)
+					sql += ", ";
+				else
+					first = false;
+				sql += "(" + id + ", " + modValues[j] + ", " + var + ", " + engine + ")";
+			}
+			if (length != sql.length())
+			{
+				conn.setAutoCommit(false);
+				PreparedStatement ps = conn.prepareStatement(sql + ";");
+				ps.executeUpdate();
+				ps.close();
+				conn.commit();
+				finished = true;
+			}
+		}
+	}
+
+	if (sortBy == null)
+		sortBy = "name asc";
+
+class ModFinder {
+	public ModFinder(String[] values)
+	{
+		modValues = values;
+	}
+	public boolean findMod(String mod)
+	{
+		if (modValues == null)
+			return false;
+		for (int i = 0; i < modValues.length; i++)
+			if (mod.compareTo(modValues[i]) == 0)
+				return true;
+		return false;
+	}
+	private String[] modValues;
+}
+	ModFinder modFinder = new ModFinder(modValues);
+%> -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+<title>PRIX - PRoteome InformatiX</title>
+<link href="/css/home.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+function checkAll(obj, flag) {
+	if (obj != null)
+	{
+		if (obj.length > 0)
+		{
+			for (i = 0; i < obj.length; i++)
+				obj[i].checked = flag;
+		}
+		else
+			obj.checked = flag;
+	}
+}
+
+var checkAllClickClasses = false;
+function checkAllClasses() {
+	checkAllClickClasses = !checkAllClickClasses;
+	checkAll(document.mod_list.mod, checkAllClickClasses);
+	return true;
+}
+function uncheckTop(obj) {
+	if (checkAllClickClasses && !obj.checked)
+	{
+		checkAllClickClasses = false;
+		document.mod_list.check_all.checked = false;
+	}
+}
+
+function sortBy(by) {
+	document.mod_list.sort.value = by;
+	//document.mod_list.action = "unimod_ptms_list.jsp?sort=" + by;
+	document.mod_list.submit();
+}
+
+function doSave() {
+	var obj = document.mod_list.mod;
+	var filled = false;
+	if (obj != null)
+	{
+		if (obj.length > 0)
+		{
+			for (i = 0; i < obj.length; i++)
+				if (obj[i].checked)
+					filled = true;
+		}
+		else
+		{
+			if (obj.checked)
+				filled = true;
+		}
+	}
+	if (filled)
+	{
+		document.mod_list.action = "unimod_ptms_list.jsp?submit=true";
+		document.mod_list.submit();
+	}
+}
+
+// ㅈㅍㅈㅅ var currentFilter = <%=(filter.compareTo("default") == 0) ? 0 : 1%>;
+function showFiltered() {
+	if (!document.mod_list.filter[currentFilter].checked)
+	{
+		currentFilter = ~currentFilter;
+		document.mod_list.submit();
+	}
+}
+</script>
+</head>
+
+<!-- ㅈㅍㅈㅅ
+  <body <% if (id == null) out.print("onload='opener.opener.location = \"../login.jsp?url=modi/search.jsp\"; opener.close(); window.close();'"); else if (finished) out.print("onload='opener.location = \"var_ptms_list.jsp?var=" + var + "&engine=" + engine + "\"; opener.opener.location.href = opener.opener.document.URL;'"); %>> -->
+<body>
+<form name="mod_list" method="post" th:action="@{/modplus/unimod_ptms_list}">
+
+  <input type="hidden" name="sort" th:value="${sortBy}"/>
+  <input type="hidden" name="var" th:value="${var}"/>
+  <input type="hidden" name="engine" th:value="${engine}"/>
+
+<table border="0" cellspacing="0" cellpadding="0" id="TitTable">
+  <tr>
+    <td style="padding-left:15px;"><font class="blueB" size="3">ms/ms search </font> _ Unimod modification list</td>
+  </tr>
+</table>
+
+<table cellpadding="1" width="95%" align="center" border="0">
+  <tbody>
+    <tr>
+      <td width="43%"><div align="left">
+          Show &nbsp; <input name="filter" value="default" type="radio" class="CHECK" th:checked="${filter == 'default'}" onclick="showFiltered()"/>
+          default &nbsp; <input name="filter" value="all" type="radio" class="CHECK" th:checked="${filter == 'all'}" onclick="showFiltered()"/>
+          all &nbsp; modification list<br>
+      </div></td>
+      <td width="57%"><div align="right">
+        <input name="button222" type="button" onClick="doSave()" value=" Add to search list" />
+        <input name="button3" type="button" onClick="window.close()" value=" Close " />
+      </div></td>
+    </tr>
+  </tbody>
+</table>
+
+<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
+  <!--tbody-->
+    <tr>
+      <td class="grayTH"><div align="center">
+
+      <th:block th:if="${engine eq '0'}">
+        <input name="check_all" type="checkbox" class="CHECK" onclick="checkAllClasses();"/>
+      </th:block>
+      <th:block th:unless="${engine eq '0'}">
+        &nbsp;
+      </th:block>
+      
+	  </div></td>      
+      <td class="grayTH"><div align="left">
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            
+            <td rowspan="2" style="padding-right:10px">Name
+              <span th:switch="${sortBy}">
+                  <span th:case="'name asc'">&uarr;</span>
+                  <span th:case="'name desc'">&darr;</span>
+                  <span th:case="*">&nbsp;</span>
+              </span>
+            </td>
+            
+            <td><a href="#" onclick="sortBy('name asc')"><img src="/images/sortup.gif" width="10" height="10" border="0"></a></td>
+          </tr>
+          <tr>
+            <td><a href="#" onclick="sortBy('name desc')"><img src="/images/sortdown_cur.gif" width="10" height="10" border="0"></a></td>
+          </tr>
+        </table>
+      </div></td>
+      <td class="grayTH"><div align="left">
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+
+            <td rowspan="2" style="padding-right:10px">Classification
+              <span th:switch="${sortBy}">
+                  <span th:case="'class asc'">&uarr;</span>
+                  <span th:case="'class desc'">&darr;</span>
+                  <span th:case="*">&nbsp;</span>
+              </span>
+            </td>
+
+            <td><a href="#" onclick="sortBy('class asc')"><img src="/images/sortup.gif" width="10" height="10" border="0"></a></td>
+          </tr>
+          <tr>
+            <td><a href="#" onclick="sortBy('class desc')"><img src="/images/sortdown_cur.gif" width="10" height="10" border="0"></a></td>
+          </tr>
+        </table>
+      </div></td>
+      <td class="grayTH"><div align="right">
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+
+            <td rowspan="2" style="padding-right:10px">Mass
+                <span th:switch="${sortBy}">
+                    <span th:case="'mass_diff asc'">&uarr;</span>
+                    <span th:case="'mass_diff desc'">&darr;</span>
+                    <span th:case="*">&nbsp;</span>
+                </span>
+            </td>
+
+            <td><a href="#" onclick="sortBy('mass_diff asc')"><img src="/images/sortup.gif" width="10" height="10" border="0"></a></td>
+          </tr>
+          <tr>
+            <td><a href="#" onclick="sortBy('mass_diff desc')"><img src="/images/sortdown_cur.gif" width="10" height="10" border="0"></a></td>
+          </tr>
+        </table>
+      </div></td>
+      <td class="grayTH"><div align="center">
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+
+            <td rowspan="2" style="padding-right:10px">Site
+              <span th:switch="${sortBy}">
+                  <span th:case="'residue asc'">&uarr;</span>
+                  <span th:case="'residue desc'">&darr;</span>
+                  <span th:case="*">&nbsp;</span>
+              </span>
+            </td>
+
+            <td><a href="#" onclick="sortBy('residue asc')"><img src="/images/sortup.gif" width="10" height="10"></a></td>
+          </tr>
+          <tr>
+            <td><a href="#" onclick="sortBy('residue desc')"><img src="/images/sortdown_cur.gif" width="10" height="10"></a></td>
+          </tr>
+        </table>
+      </div></td>
+      <td class="grayTH"><div align="center">
+        <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+
+          <td rowspan="2" style="padding-right:10px">Position
+              <span th:switch="${sortBy}">
+                  <span th:case="'position asc'">&uarr;</span>
+                  <span th:case="'position desc'">&darr;</span>
+                  <span th:case="*">&nbsp;</span>
+              </span>
+          </td>
+
+            <td><a href="#" onclick="sortBy('position asc')"><img src="/images/sortup.gif" width="10" height="10"></a></td>
+          </tr>
+          <tr>
+            <td><a href="#" onclick="sortBy('position desc')"><img src="/images/sortdown_cur.gif" width="10" height="10"></a></td>
+          </tr>
+        </table>
+      </div></td>
+    </tr>
+
+<th:block th:if="${listModJoinClass != null and listModJoinClass.size() > 0}">
+            <th:block th:each="modification : ${listModJoinClass}">
+                <tr id="list_${modification.id}" onmouseover="this.style.backgroundColor='#f7f7f7'" onmouseout="this.style.backgroundColor='#ffffff'">
+                    <td class="grayTD">
+                        <div align="center">
+                            <input name="mod" value="${modification.id}" type="checkbox" class="CHECK" th:checked="${modFinder.findMod(modification.id.toString())}" onclick="uncheckTop(this);"/>
+                        </div>
+                    </td>
+                    <td class="grayTD">
+                        <div align="left" th:text="${modification.name}"></div>
+                    </td>
+                    <td class="grayTD">
+                        <div align="left" th:text="${modification.columnClass}"></div>
+                    </td>
+                    <td class="grayTD">
+                        <div align="right" th:text="${modification.massDiff}"></div>
+                    </td>
+                    <td class="grayTD">
+                        <div align="center" th:text="${modification.residue}"></div>
+                    </td>
+                    <td class="grayTD">
+                        <div align="center" th:text="${modification.position}"></div>
+                    </td>
+                </tr>
+            </th:block>
+</th:block>
+
+
+  <!--/tbody-->
+</table>
+<table cellpadding="1" width="95%" align="center" border="0">
+  <tbody>
+    <tr>
+      <td width="43%"><div align="left">
+        <br>
+      </div></td>
+      <td width="57%"><div align="right">
+        <input name="button22322" type="button" onClick="doSave()" value=" Add to search list" />
+        <input name="button3324" type="button" onClick="window.close()" value=" Close " />
+      </div></td>
+    </tr>
+  </tbody>
+</table>
+</form>
+<br/>
+
+<footer th:replace="~{inc/pop_footer::footer}">
+</body>
+</html>
