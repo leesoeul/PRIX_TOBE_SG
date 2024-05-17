@@ -63,7 +63,7 @@ public class LivesearchController {
     }
 
     // id에 해당하는 usersetting이 존재하지 않을시 보낼 dummy
-    UserSettingDto userSettingDto = UserSettingDto.builder()
+    UserSettingDto dummyUserSettingDto = UserSettingDto.builder()
         .version("1.0.1")
         .enzyme(null)
         .missedCleavage(null)
@@ -83,9 +83,13 @@ public class LivesearchController {
         .build();
 
     // id와 일치하는 usersetting을 가져오거나 reuqest param에 따라 delete usermodification 수행
+    UserSettingDto userSettingDto = dummyUserSettingDto;
     if (id.compareTo(anony) != 0) 
     {
       userSettingDto = userSettingService.getUsersettingById(id);
+      if (userSettingDto == null) {
+          userSettingDto = dummyUserSettingDto;
+      }
     } 
     else if (request.getParameter("entry") == null) 
     {

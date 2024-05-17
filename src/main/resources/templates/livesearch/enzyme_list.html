@@ -76,6 +76,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
 <title>PRIX - PRoteome InformatiX</title>
 <link href="/css/home.css" rel="stylesheet" type="text/css" />
+
+<script>
+	function deleteEnzyme(enzymeId) {
+			document.location = 'enzyme_list?action=del&id=' + enzymeId;
+	}
+</script>
+
 </head>
 
 <body>
@@ -165,7 +172,7 @@
 			<td class="grayTD" align="center" th:text="${enzyme.ct_cleave}"></td>
 			<td class="grayTD" align="right">
 					<input type="button" class="btnBlueSmall" value="del"
-							th:onclick="'document.location = \'enzyme_list?action=del&id=' + ' + ${enzyme.id} + ';'"/>
+					th:onclick="'deleteEnzyme(' + ${enzyme.id} + ')'"/>
 			</td>
 	</tr>
 
