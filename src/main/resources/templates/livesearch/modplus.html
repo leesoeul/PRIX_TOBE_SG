@@ -331,16 +331,15 @@ function stateChanged() {
 					</th:block>
 				</select>
 				&nbsp;&nbsp;
-				<!-- session.id가 4가 아닌 경우  임시로 밑에랑 조건 바꿈 원래는 4가 아니면 click 가능-->
+				
 				<input 
 						name="add_enzyme" 
 						type="button" 
 						class="btnBlueSmall" 
 						value=" + " 
 						th:onclick="window.open('enzyme_list', '', 'resizable=0, width=500, height=500, scrollbars=yes')" 
-						th:if="${session.id == 4}" 
+						th:if="${session.id != 4}" 
 				/>
-
 				<!-- session.id가 4인 경우 -->
 				<input 
 						name="add_enzyme" 
@@ -348,7 +347,7 @@ function stateChanged() {
 						class="btnBlueSmall" 
 						value=" + " 
 						onclick="" 
-						th:if="${session.id != 4}" 
+						th:if="${session.id == 4}" 
 				/>
 				&nbsp;&nbsp;
 				<font size="2" color="blue">
