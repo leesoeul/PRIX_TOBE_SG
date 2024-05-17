@@ -1,88 +1,9 @@
-<!-- ㅈㅍㅈㅅ
-<%
-	String id = (String)session.getAttribute("id");
-
-	Context initContext = new InitialContext();
-	Context envContext = (Context)initContext.lookup("java:/comp/env");
-	DataSource ds = (DataSource)envContext.lookup("jdbc/PrixDB");
-	Connection conn = ds.getConnection();
-	
-	String action = request.getParameter("action");
-	boolean reloadOpener = false;
-//	boolean addFailure = false;
-	int addState = 0;
-
-	if (id != null && action != null)
-	{
-		conn.setAutoCommit(false);
-		String sql = "";
-		if (action.compareTo("add") == 0)
-		{
-			if( request.getParameter("enzyme_name") == "" ){
-				addState = 1;
-			}
-			else if( request.getParameter("enzyme_name").contains("|") ){
-				addState = 5;
-			}
-			else{
-				if( request.getParameter("nt_cleave") == "" && request.getParameter("ct_cleave") == "" ){
-					addState = 2;
-				}
-				else{
-					String cleaveStr = request.getParameter("ct_cleave");
-					for(int c=0; c<cleaveStr.length(); c++){
-						if( !Character.isLetter(cleaveStr.charAt(c)) ){
-							addState = 3;
-							break;
-						}
-					}
-					cleaveStr = request.getParameter("nt_cleave");
-					for(int c=0; c<cleaveStr.length(); c++){
-						if( !Character.isLetter(cleaveStr.charAt(c)) ){
-							addState = 3;
-							break;
-						}
-					}
-				}
-			}
-
-			if( addState == 0 ){
-				Statement state = conn.createStatement();
-				ResultSet rs = state.executeQuery("select id from px_enzyme where (user_id=0 or user_id=" + id + ") and name='" + request.getParameter("enzyme_name").replace("'", "\\\'") + "';");
-				if (rs.next())
-					addState = 4;
-				//	addFailure = true;
-				else
-					sql = "insert into px_enzyme (user_id, name, nt_cleave, ct_cleave) values (" + id + ", '" + request.getParameter("enzyme_name").replace("'", "\\\'") + "', '" + request.getParameter("nt_cleave").toUpperCase() + "', '" + request.getParameter("ct_cleave").toUpperCase() + "');";
-				rs.close();
-				state.close();
-			}
-		}
-		else if (action.compareTo("del") == 0)
-			sql = "delete from px_enzyme where id=" + request.getParameter("id") + " and user_id=" + id + ";";
-		if (sql.length() > 0)
-		{
-			PreparedStatement ps = conn.prepareStatement(sql);
-			ps.executeUpdate();
-			conn.commit();
-			ps.close();
-			reloadOpener = true;
-		}
-	}
-%> -->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
 <title>PRIX - PRoteome InformatiX</title>
 <link href="/css/home.css" rel="stylesheet" type="text/css" />
-
-<script>
-	function deleteEnzyme(enzymeId) {
-			document.location = 'enzyme_list?action=del&id=' + enzymeId;
-	}
-</script>
-
 </head>
 
 <body>
@@ -166,14 +87,19 @@
     </tr>
 
 		<!-- 로그인 이후 제대로 작동하는지 확인 필요 -->
-		<tr th:each="enzyme : ${listEnzyme}">
-			<td class="grayTD" th:text="${enzyme.name}"></td>
-			<td class="grayTD" align="center" th:text="${enzyme.nt_cleave}"></td>
-			<td class="grayTD" align="center" th:text="${enzyme.ct_cleave}"></td>
-			<td class="grayTD" align="right">
-					<input type="button" class="btnBlueSmall" value="del"
-					th:onclick="'deleteEnzyme(' + ${enzyme.id} + ')'"/>
-			</td>
+		
+		<form id="enzyme_del" th:method="post" th:action="@{/modplus/enzyme_list}">
+			<tr th:each="enzyme : ${listEnzyme}">
+					<td class="grayTD" th:text="${enzyme.name}"></td>
+					<td class="grayTD" align="center" th:text="${enzyme.nt_cleave}"></td>
+					<td class="grayTD" align="center" th:text="${enzyme.ct_cleave}"></td>
+					<td class="grayTD" align="right">
+							<input type="hidden" name="action" value="del"/>
+							<input type="hidden" name="id" th:value="${enzyme.id}"/>
+							<input type="submit" class="btnBlueSmall" value="del"/>
+					</td>
+			</tr>
+		</form>
 	</tr>
 
 </table>
