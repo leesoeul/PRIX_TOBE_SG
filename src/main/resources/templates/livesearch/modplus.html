@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<!-- layout의 content로 table 을, links에는 link들을, scripts에는 script들을 넘긴다. 필요 없을 경우 ~{} empty fragment-->
+<html th:replace="~{inc/layout::layout(~{::table}, ~{}, ~{})}" xmlns:th="http://www.thymeleaf.org">
+<!-- header ��-->
+
+<!-- 
+<script language="javascript">
+function adjustIFrameSize(iframeWindow) {
+    var iframeElement = document.getElementById("IFRM_Result");
+    var wid = 0;
+    var hei = 0;
+    if (iframeWindow.document.height) {
+        hei = iframeWindow.document.height;
+    } else if (document.all) { // ie
+        if (iframeWindow.document.compatMode && iframeWindow.document.compatMode != 'BackCompat') {
+            hei = iframeWindow.document.documentElement.scrollHeight;
+        } else {
+            hei = iframeWindow.document.body.scrollHeight;
+        }
+    }
+    iframeElement.style.height = hei + 'px';
+    document.getElementById("RIGHT").style.height = hei + 'px';
+}
+function reset() {
+		alert("reset.");
+}
+function resett() {
+
+	alert("reset.");
+
+
+}
+
+function process() {
+	var form = document.search;
+
+	if( !validateText(form.user.value, form.title.value ) ){
+		alert("Sorry! Character ' | ' and ' & ' cannot be used in UserName or Search Title field.");
+		return;
+	}
+	
+	if( form.ms_format.value == '' ){
+		alert("Please select Data format.");
+		return;
+	}
+
+	if( form.ms_instrument.value == '' ){
+		alert("Please select Instrument type.");
+		return;
+	}
+
+	if( form.ms_file.value == '' ){
+		alert("Please select MS/MS Data file.");
+		return;
+	}
+
+	if( form.database.value == '' && form.fasta.value == '' ){
+		alert("Please specify Database or upload protein database file(*.fasta).");
+		return;
+	}
+
+	if( !validateDataFormat(form.ms_file.value, form.ms_format.value) ){
+		alert("Specified Data Format and MS/MS Data are inconsistent. Please check it.");
+		return;
+	}
+	
+	if( !validateTolerance(form.pept_tolerance.value, form.frag_tolerance.value) ){
+		alert("Peptide Tol. and Fragment Tol. should be real number.");
+		return;
+	}
+
+	if( !validateTolerance(form.min_modified_mass.value, form.max_modified_mass.value) ){
+		alert("Min/Max Modified Mass should be real number.");
+		return;
+	}
+
+	if( !validateModifiedMass(form.min_modified_mass.value, form.max_modified_mass.value) ){
+		alert("Min Modified Mass cannot be larger than Max Modified Mass.");
+		return;
+	}
+
+	form.submit();
+}
+
+function validateText(user, title) {
+	if( user.indexOf("|") > -1 || title.indexOf("|") > -1 ) return false;
+	if( user.indexOf("&") > -1 || title.indexOf("&") > -1 ) return false;
+	return true;
+}
+
+function validateTolerance(pept, frag) {
+	if( pept == '' || frag == '' )
+		return false;
+	var ex = /^[+-]?\d*\.*\d*$/;
+	if( !ex.test(pept) || !ex.test(frag) )
+		return false;
+	return true;
+}
+
+function validateModifiedMass(min, max) {	
+	if( parseFloat(min) > parseFloat(max) )
+		return false;
+	return true;
+}
+
+function validateDataFormat(data, format) {	
+	var tmp = data.substring(data.lastIndexOf(".")+1).toLowerCase();
+	if( tmp == 'mgf' || tmp == 'pkl' || tmp == 'dta' ){
+		if( tmp != format )
+			return false;
+	}
+	return true;
+}
+
+function changeDB(){
+	var form = document.search;
+	if( form.database.value != '' )
+		form.fasta.disabled = true;
+	else form.fasta.disabled = false;
+}
+
+var xmlhttp;
+var fixed = <%
+	if (state != null)
+	{
+		ResultSet rs = state.executeQuery("select count(1) from px_enzyme where user_id=0;");
+		if (rs.next())
+		{
+			out.print("" + rs.getInt(1));
+		}
+		else
+			out.print("0");
+		rs.close();
+	}
+	else
+		out.print("0");
+%>;
+
+</script> --%> -->
+
+<script language="javascript">
+	
+  function handleButtonClick(sessionId) {
+    /* 이게 원래 진짜 코드
+		if (sessionId != 4) {
+      window.open('/modplus/enzyme_list', '', 'resizable=0, width=500, height=500, scrollbars=yes');
+    }
+		*/
+		//테스트용
+      window.open('/modplus/enzyme_list', '', 'resizable=0, width=500, height=500, scrollbars=yes');
+  }
+		
+
+function enzymeList() {
+	if (xmlhttp == null)
+	{
+		if (window.XMLHttpRequest)
+			xmlhttp = new XMLHttpRequest();
+		else
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	if (xmlhttp == null)
+		return;
+	
+	//xmlhttp.onreadystatechange = stateChanged;
+	xmlhttp.open("GET", "user_enzyme", false);
+	xmlhttp.send(null);
+	stateChanged();
+}
+
+function stateChanged() {
+	var obj = document.search.enzyme;
+	if (xmlhttp.readyState == 4)
+	{
+		var length = obj.length;
+		var text = xmlhttp.responseText;
+		var pos = -1;
+		for (var i = 0; i < text.length; i++)
+		{
+			if (text.charAt(i) != ' ' && text.charAt(i) != '\n' && text.charAt(i) != '\r' && text.charAt(i) != '\t')
+			{
+				pos = i;
+				break;
+			}
+		}
+		if (pos >= 0)
+			text = text.substr(pos);
+		else
+			text = '';
+		var nodes = text.split(',');
+		for (var i = 0; i < nodes.length; i++)
+		{
+			var values = nodes[i].split(':');
+			if (values[0] != null && values[0] != '')
+			{
+				if (i + fixed < length)
+				{
+					if (values[1] != obj.options[i + fixed].value)
+						obj.options[i + fixed] = new Option(values[0], values[1]);
+				}
+				else
+					obj.options.add(new Option(values[0], values[1]));
+			}
+		}
+		if (nodes.length > 0)
+		{
+			for (var i = fixed + nodes.length - 1; i < length; i++)
+				obj.options.remove(i);
+		}
+		//for (var i = fixed; i < length; i++)
+		//	obj.options.remove(i);
+		//obj.options.add(new Option("added", "0"));
+	}
+}
+
+</script>
+
+<table>
+<table width="990" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="190" height="100%" rowspan="2" align="right" valign="top" style="padding-right:15px">
+		<!-- left menu -->
+    <div th:insert="~{livesearch/livesearch_menu :: livesearch_menu}" />
+	</td>
+    <td height="10" valign="top"><table border="0" cellspacing="0" cellpadding="0" id="TitTable">
+      <tr>
+        <td style="padding-left:15px;"><font color="#0033FF" size="3"><b>MODPlus</b>&nbsp;&nbsp;&nbsp;</font>ms/ms search 
+					( <font color="#000000">version [[${userSetting.version}]]</font> )
+        </td>
+        <td align="right" valign="bottom" style="padding-right:5px;"><table border="0" cellspacing="0" cellpadding="0">
+
+          <tr th:if="${session.id != null and session.id ne 4}">
+            <td><img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="history" class="menu">History</a> &nbsp; &nbsp;</td>
+            <td><img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="/login?action=logout" class="menu">Logout</a> &nbsp; &nbsp;</td>
+          </tr>
+
+        </table></td>
+      </tr>
+    </table>
+    </td>
+  </tr>
+  <tr>
+<form name="search" method="post" action="process.jsp" enctype="multipart/form-data">
+<input type="hidden" name="engine" value="modeye"/>
+    <td valign="top" style="padding:10px;"><table width="100%" border="0" cellpadding="0" cellspacing="0" id="gray" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
+	  <tr>
+        <th><div align="right"><a href="/help#NAME" class="thmenu">User Name</a> </div></th>
+        <td colspan="3"><input name="user" type="text"  size="60" th:value="${username}" /></td>
+      </tr>
+      <tr>
+        <th align="right"><div align="right"><a href="/help#TIT" class="thmenu">Search  Title</a> </th>
+        <td colspan="3"><input name="title" type="text" size="60" /></td>
+      </tr>
+      <tr>
+	    <th><div align="right"><a href="/help#DATA_FORMAT" class="thmenu">Data Format</a> </div></th>
+			<td><select name="ms_format">
+				<option value="">Select -------------</option>
+
+				<option value="mgf" th:selected="${userSetting.dataFormat == 'mgf'}">Mascot (*.mgf)</option>
+				<option value="dta" th:selected="${userSetting.dataFormat == 'dta'}">Sequest (*.dta)</option>
+				<option value="pkl" th:selected="${userSetting.dataFormat == 'pkl'}">Micromass (*.pkl)</option>
+
+			</select></td>
+        <th><div align="right"><a href="/help#INST" class="thmenu">MS Resolution</a> </div></th>
+        <td><select name="ms_resolution">
+			<option value="high">High</option>
+			<option value="low" th:selected="${userSetting.msResolution == 'low'}">Low</option>
+          </select></td>
+      </tr>
+	  
+	  <tr>
+        <th><div align="right"><a href="/help#INST" class="thmenu">MS/MS Instrument</a> </div></th>
+        <td><select name="ms_instrument">
+			<option value="">Select ---</option>
+			<option value="ESI-ION-TRAP" th:selected="${userSetting.instrument == 'ESI-ION-TRAP'}">ESI-TRAP</option>
+			<option value="QTOF" th:selected="${userSetting.instrument == 'QTOF'}">HCD/QTOF</option>
+			
+          </select>
+        </td>
+		<th><div align="right"><a href="/help#INST" class="thmenu">MS/MS Resolution</a> </div></th>
+        <td><select name="msms_resolution">
+			<option value="high">High</option>
+			<option value="low" th:selected="${userSetting.msmsResolution == 'low'}">Low</option>
+          </select></td>
+      </tr>
+     
+	  <tr>
+        <th><div align="right"><a href="/help#MSMS" class="thmenu">MS/MS Data</a> </div></th>
+        <td colspan="3"><input name="ms_file" type="file" size="45" /> &nbsp; File size limit : 500MB</td>            
+      </tr>
+      <tr>
+        <th><div align="right"><a href="/help#DB" class="thmenu">Database</a> </div></th>
+        <td colspan="3"><select name="database" onchange="changeDB()">
+            <option value="">Select ------------------------</option>
+						
+						<option th:each="database : ${listDatabase}"
+						th:value="${database.name}" 
+						th:text="${database.file}">
+						</option>
+
+        </select>&nbsp;&nbsp;</td>    
+      </tr>
+      <tr>	  
+        <th rowspan="1"><div align="right"><a href="/help#DB" class="thmenu">Local  DB</a> </div></th>
+		<td colspan="3"><input name="fasta" type="file" size="45" /> &nbsp; File size limit : 100MB&nbsp;&nbsp;</td>
+	  </tr>	  
+	  <tr>	  
+        <th><div align="right"><a href="/help#TARDEC" class="thmenu">Target-Decoy </div></th>
+		<td colspan="3"><input name="decoy" type="checkbox" class="CHECK" value="O" /><font size="2" color="blue"> Search with decoy proteins<font></td>
+	  </tr> 
+      <tr>
+        <th><div align="right"><a href="/help#ENZYME" class="thmenu">Enzyme</a> </div></th>
+
+        <td colspan="3"><select name="enzyme" onclick="enzymeList();">
+
+					<!-- listEnzymeId0에 대해 반복 -->
+					<th:block th:each="enzymeObj : ${listEnzymeId0}">
+							<option th:value="${enzymeObj.id}"
+											th:selected="${enzyme != null} ? (${enzyme} == ${enzymeObj.id}) : false">
+									<span th:text="${enzymeObj.name}"></span>
+							</option>
+					</th:block>
+
+					<!-- listEnzymeId에 대해 반복 -->
+					<th:block th:each="enzymeObj : ${listEnzymeId}">
+							<option th:value="${enzymeObj.id}"
+											th:selected="${enzyme != null} ? (${enzyme} == ${enzymeObj.id}) : false">
+									<span th:text="${enzymeObj.name}"></span>
+									<span th:text="' *'"></span>
+							</option>
+					</th:block>
+				</select>
+				&nbsp;&nbsp;
+				<!-- session.id가 4가 아닌 경우  임시로 밑에랑 조건 바꿈 원래는 4가 아니면 click 가능-->
+				<input 
+						name="add_enzyme" 
+						type="button" 
+						class="btnBlueSmall" 
+						value=" + " 
+						th:onclick="window.open('enzyme_list', '', 'resizable=0, width=500, height=500, scrollbars=yes')" 
+						th:if="${session.id == 4}" 
+				/>
+
+				<!-- session.id가 4인 경우 -->
+				<input 
+						name="add_enzyme" 
+						type="button" 
+						class="btnBlueSmall" 
+						value=" + " 
+						onclick="" 
+						th:if="${session.id != 4}" 
+				/>
+				&nbsp;&nbsp;
+				<font size="2" color="blue">
+						<span th:if="${session.id == 4}">Login</span>
+						<span th:if="${session.id != 4}">Click</span>
+						to add a new enzyme rule
+				</font>
+		</td>
+		
+	  </tr>
+	  <tr>
+        <th><div align="right"><a href="/help#MISSCLEAVE" class="thmenu">Max No. of Missed Cleavages</a> </div></th>
+        <td><select name="missed_cleavage">
+					<option th:value="0" th:selected="${userSetting.missedCleavage == '0'}">0</option>
+					<option th:value="1" th:selected="${userSetting.missedCleavage == '1'}">1</option>
+					<option th:value="2" th:selected="${userSetting.missedCleavage == '2'}">2</option>
+					<option th:value="3" th:selected="${userSetting.missedCleavage == '3'}">3</option>
+					<option th:value="4" th:selected="${userSetting.missedCleavage == '4'}">4</option>
+					<option th:value="5" th:selected="${userSetting.missedCleavage == '5'}">5</option>
+			</select>
+			<th><div align="right"><a href="/help#NTT" class="thmenu">Min No. of Enzyme Termini</a> </div></th>
+				<td>
+					<select name="ntt">           
+						<option th:value="4" th:selected="${userSetting.minNumEnzTerm == '1'}">4</option>
+						<option th:value="5" th:selected="${userSetting.minNumEnzTerm == '2'}">5</option>
+       		</select>
+				</td>
+      </tr>
+      <tr>
+        <th><div align="right"><a href="/help#PEPTTOL" class="thmenu">Peptide  Tol.</a> </div></th>
+       	<td>&#177; <input name="pept_tolerance" type="text" size="10" th:value="${userSetting.pTolerance}" /> <select name="unit"> 
+					<option th:selected="${userSetting.pUnit == 'Da'}">Da</option>
+					<option th:selected="${userSetting.pUnit == 'ppm'}">ppm</option> 
+        </select></td>
+		<th><div align="right"><a href="/help#ISOERR" class="thmenu">#<sup>13</sup>C (Isotope error)</a> </div></th>
+        <td>&nbsp;&nbsp;Min	
+		<select name="min_isotope">
+			<option th:selected="${userSetting.minIE == '-1'}">-1</option>
+			<option th:selected="${userSetting.minIE == '0'}">0</option>
+		</select>
+		&nbsp;&nbsp;Max
+		<select name="max_isotope">		    
+			<option th:selected="${userSetting.maxIE == '0'}">0</option>
+			<option th:selected="${userSetting.maxIE == '1'}">1</option>
+			<option th:selected="${userSetting.maxIE == '2'}">2</option>
+			<option th:selected="${userSetting.maxIE == '3'}">3</option>
+		</select>
+		</td>
+        <td></td>
+        
+      </tr>
+	    <th><div align="right"><a href="/help#FRAGTOL" class="thmenu">Fragment Tol.</a> </div></th>
+			<td colspan="3">&#177; <input name="frag_tolerance" type="text" size="10" th:value="${userSetting.fTolerance}" /> Da</td>
+	  <tr>
+	  </tr>
+      <tr>
+        <th><div align="right"><a href="/help#MODRANGE" class="thmenu">Modified  Mass</a> </div></th>
+					<td>Min&nbsp;&nbsp;&nbsp;<input name="min_modified_mass" type="text" size="10" th:value="${userSetting.minMM}" /> Da</td>
+					<td colspan="2">Max&nbsp;&nbsp;&nbsp;<input name="max_modified_mass" type="text" size="10" th:value="${userSetting.maxMM}" /> Da</td>
+      </tr>
+      <tr>
+				
+
+        <th><div align="right"><a href="/help#FIXMOD" class="thmenu">Fixed Modifications</a> </div></th>
+        <td  height="auto" style="word-break:break-all;">
+					<!--ㅈㅍㅈㅅ <iframe  frameborder="0" height="23" width="150" marginheight="0" marginwidth="0" src="fix_ptms?engine=0"></iframe> -->
+				</td>
+
+
+
+        <th><div align="right"><a href="/help#VARMOD" class="thmenu">Variable Modifications</a> </div></th>
+        <td>
+					<!-- <iframe frameborder="0" height="23" style="word-break:break-all;" width="150" scrolling="no" marginheight="0" marginwidth="0" src="/modplus/var_ptms?engine=0"></iframe> -->
+					<div th:insert="~{livesearch/var_ptms}" th:with="engine=0"></div>
+				</td>
+      </tr>
+
+
+    </table>
+      <br>
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+
+			<th:block>
+				<td align="left">
+						<a th:href="@{/result?file=50l4Gh80mJ1Q4o5FgSMnPo647UD217oh4E35174ln46038SP2125}">Run sample data</a>
+						&nbsp;&nbsp;
+						(<a class="under" th:href="@{/download/test_data.zip}">Download sample data</a>)
+				</td>
+			</th:block>
+
+          <td align="right"> 
+			  <!-- <%-- ㅈㅍㅈㅅ <input name="Reset" type="reset" class="btn" onClick="javascript:reset()" value="Reset">
+		      <input name="Submit" type="button" class="btn" onClick="process()" value="Submit"></td> --%> -->
+					<input name="Reset" type="reset" class="btn" value="Reset">
+		      <input name="Submit" type="button" class="btn" value="Submit"></td> 
+        </tr>
+      </table></td>
+  </tr>
+</table>
+</form>
+</table>
+</html>

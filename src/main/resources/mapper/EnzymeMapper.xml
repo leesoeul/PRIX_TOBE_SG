@@ -8,4 +8,21 @@
     SELECT  name, nt_cleave, ct_cleave, id FROM px_enzyme WHERE user_id = #{userId}
   </select>
 
+  <select id="selectIdByUserIdAndName" resultType="Integer">
+    SELECT id FROM px_enzyme 
+    WHERE (user_id = 0 OR user_id = #{userId}) 
+    AND name = #{name}
+  </select>
+
+  <insert id="insertEnzyme">
+    INSERT INTO px_enzyme (user_id, name, nt_cleave, ct_cleave) 
+    VALUES (#{userId}, #{name}, #{ntCleave}, #{ctCleave})
+  </insert>
+
+  <delete id="deleteEnzyme">
+    DELETE FROM px_enzyme 
+    WHERE id = #{id} 
+    AND user_id = #{userId}
+  </delete>
+
 </mapper>

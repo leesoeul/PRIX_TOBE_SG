@@ -11,4 +11,10 @@ import com.prix.homepage.user.pojo.Enzyme;
 @Repository
 public interface EnzymeMapper {
   List<Enzyme> findByUserId(Integer userId);
+
+  Integer selectIdByUserIdAndName(Integer userId, String name);
+
+  void insertEnzyme(Integer userId, String name, String ntCleave, String ctCleave);
+  
+  void deleteEnzyme(Integer id, Integer userId);
 }

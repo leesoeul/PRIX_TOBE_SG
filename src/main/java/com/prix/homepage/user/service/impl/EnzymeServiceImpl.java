@@ -44,4 +44,20 @@ public class EnzymeServiceImpl implements EnzymeService{
     return listEnzyme;
   }
 
+  @Override
+  public Integer selectIdByUserIdAndName(Integer userId, String name) {
+    return enzymeMapper.selectIdByUserIdAndName(userId, name);
+  }
+
+  @Override
+  public void insertEnzyme(Integer userId, String name, String ntCleave, String ctCleave) throws Exception
+  {
+    enzymeMapper.insertEnzyme(userId, name, ntCleave, ctCleave);
+  }
+
+  @Override
+  public void deleteEnzyme(Integer id, Integer userId) throws Exception {
+    enzymeMapper.deleteEnzyme(id, userId);
+  }
+
 }

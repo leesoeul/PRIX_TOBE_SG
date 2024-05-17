@@ -10,17 +10,28 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Enzyme {
-
+public class Modification {
+  
   private Integer id;
 
   @NotNull
-  private Integer user_id;
+  private Integer userId;
 
   @NotNull
   private String name;
 
-  private String nt_cleave;
+  private String fullname;
 
-  private String ct_cleave;
+  private Integer columnClass;
+
+  @NotNull
+  private Double massDiff;
+
+  private Double avgMassDiff;
+
+  @NotNull
+  private String residue;
+
+  private String position;
+  
 }
