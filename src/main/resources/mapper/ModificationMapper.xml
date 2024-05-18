@@ -55,7 +55,8 @@
     FROM px_modification m
     JOIN px_classification c ON c.id = m.class
     WHERE m.user_id = 0
-    <if test='var.equals("1")'>
+    <!-- fixed modification이라면 -->
+    <if test='variable != 1'>
         <if test='engine == 0'>
             AND (position = 'ANYWHERE'
             OR (position = 'ANY_N_TERM' AND residue = 'N-term')
@@ -66,10 +67,10 @@
         </if>
     </if>
     <if test='filter.equals("default")'>
-        <if test='var.equals("1")'>
+        <if test='variable == 1'>
             AND m.class IN (2, 3, 4, 5, 6, 13, 14)
         </if>
-        <if test='!var.equals("1")'>
+        <if test='variable != 1'>
             AND m.class IN (2, 3, 4, 5, 6, 11, 13, 14)
         </if>
     </if>

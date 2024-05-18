@@ -13,5 +13,5 @@ public interface ModificationService {
 
   List<Modification> selectModListNotInUserMod(Integer userId, String var, Boolean engine);
 
-  List<Modification> selectModJoinClass(Integer userId, String var, Integer engine, String filter, String sortBy);
+  List<Modification> selectModJoinClass(Integer userId, Boolean variable, Integer engine, String filter, String sortBy);
 }

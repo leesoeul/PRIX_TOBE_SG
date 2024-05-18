@@ -331,12 +331,12 @@ public class PtmsListController {
     if(sortBy == null) sortBy = "name asc";
 
     ModFinder modFinder = new ModFinder(modValues);
-
     Integer engineBit = Integer.parseInt(engine);
 
     logger.info("id: {}, var: {}, engineBit: {}, filter: {}, sortBy: {}", id, var, engineBit, filter, sortBy);
 
-    List<Modification> listModJoinClass= modificationService.selectModJoinClass(id, var, engineBit, filter, sortBy);
+    Boolean varBool = var.equals("1");
+    List<Modification> listModJoinClass= modificationService.selectModJoinClass(id, varBool, engineBit, filter, sortBy);
 
     model.addAttribute("finished", finished);//var_ptms_list 업데이트 용도
     model.addAttribute("id", id);
@@ -404,8 +404,9 @@ public class PtmsListController {
     ModFinder modFinder = new ModFinder(modIds);
 
     Integer engineBit = Integer.parseInt(engine);
+    Boolean varBool = var.equals("1");
 
-    List<Modification> listModJoinClass= modificationService.selectModJoinClass(id, var, engineBit, filter, sortBy);
+    List<Modification> listModJoinClass= modificationService.selectModJoinClass(id, varBool, engineBit, filter, sortBy);
 
     model.addAttribute("finished", finished);//var_ptms_list 업데이트 용도
     model.addAttribute("id", id);
