@@ -30,6 +30,11 @@ public class PtmsListController {
   private final ModificationService modificationService;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+  /**
+   * modplus/search에서 variable modifications의 + 버튼 클릭시 뜨는 팝업창
+   * @param paramsMap id, var, engine, sort
+   * @param request 세션 접근 용도
+   */
   @GetMapping("/modplus/var_ptms_list")
   public String varPtmsListPopUp(Model model, @RequestParam Map<String, String> paramsMap,
       HttpServletRequest request) {
