@@ -23,8 +23,9 @@ public class CountModRestController {
      * @return 일치하는 카운트 숫자
      */
     @GetMapping("/countModifications")
-    public Integer countModifications(@RequestParam Integer userId, @RequestParam Integer engine) {
+    public Integer countModifications(@RequestParam Integer userId, @RequestParam Integer variable,  @RequestParam Integer engine) {
       boolean engineBool = engine == 1;
-      return userModificationService.countModifications(userId, engineBool);
+      boolean variableBool = variable == 1;
+      return userModificationService.countModifications(userId, variableBool, engineBool);
     }
 }

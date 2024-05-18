@@ -56,16 +56,20 @@ function openUserList(button) {
 <script th:inline="javascript">
   /*<![CDATA[*/
   function handlePageLoad() {
-      var id = /*[[${id}]]*/ null;
-      var varValue = /*[[${var}]]*/ null;
-      var engineValue = /*[[${engine}]]*/ null;
+      let id = /*[[${id}]]*/ null;
+      let varValue = /*[[${var}]]*/ null;
+      let engineValue = /*[[${engine}]]*/ null;
       
       if (id == null) {
           opener.location = '../login?url=modi/search';
           opener.close();
           window.close();
       } else {
-          window.opener.loadVarMods(id, engineValue);
+        if(varValue === "1"){
+						window.opener.loadVarMods(id, engineValue);
+					}else{
+						window.opener.loadFixedMods(id, engineValue);
+					}
       }
   }
   /*]]>*/

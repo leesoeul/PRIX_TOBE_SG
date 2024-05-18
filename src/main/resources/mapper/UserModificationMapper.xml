@@ -16,7 +16,7 @@
     SELECT count(1) 
     FROM px_user_modification 
     WHERE user_id = #{userId} 
-      AND variable = 1 
+      AND variable = #{variable}
       AND engine = #{engine}
   </select>
 

@@ -88,11 +88,16 @@ public class LivesearchController {
 
     
     Boolean engine = false;
-    Integer varMods = userModificationService.countModifications(id, engine);
-    if(varMods == null) varMods = 0;
+    Boolean variable = true;
+    Integer varModCount = userModificationService.countModifications(id, variable, engine);
+    if(varModCount == null) varModCount = 0;
+    variable = false;
+    Integer fixedModCount = userModificationService.countModifications(id, variable, engine);
+    if(fixedModCount == null) fixedModCount = 0;
 
-    //Variable Modifications의 표기 숫자 varmods전달
-    model.addAttribute("varMods", varMods);
+    //Modifications 개수 전달
+    model.addAttribute("varModCount", varModCount);
+    model.addAttribute("fixedModCount", fixedModCount);
 
     // px_database : id, name, file # 비었으면 빈 List []
     List<Database> listDatabaseResponseDto = databaseService.getAllDatabase();

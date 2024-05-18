@@ -24,8 +24,8 @@ public class UserModificationServiceImpl implements UserModificationService{
   }
 
   @Override
-  public Integer countModifications(Integer userId, Boolean engine) {
-    return userModificationMapper.countModifications(userId, engine);
+  public Integer countModifications(Integer userId, Boolean variable, Boolean engine) {
+    return userModificationMapper.countModifications(userId, variable, engine);
   }
 
   @Override
