@@ -13,7 +13,7 @@ public interface UserModificationMapper {
 
   Integer countModifications(Integer userId, Boolean engine);
 
-  void deleteByUserIdAndModId(Integer userId, String engine, String[] modIds);
+  void deleteByUserIdAndModId(Integer userId, Boolean engine, String[] modIds);
 
   void insertWithModIds(Integer userId, String[] modIds, Boolean var, Boolean engine);
 

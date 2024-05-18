@@ -36,7 +36,6 @@ public class PtmsListController {
 
     // 세션에서 id 확인 없으면 anonymous 4 부여. request param도 확인
     HttpSession session = request.getSession();
-    final Integer anony = 4;
     Integer id = (Integer) session.getAttribute("id");
     String var = paramsMap.get("var");
     if (var == null)
@@ -50,36 +49,60 @@ public class PtmsListController {
     Boolean varBool = var.equals("1");
     Boolean engineBool = engine.equals("1");
 
-    boolean reloadParant = false;
-    if (id != null) {
-      String[] values = request.getParameterValues("mod");
-      if (values != null) {
-        try {
-          userModificationService.deleteByUserIdAndModId(id, engine, values);
-          logger.info("delete done in var_ptms_list");
-        } catch (Exception e) {
-          logger.error("Error deleting UserModification with mod_id for ID {} : {}", id, e.getMessage());
-        }
-        reloadParant = true;
-      }
-    }//여기까지 일단 jsp 초기 
-
-
-
     //id에 해당하는 usermodification을 바탕으로 modification 정보를 list로 받아냄
     List<Modification> listModification = modificationService.findModListByUserMod(id, varBool, engineBool, sortBy);
-    // logger.info("List of Modifications:");
-    // for (Modification modification : listModification) {
-    //     logger.info("Modification ID: {}", modification.getId());
-    // }
 
-    model.addAttribute("reloadParent", reloadParant);
     model.addAttribute("id", id);
     model.addAttribute("sortBy", sortBy);
     model.addAttribute("var", var);
     model.addAttribute("engine", engine);
     model.addAttribute("listModification", listModification);
 
+    return "livesearch/var_ptms_list";
+  }
+
+  /**
+   * var_ptms_list팝업창에서 delete 요청
+   * @param paramsMap i
+   * @param request
+   * @return
+   */
+  @PostMapping("/modplus/var_ptms_list")
+  public String postVarPtmsListPopUp(Model model, @RequestParam Map<String, String> paramsMap,
+      HttpServletRequest request) {
+
+    // 세션에서 id 확인 없으면 anonymous 4 부여. request param도 확인
+    HttpSession session = request.getSession();
+    Integer id = (Integer) session.getAttribute("id");
+    String var = paramsMap.get("var");
+    if (var == null)
+      var = "1";
+    String engine = paramsMap.get("engine");
+    if (engine == null)
+      engine = "0";
+    String sortBy = paramsMap.get("sort");
+    if (sortBy == null)
+      sortBy = "";
+    Boolean varBool = var.equals("1");
+    Boolean engineBool = engine.equals("1");
+
+    if (id != null) {
+      String[] modIds = request.getParameterValues("mod");
+        try {
+          userModificationService.deleteByUserIdAndModId(id, engineBool, modIds);
+          logger.info("delete done in var_ptms_list");
+        } catch (Exception e) {
+          logger.error("Error deleting UserModification with mod_id for ID {} : {}", id, e.getMessage());
+        }
+      }
+    //id에 해당하는 usermodification을 바탕으로 modification 정보를 list로 받아냄
+    List<Modification> listModification = modificationService.findModListByUserMod(id, varBool, engineBool, sortBy);
+
+    model.addAttribute("id", id);
+    model.addAttribute("sortBy", sortBy);
+    model.addAttribute("var", var);
+    model.addAttribute("engine", engine);
+    model.addAttribute("listModification", listModification);
 
     return "livesearch/var_ptms_list";
   }

@@ -29,7 +29,7 @@ public class UserModificationServiceImpl implements UserModificationService{
   }
 
   @Override
-  public void deleteByUserIdAndModId(Integer userId, String engine, String[] modIds) throws Exception {
+  public void deleteByUserIdAndModId(Integer userId, Boolean engine, String[] modIds) throws Exception {
     userModificationMapper.deleteByUserIdAndModId(userId, engine, modIds);
   }
 

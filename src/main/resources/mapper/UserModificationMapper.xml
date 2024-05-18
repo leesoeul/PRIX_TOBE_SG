@@ -20,7 +20,7 @@
       AND engine = #{engine}
   </select>
 
-  <delete id="deleteByUserAndEngine">
+  <delete id="deleteByUserIdAndModId">
     DELETE FROM px_user_modification
     WHERE user_id = #{userId}
     AND engine = #{engine}
