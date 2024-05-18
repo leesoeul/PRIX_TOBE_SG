@@ -13,7 +13,7 @@ import lombok.AllArgsConstructor;
  */
 @RestController
 @AllArgsConstructor
-public class CountModController {
+public class CountModRestController {
     private final UserModificationService userModificationService;
 
     /**
