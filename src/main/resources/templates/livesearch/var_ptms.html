@@ -3,18 +3,18 @@
 <!-- CSS 링크 -->
 <link th:href="@{/css/home.css}" rel="stylesheet" type="text/css"/>
 <script th:inline="javascript">
-    // unimod_ptms_list에서 count숫자만 업데이트 시키고 싶을때 호출하는 함수
+    // ptms_list에서 count숫자만 업데이트 시키고 싶을때 호출하는 함수
     /*<![CDATA[*/
     function loadVarMods(userId, engine) {
-        var xhr = new XMLHttpRequest();
-        var url = '/countModifications?userId=' + userId + '&engine=' + engine;
+        let xhr = new XMLHttpRequest();
+        let url = '/countModifications?userId=' + userId + '&variable=1' + '&engine=' + engine;
         xhr.open('GET', url);
         xhr.onload = function() {
             if (xhr.status === 200) {
-                var varMods = xhr.responseText;
-                console.log('Received varMods:', varMods);
+                let varModCount = xhr.responseText;
+                console.log('Received varModCount:', varModCount);
                 // varMods 값을 Thymeleaf 변수에 할당하여 input 태그의 값으로 설정
-                document.querySelector('input[name="variable_mod"]').value = varMods;
+                document.querySelector('input[name="variable_mod"]').value = varModCount;
             } else {
                 console.error('Request failed. Status code: ' + xhr.status);
             }
@@ -24,8 +24,7 @@
     /*]]>*/
 </script>
 <!-- 텍스트 입력 필드 -->
-<input name="variable_mod" type="text" size="10" th:value="${varMods}" disabled />&nbsp;&nbsp;
-
+<input name="variable_mod" type="text" size="10" th:value="${varModCount}" disabled />&nbsp;&nbsp;
 <!-- 버튼 및 onclick 이벤트 -->
 <input 
     name="add_variable_mod" 

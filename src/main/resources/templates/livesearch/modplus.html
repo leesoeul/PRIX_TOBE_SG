@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- layout의 content로 table 을, links에는 link들을, scripts에는 script들을 넘긴다. 필요 없을 경우 ~{} empty fragment-->
-<html th:replace="~{inc/layout::layout(~{::table}, ~{}, ~{})}" xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{inc/layout::layout(~{::table}, ~{}, ~{::script})}" xmlns:th="http://www.thymeleaf.org">
 <!-- header ��-->
 
 <!-- 
@@ -138,81 +138,29 @@ var fixed = <%
 
 </script> --%> -->
 
-<script language="javascript">
-	
-  function handleButtonClick(sessionId) {
-    /* 이게 원래 진짜 코드
-		if (sessionId != 4) {
-      window.open('/modplus/enzyme_list', '', 'resizable=0, width=500, height=500, scrollbars=yes');
+<script th:inline="javascript">
+    // user와 admin의 enzyme list를 받아서 select블록을 대체한다.
+    function getEnzymeList(userId) {
+        let xhr = new XMLHttpRequest();
+        let url = '/user_enzyme?userId=' + userId;
+        xhr.open('GET', url);
+				xhr.onload = function() {
+        if (xhr.status === 200) {
+            let responseText = xhr.responseText;
+            let enzymeData = JSON.parse(responseText);
+            let options = '';
+            enzymeData.forEach(function(enzyme) {
+                options += '<option value="' + enzyme.id + '">' + enzyme.name + '</option>';
+            });
+            // th:block를 대체할 HTML 코드를 삽입
+            let blockElement = document.getElementById('enzyme-block');
+            blockElement.innerHTML = options;
+        } else {
+            console.error('Request failed. Status code: ' + xhr.status);
+        }
+    };
+        xhr.send();
     }
-		*/
-		//테스트용
-      window.open('/modplus/enzyme_list', '', 'resizable=0, width=500, height=500, scrollbars=yes');
-  }
-		
-
-function enzymeList() {
-	if (xmlhttp == null)
-	{
-		if (window.XMLHttpRequest)
-			xmlhttp = new XMLHttpRequest();
-		else
-			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	if (xmlhttp == null)
-		return;
-	
-	//xmlhttp.onreadystatechange = stateChanged;
-	xmlhttp.open("GET", "user_enzyme", false);
-	xmlhttp.send(null);
-	stateChanged();
-}
-
-function stateChanged() {
-	var obj = document.search.enzyme;
-	if (xmlhttp.readyState == 4)
-	{
-		var length = obj.length;
-		var text = xmlhttp.responseText;
-		var pos = -1;
-		for (var i = 0; i < text.length; i++)
-		{
-			if (text.charAt(i) != ' ' && text.charAt(i) != '\n' && text.charAt(i) != '\r' && text.charAt(i) != '\t')
-			{
-				pos = i;
-				break;
-			}
-		}
-		if (pos >= 0)
-			text = text.substr(pos);
-		else
-			text = '';
-		var nodes = text.split(',');
-		for (var i = 0; i < nodes.length; i++)
-		{
-			var values = nodes[i].split(':');
-			if (values[0] != null && values[0] != '')
-			{
-				if (i + fixed < length)
-				{
-					if (values[1] != obj.options[i + fixed].value)
-						obj.options[i + fixed] = new Option(values[0], values[1]);
-				}
-				else
-					obj.options.add(new Option(values[0], values[1]));
-			}
-		}
-		if (nodes.length > 0)
-		{
-			for (var i = fixed + nodes.length - 1; i < length; i++)
-				obj.options.remove(i);
-		}
-		//for (var i = fixed; i < length; i++)
-		//	obj.options.remove(i);
-		//obj.options.add(new Option("added", "0"));
-	}
-}
-
 </script>
 
 <table>
@@ -311,36 +259,34 @@ function stateChanged() {
       <tr>
         <th><div align="right"><a href="/help#ENZYME" class="thmenu">Enzyme</a> </div></th>
 
-        <td colspan="3"><select name="enzyme" onclick="enzymeList();">
-
-					<!-- listEnzymeId0에 대해 반복 -->
-					<th:block th:each="enzymeObj : ${listEnzymeId0}">
-							<option th:value="${enzymeObj.id}"
-											th:selected="${enzyme != null} ? (${enzyme} == ${enzymeObj.id}) : false">
-									<span th:text="${enzymeObj.name}"></span>
-							</option>
-					</th:block>
-
-					<!-- listEnzymeId에 대해 반복 -->
-					<th:block th:each="enzymeObj : ${listEnzymeId}">
-							<option th:value="${enzymeObj.id}"
-											th:selected="${enzyme != null} ? (${enzyme} == ${enzymeObj.id}) : false">
-									<span th:text="${enzymeObj.name}"></span>
-									<span th:text="' *'"></span>
-							</option>
-					</th:block>
-				</select>
+        <td colspan="3">
+						<select name="enzyme" id="enzyme-block" th:userId="${session.id}" th:onmousedown="getEnzymeList(getAttribute('userId'))">
+							<!-- listEnzymeId0에 대해 반복 -->
+							<th:block th:each="enzymeObj : ${listEnzymeId0}">
+									<option th:value="${enzymeObj.id}"
+													th:selected="${enzyme != null} ? (${enzyme} == ${enzymeObj.id}) : false">
+											<span th:text="${enzymeObj.name}"></span>
+									</option>
+							</th:block>
+		
+							<!-- listEnzymeId에 대해 반복 -->
+							<th:block th:each="enzymeObj : ${listEnzymeId}">
+									<option th:value="${enzymeObj.id}"
+													th:selected="${enzyme != null} ? (${enzyme} == ${enzymeObj.id}) : false">
+											<span th:text="${enzymeObj.name}"></span>
+											<span th:text="' *'"></span>
+									</option>
+							</th:block>
+						</select>
 				&nbsp;&nbsp;
-				<!-- session.id가 4가 아닌 경우  임시로 밑에랑 조건 바꿈 원래는 4가 아니면 click 가능-->
 				<input 
 						name="add_enzyme" 
 						type="button" 
 						class="btnBlueSmall" 
 						value=" + " 
 						th:onclick="window.open('enzyme_list', '', 'resizable=0, width=500, height=500, scrollbars=yes')" 
-						th:if="${session.id == 4}" 
+						th:if="${session.id != 4}" 
 				/>
-
 				<!-- session.id가 4인 경우 -->
 				<input 
 						name="add_enzyme" 
@@ -348,7 +294,7 @@ function stateChanged() {
 						class="btnBlueSmall" 
 						value=" + " 
 						onclick="" 
-						th:if="${session.id != 4}" 
+						th:if="${session.id == 4}" 
 				/>
 				&nbsp;&nbsp;
 				<font size="2" color="blue">
@@ -414,14 +360,13 @@ function stateChanged() {
 
         <th><div align="right"><a href="/help#FIXMOD" class="thmenu">Fixed Modifications</a> </div></th>
         <td  height="auto" style="word-break:break-all;">
-					<!--ㅈㅍㅈㅅ <iframe  frameborder="0" height="23" width="150" marginheight="0" marginwidth="0" src="fix_ptms?engine=0"></iframe> -->
+					<div th:insert="~{livesearch/fix_ptms}" th:with="engine=0"></div>
 				</td>
 
 
 
         <th><div align="right"><a href="/help#VARMOD" class="thmenu">Variable Modifications</a> </div></th>
         <td>
-					<!-- <iframe frameborder="0" height="23" style="word-break:break-all;" width="150" scrolling="no" marginheight="0" marginwidth="0" src="/modplus/var_ptms?engine=0"></iframe> -->
 					<div th:insert="~{livesearch/var_ptms}" th:with="engine=0"></div>
 				</td>
       </tr>

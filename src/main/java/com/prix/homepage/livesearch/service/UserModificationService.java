@@ -6,9 +6,9 @@ public interface UserModificationService {
 
   void deleteByUserIdVar0(String userId) throws Exception;
 
-  Integer countModifications(Integer userId, Boolean engine);
+  Integer countModifications(Integer userId, Boolean variable, Boolean engine);
 
-  void deleteByUserIdAndModId(Integer userId, String engine, String[] modIds) throws Exception;
+  void deleteByUserIdAndModId(Integer userId, Boolean engine, String[] modIds) throws Exception;
 
   void insertWithModIds(Integer userId, String[] modIds, Boolean var, Boolean engine) throws Exception;
 

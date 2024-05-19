@@ -19,7 +19,7 @@
                           <td
                             width="105"
                             class="header-top-dot"
-                            th:remove="${session.id != null and session.id == '4'} ? none : all"
+                            th:remove="${session.id != null and session.id != 4} ? none : all"
                           >
                             &nbsp;
                           </td>
@@ -30,7 +30,7 @@
                         </tr>
                         <tr>
                           <td
-                            th:remove="${session.id != null or session.id == '4'} ? all : none"
+                            th:remove="${session.id == null or session.id == 4} ? none : all"
                           >
                             <img src="/images/top_icon_01.gif" /> &nbsp;<a
                               th:href="@{/login}"
@@ -39,7 +39,7 @@
                             >
                           </td>
                           <td
-                            th:remove="${session.id != null and session.id != '4'} ? none : all"
+                            th:remove="${session.id != null and session.id != 4} ? none : all"
                           >
                             <img src="/images/top_icon_01.gif" />&nbsp;<a
                               th:href="@{/login?action=logout}"
@@ -48,7 +48,7 @@
                             >
                           </td>
                           <td
-                            th:remove="${session.id != null and session.id != '4'} ? none : all"
+                            th:remove="${session.id != null and session.id != 4} ? none : all"
                           >
                             <img src="/images/top_icon_01.gif" />&nbsp;<a
                               th:href="@{/deleteAccount}"
@@ -122,7 +122,8 @@
                         </tr>
                         <!-- livesearch page 일때 -->
                         <tr
-                          th:if="${#strings.startsWith(currentUri, '/livesearch')}"
+                          th:if="${#strings.startsWith(currentUri, '/livesearch') or 
+                                  #strings.startsWith(currentUri, '/modplus/search')}"
                         >
                           <td>
                             <a th:href="@{/}">
@@ -233,8 +234,7 @@
                                                     #strings.startsWith(currentUri, '/help') or 
                                                     #strings.startsWith(currentUri, '/admin') or 
                                                     #strings.startsWith(currentUri, '/confirm_personalInfo') or 
-                                                    #strings.startsWith(currentUri, '/registration') or 
-                                                    #strings.startsWith(currentUri, '/modplus/search')}"
+                                                    #strings.startsWith(currentUri, '/registration')}"
                         >
                           <td>
                             <a href="/"

@@ -114,8 +114,8 @@ public class EnzymeListController {
       // action이 del이면 enzyme 삭제
       else if (action.compareTo("del") == 0) {
         try {
-          Integer paramId = Integer.parseInt(paramsMap.get("id"));
-          enzymeService.deleteEnzyme(paramId, id);
+          Integer enzymeId = Integer.parseInt(paramsMap.get("id"));
+          enzymeService.deleteEnzyme(enzymeId, id);
         } catch (Exception e) {
           logger.error("Error deleting px_enzyme for ID {}: {}", id, e.getMessage());
         }

@@ -37,9 +37,9 @@ public class ModificationServiceImpl implements ModificationService {
   }
 
   @Override
-  public List<Modification> selectModJoinClass(Integer userId, String var, Integer engine, String filter,
+  public List<Modification> selectModJoinClass(Integer userId, Boolean variable, Integer engine, String filter,
       String sortBy) {
-      return modificationMapper.selectModJoinClass(userId, var, engine, filter, sortBy);
+      return modificationMapper.selectModJoinClass(userId, variable, engine, filter, sortBy);
   }
   
   

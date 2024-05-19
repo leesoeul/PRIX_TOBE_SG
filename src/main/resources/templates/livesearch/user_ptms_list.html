@@ -85,11 +85,11 @@ function doSubmit() {
           //modplus/var_ptms_list 새로고침
           opener.location = 'var_ptms_list?var=' + varValue + '&engine=' + engineValue;
           // (/modplus/search, 함수는 var_ptms.html)부모부모 window의 loadVarNods함수를 호출해서 카운트를 갱신한다.
-          window.opener.opener.loadVarMods(id, engineValue);
-
-          //원래 있던 코드지만 타임리프에서 부모부모창 modplus/search마저 불필요하게 새로고침 되서
-          // modification 카운트만 변경시키고자 함
-          //  opener.opener.location.reload();
+					if(varValue === "1"){
+						window.opener.opener.loadVarMods(id, engineValue);
+					}else{
+						window.opener.opener.loadFixedMods(id, engineValue);
+					}
       }
   }
   /*]]>*/
