@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!-- layout의 content로 table 을, links에는 link들을, scripts에는 script들을 넘긴다. 필요 없을 경우 ~{} empty fragment-->
+<html th:replace="~{inc/layout::layout(~{::body}, ~{}, ~{::script})}" xmlns:th="http://www.thymeleaf.org">
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let timerID = null;
+    function initTimer() {
+        timerID = self.setTimeout(timeOut, 3000);
+    }
+    function timeOut() {
+        clearTimeout(timerID);
+        let logPath = /*[[ ${#URLEncoder.encode(processDto.logPath, 'UTF-8')} ?: '']*/ '';
+        let xmlPath = /*[[ ${#URLEncoder.encode(processDto.xmlPath, 'UTF-8')} ?: '']*/ '';
+        let msPath = /*[[ ${#URLEncoder.encode(processDto.msPath, 'UTF-8')} ?: '']*/ '';
+        let dbPath = /*[[ ${#URLEncoder.encode(processDto.dbPath, 'UTF-8')} ?: '']*/ '';
+        let decoyPath = /*[[ ${#URLEncoder.encode(processDto.decoyPath, 'UTF-8')} ?: '']*/ '';
+        let multiPath = /*[[ ${#URLEncoder.encode(processDto.multiPath, 'UTF-8')} ?: '']*/ '';
+        let engine = /*[[ ${processDto.engine} ?: '']*/ '';
+        let jobCode = /*[[ ${processDto.jobCode} ?: '']*/ '';
+        let refCt = /*[[ ${processDto.refreshCount + 1} ?: 0]]*/ '';
+        let url = /*[[ @{/process(execute='no', log=${logPath}, xml=${xmlPath}, ms=${msPath}, db=${dbPath}, dec=${decoyPath}, title=${processDto.title}, mi=${processDto.msIndex}, di=${processDto.dbIndex}, mul=${multiPath}, engine=${engine}, job=${jobCode}, refCt=${refCt})} ]]*/ '';
+        window.location = url;
+    }
+    /*]]>*/
+</script>
+<!-- 이게 진짠데 일단 processservice 부분이 오류가 있어서 임시로 아래 <body>만 사용
+	<body th:onload="${processDto.finished or processDto.failed} ? '' : 'initTimer();'"> -->
+<body>
+<table width="95%" border="0" align="center" cellpadding="1">
+    <tr>
+        <td class="grayTD" th:class="'grayTD'">&nbsp;<br><img src="/images/p_st1.GIF" width="4" height="9">&nbsp;This job was submitted. You can use the following link to access the search results later:<br>
+            <a th:href="@{/modplus/result(file=${processDto.jobCode})}" target="_blank" th:utext="'https://prix.hanyang.ac.kr/modplus/result?file=' + ${processDto.jobCode}">https://prix.hanyang.ac.kr/modplus/result?file=${processDto.jobCode}<a/><br>
+        </td>
+    
+    </tr>
+    <tr>
+        <td th:text="'Processing... ' + ${processDto.rate} + '%'">
+            &nbsp;<br><span style="font-size: 1.2em;">Processing... <font class="blue"><em th:text="${processDto.rate} + '%'"></em></font></span>&nbsp;&nbsp;&nbsp;&nbsp; 
+            <span th:if="${processDto.engine eq 'dbond'}">
+                    ( To stop, click <a th:href="@{/dbond_search.jsp}">here</a> )
+            </span>
+            <span th:unless="${processDto.engine eq 'dbond'}">
+                    ( To stop, click <a th:href="@{'cancel?job=' + ${processDto.jobCode}}">here</a> )
+            </span>
+        </td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+    </tr>
+    <tr>
+        <td>
+            <span class="drak">
+                    <pre th:text="${processDto.fileMsg eq '' ? processDto.output : processDto.fileMsg}"></pre>
+            </span>
+    </td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+    </tr>
+
+    <tr>
+        <td>&nbsp;</td>
+    </tr>
+
+</table>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!-- layout의 content로 table 을, links에는 link들을, scripts에는 script들을 넘긴다. 필요 없을 경우 ~{} empty fragment-->
+<html
+  th:replace="~{inc/layout::layout(~{::table}, ~{}, ~{})}"
+  xmlns:th="http://www.thymeleaf.org"
+>
+  <table border="0" width="100%">
+    <tr>
+      <td width="5">&nbsp;</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><p>Canceling your search....... Please wait.</p></td>
+    </tr>
+    <div th:if="${error}">
+      <p>
+        <b>NOTICE:</b>
+        <span style="color: red" th:text="${errorMessage}"></span>
+      </p>
+    </div>
+    <div th:unless="${error}">
+      <table border="0" width="100%">
+        <tr>
+          <td width="5">&nbsp;</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+          <td>
+            <p>Canceling your search....... Please wait.</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </table>
+</html>

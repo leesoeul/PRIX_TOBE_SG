@@ -60,16 +60,16 @@ public class UserSettingServiceImpl implements UserSettingService {
       missedCleavage = "" + userSetting.getMmc();
       minNumEnzTerm = "" + userSetting.getMet();
       pTolerance = "" + userSetting.getPtol();
-      pUnit = "" + userSetting.getPtol_unit();
+      pUnit = "" + userSetting.getPtolUnit();
       fTolerance = "" + userSetting.getFtol();
-      minMM = "" + userSetting.getMm_min();
-      maxMM = "" + userSetting.getMm_max();
-      dataFormat = userSetting.getData_format();
+      minMM = "" + userSetting.getMmMin();
+      maxMM = "" + userSetting.getMmMax();
+      dataFormat = userSetting.getDataFormat();
       instrument = userSetting.getInstrument();
-      msResolution = userSetting.getMs_resolution();
+      msResolution = userSetting.getMsResolution();
       if (msResolution == null)
         msResolution = "";
-      msmsResolution = userSetting.getMsms_resolution();
+      msmsResolution = userSetting.getMsmsResolution();
       if (msmsResolution == null)
         msmsResolution = "";
 

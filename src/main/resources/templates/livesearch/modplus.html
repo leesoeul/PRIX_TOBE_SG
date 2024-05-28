@@ -2,37 +2,32 @@
 <!-- layout의 content로 table 을, links에는 link들을, scripts에는 script들을 넘긴다. 필요 없을 경우 ~{} empty fragment-->
 <html th:replace="~{inc/layout::layout(~{::table}, ~{}, ~{::script})}" xmlns:th="http://www.thymeleaf.org">
 <!-- header ��-->
-
-<!-- 
-<script language="javascript">
-function adjustIFrameSize(iframeWindow) {
-    var iframeElement = document.getElementById("IFRM_Result");
-    var wid = 0;
-    var hei = 0;
-    if (iframeWindow.document.height) {
-        hei = iframeWindow.document.height;
-    } else if (document.all) { // ie
-        if (iframeWindow.document.compatMode && iframeWindow.document.compatMode != 'BackCompat') {
-            hei = iframeWindow.document.documentElement.scrollHeight;
+<script th:inline="javascript">
+    // user와 admin의 enzyme list를 받아서 select블록을 대체한다.
+    function getEnzymeList(userId) {
+        let xhr = new XMLHttpRequest();
+        let url = '/user_enzyme?userId=' + userId;
+        xhr.open('GET', url);
+				xhr.onload = function() {
+        if (xhr.status === 200) {
+            let responseText = xhr.responseText;
+            let enzymeData = JSON.parse(responseText);
+            let options = '';
+            enzymeData.forEach(function(enzyme) {
+                options += '<option value="' + enzyme.id + '">' + enzyme.name + '</option>';
+            });
+            // th:block를 대체할 HTML 코드를 삽입
+            let blockElement = document.getElementById('enzyme-block');
+            blockElement.innerHTML = options;
         } else {
-            hei = iframeWindow.document.body.scrollHeight;
+            console.error('Request failed. Status code: ' + xhr.status);
         }
+    };
+        xhr.send();
     }
-    iframeElement.style.height = hei + 'px';
-    document.getElementById("RIGHT").style.height = hei + 'px';
-}
-function reset() {
-		alert("reset.");
-}
-function resett() {
 
-	alert("reset.");
-
-
-}
-
-function process() {
-	var form = document.search;
+	function process() {
+	let form = document.search;
 
 	if( !validateText(form.user.value, form.title.value ) ){
 		alert("Sorry! Character ' | ' and ' & ' cannot be used in UserName or Search Title field.");
@@ -91,7 +86,7 @@ function validateText(user, title) {
 function validateTolerance(pept, frag) {
 	if( pept == '' || frag == '' )
 		return false;
-	var ex = /^[+-]?\d*\.*\d*$/;
+	let ex = /^[+-]?\d*\.*\d*$/;
 	if( !ex.test(pept) || !ex.test(frag) )
 		return false;
 	return true;
@@ -104,7 +99,7 @@ function validateModifiedMass(min, max) {
 }
 
 function validateDataFormat(data, format) {	
-	var tmp = data.substring(data.lastIndexOf(".")+1).toLowerCase();
+	let tmp = data.substring(data.lastIndexOf(".")+1).toLowerCase();
 	if( tmp == 'mgf' || tmp == 'pkl' || tmp == 'dta' ){
 		if( tmp != format )
 			return false;
@@ -112,55 +107,9 @@ function validateDataFormat(data, format) {
 	return true;
 }
 
-function changeDB(){
-	var form = document.search;
-	if( form.database.value != '' )
-		form.fasta.disabled = true;
-	else form.fasta.disabled = false;
+function reset() {
+		alert("reset.");
 }
-
-var xmlhttp;
-var fixed = <%
-	if (state != null)
-	{
-		ResultSet rs = state.executeQuery("select count(1) from px_enzyme where user_id=0;");
-		if (rs.next())
-		{
-			out.print("" + rs.getInt(1));
-		}
-		else
-			out.print("0");
-		rs.close();
-	}
-	else
-		out.print("0");
-%>;
-
-</script> --%> -->
-
-<script th:inline="javascript">
-    // user와 admin의 enzyme list를 받아서 select블록을 대체한다.
-    function getEnzymeList(userId) {
-        let xhr = new XMLHttpRequest();
-        let url = '/user_enzyme?userId=' + userId;
-        xhr.open('GET', url);
-				xhr.onload = function() {
-        if (xhr.status === 200) {
-            let responseText = xhr.responseText;
-            let enzymeData = JSON.parse(responseText);
-            let options = '';
-            enzymeData.forEach(function(enzyme) {
-                options += '<option value="' + enzyme.id + '">' + enzyme.name + '</option>';
-            });
-            // th:block를 대체할 HTML 코드를 삽입
-            let blockElement = document.getElementById('enzyme-block');
-            blockElement.innerHTML = options;
-        } else {
-            console.error('Request failed. Status code: ' + xhr.status);
-        }
-    };
-        xhr.send();
-    }
 </script>
 
 <table>
@@ -177,7 +126,7 @@ var fixed = <%
         </td>
         <td align="right" valign="bottom" style="padding-right:5px;"><table border="0" cellspacing="0" cellpadding="0">
 
-          <tr th:if="${session.id != null and session.id ne 4}">
+          <tr th:if="${session.id != null and session.id != 4}">
             <td><img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="history" class="menu">History</a> &nbsp; &nbsp;</td>
             <td><img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="/login?action=logout" class="menu">Logout</a> &nbsp; &nbsp;</td>
           </tr>
@@ -188,7 +137,7 @@ var fixed = <%
     </td>
   </tr>
   <tr>
-<form name="search" method="post" action="process.jsp" enctype="multipart/form-data">
+<form name="search" method="post" th:action="@{/modplus/search}" enctype="multipart/form-data">
 <input type="hidden" name="engine" value="modeye"/>
     <td valign="top" style="padding:10px;"><table width="100%" border="0" cellpadding="0" cellspacing="0" id="gray" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
 	  <tr>
@@ -238,11 +187,11 @@ var fixed = <%
       </tr>
       <tr>
         <th><div align="right"><a href="/help#DB" class="thmenu">Database</a> </div></th>
-        <td colspan="3"><select name="database" onchange="changeDB()">
+        <td colspan="3"><select name="database">
             <option value="">Select ------------------------</option>
 						
 						<option th:each="database : ${listDatabase}"
-						th:value="${database.name}" 
+						th:value="${database.id}" 
 						th:text="${database.file}">
 						</option>
 
@@ -379,17 +328,16 @@ var fixed = <%
 
 			<th:block>
 				<td align="left">
-						<a th:href="@{/result?file=50l4Gh80mJ1Q4o5FgSMnPo647UD217oh4E35174ln46038SP2125}">Run sample data</a>
+						<a th:href="@{/modplus/result?file=50l4Gh80mJ1Q4o5FgSMnPo647UD217oh4E35174ln46038SP2125}">Run sample data</a>
 						&nbsp;&nbsp;
-						(<a class="under" th:href="@{/download/test_data.zip}">Download sample data</a>)
+						(<a class="under" th:href="@{/test_data.zip}">Download sample data</a>)
 				</td>
 			</th:block>
 
           <td align="right"> 
-			  <!-- <%-- ㅈㅍㅈㅅ <input name="Reset" type="reset" class="btn" onClick="javascript:reset()" value="Reset">
-		      <input name="Submit" type="button" class="btn" onClick="process()" value="Submit"></td> --%> -->
-					<input name="Reset" type="reset" class="btn" value="Reset">
-		      <input name="Submit" type="button" class="btn" value="Submit"></td> 
+					<input name="Reset" type="reset" class="btn" value="Reset" onclick="reset()">
+		      <input name="Submit" type="button" class="btn" value="Submit" onclick="process()">
+				</td> 
         </tr>
       </table></td>
   </tr>
