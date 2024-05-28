@@ -535,16 +535,17 @@ public class ProcessService {
 								userSettingMapper.insert(idInt, enzymeInt, missedCleavageInt, minNumEnzTermInt, pTolFloat, pUnit,
 										fTolFloat,
 										minMMFloat, maxMMFloat, engine, dataFormat, instrument, msResolution, msmsResolution);
+							}
 
-								try {
-									// [ISNA]
-									prixIndex = prixDataWriter.write("prix", prix_result, null);
-									jobCode = JobProcess.generateCode(prixIndex, id,
-											LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-									jobQueueMapper.insert(idInt, jobCode, title);
-								} catch (Exception e) {
-									logger.warn("error [ISNA]", e.getMessage());
-								}
+							try {
+								// [ISNA]
+								prixIndex = prixDataWriter.write("prix", prix_result, null);
+								jobCode = JobProcess.generateCode(prixIndex, id,
+										LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+								jobQueueMapper.insert(idInt, jobCode, title);
+
+							} catch (Exception e) {
+								logger.warn("error [ISNA]", e.getMessage());
 							}
 						}
 
@@ -574,7 +575,6 @@ public class ProcessService {
 						}
 					}
 				}
-
 			}
 		} else {
 
@@ -717,6 +717,7 @@ public class ProcessService {
 					jobQueueMapper.delete(jobCode);
 				}
 			}
+			logger.info("jobcode!!!!!!!!!!:" + jobCode);
 		}
 		// 별 문제 없으면 livesearch/process를 반환(컨트롤러에서 리턴할 값) process가 modplus외에도 사용될 경우 수정
 		// 필요할 수 있음
