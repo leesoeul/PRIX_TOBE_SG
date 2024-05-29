@@ -355,7 +355,6 @@ public class ProcessService {
 							// fasta에 해당하는 파일 처리
 							dbFile = file.getOriginalFilename();
 
-							dbFile = file.getOriginalFilename();
 							if (file.getSize() > 52428800 * 2) {
 								failed = true;
 								output = "Database file size should not exceed 50MB.";
@@ -717,7 +716,6 @@ public class ProcessService {
 					jobQueueMapper.delete(jobCode);
 				}
 			}
-			logger.info("jobcode!!!!!!!!!!:" + jobCode);
 		}
 		// 별 문제 없으면 livesearch/process를 반환(컨트롤러에서 리턴할 값) process가 modplus외에도 사용될 경우 수정
 		// 필요할 수 있음

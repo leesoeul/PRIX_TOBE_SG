@@ -7,8 +7,9 @@
 
 <table>
 <!-- 원래 코드 190줄부터 251줄까지 -->
-<meta http-equiv="refresh" content="10; URL='result?file=' + ${resultDto.fileName}" th:if="${resultDto != null and resultDto.jobState != null and resultDto.jobState.progress >= 0}"/>
-<div th:if="${resultDto != null and resultDto.jobState != null and !resultDto.jobState.isNumJob() and resultDto.jobState.isCorrectJob() and !resultDto.jobState.checkJobCompleted() and resultDto.userId != null}">
+<!--  일단 주석 처리 원래 이 코드임 2024
+	<meta http-equiv="refresh" content="10; URL='result?file=' + ${resultDto.fileName}"/> -->
+<div th:if="${!resultDto?.jobState?.isNumJob() and resultDto?.jobState?.isCorrectJob() and resultDto.userId != null and !resultDto?.jobState?.checkJobCompleted()}">
     <p th:if="${resultDto.jobState.progress < 0}">
         <font class="blue"><b>NOTICE:</b></font>
         <font class="red" th:text="${resultDto.jobState.message}"></font><br>
@@ -24,7 +25,7 @@
     </p>
 </div>
 
-<div th:if="${resultDto != null and resultDto.jobState != null and (!resultDto.jobState.correctJob or (resultDto.jobState.numJob and resultDto.level <= 1 and (session.id == 4 or resultDto.userId != null)))}">
+<div th:if="${!resultDto?.jobState?.correctJob or (resultDto.jobState.numJob and resultDto.level <= 1 and (session.id == 4 or resultDto.userId == null))}">
     <p th:if="${!resultDto.jobState.correctJob}">
         Your link is NOT valid.
     </p>
@@ -145,7 +146,6 @@ function doSearch() {
 					return;
 			}
 
-			form.action = "result.jsp";
 			form.submit();
 	}
 </script>
@@ -353,7 +353,7 @@ function doSearch() {
 
 <table border="0" bgcolor="#D2D2D2" width="90%">
 <!--table border="0" width="90%" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid;"-->
-<form name="view_as" th:onsubmit="checkSubmit()" method="post">
+<form name="view_as" th:action="@{/modplus/result}" th:onsubmit="checkSubmit()" method="post">
 	<input type="hidden" name="file" th:value="${resultDto.fileName}" />
 	<tr>
 			<td width="100" valign="top">
@@ -382,14 +382,19 @@ function doSearch() {
 <form name="extract_as">
 	<script th:inline="javascript">
     function download() {
-        let url = '/downloader?path=' + /*[[@{java.net.URLEncoder.encode(resultDto.fileName)}]]*/ '';
-        if (document.extract_as.extract[0].checked)
+        /*<![CDATA[*/
+        let encodedFileName = /*[[${resultDto.fileName}]]*/ '';
+        let url = '/downloader?path=' + encodedFileName;
+        if (document.extract_as.extract[0].checked) {
             url = url + '&name=prix.xml&type=xml';
-        else
+        } else {
             url = url + '&name=prix.csv&type=csv';
+        }
         window.open(url, 'Download');
+        /*]]>*/
     }
 	</script>
+
 	<tr>
 		<td><input type="button" class="btnSmall" value="Extract As" onclick="download()"/></td>
 		<td>&nbsp;&nbsp;<input type="radio" class="CHECK" name="extract" value="pepxml" checked/>XML (for viewer)&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" class="CHECK" name="extract" value="excel"/>CSV</td>

@@ -3,6 +3,8 @@ package com.prix.homepage.livesearch.dao;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import com.prix.homepage.livesearch.pojo.Data;
+
 
 @Mapper
 @Repository
@@ -17,4 +19,6 @@ public interface DataMapper {
   void updateContent(Integer id, byte[] content);
 
   byte[] findContentById(Integer id);
+
+  Data getNameContentById(Integer id);
 }

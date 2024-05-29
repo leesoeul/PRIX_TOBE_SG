@@ -40,6 +40,7 @@ public class ResultService {
 	public ResultDto result(String id,
 			HttpServletRequest request, HttpSession session) throws FileNotFoundException {
 
+		if(id == null) id = "4";
 		Integer idInt = Integer.parseInt(id);
 
 		String fileName = request.getParameter("file");
@@ -165,6 +166,7 @@ public class ResultService {
 				.max(summary.getProteinMassMax())
 				.proteins(proteins)
 				.maxProteins(maxProteins)
+				.level(level)
 				.build();
 
 		return resultDto;

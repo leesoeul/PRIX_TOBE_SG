@@ -209,43 +209,69 @@ public class LivesearchController {
    * @param request ResultService로 넘기고 ResultService에서 param 접근
    */
   @GetMapping("/modplus/result")
-  public String resultPage(Model model, HttpServletRequest request) {
-    // 세션에서 id 확인 없으면 4(anony)로 지정
-    final Integer anony = 4;
-    HttpSession session = request.getSession();
-    String id = String.valueOf(session.getAttribute("id"));
-    if (id == null) {
-      session.setAttribute("id", anony);
-      id = (String) session.getAttribute("id");
-    }
-    ResultDto resultDto = ResultDto.builder()
-        .summary(null)
-        .mods(null)
-        .fileName("")
-        .isDBond(false)
-        .useTargetDecoy(false)
-        .minScore("")
-        .maxHit("")
-        .minFDR("")
-        .sort("")
-        .userId(null)
-        .jobState(null)
-        .max(0)
-        .proteins(new ProteinInfo[0])
-        .maxProteins(0)
-        .build();
-
-    try {
-      resultDto = resultService.result(id, request, session);
-    } catch (Exception e) {
-      logger.error("result service error: {}", e.getMessage());
-      e.printStackTrace();
-    }
-
-    model.addAttribute("resultDto", resultDto);
-    return "livesearch/result";
+  public String getResultPage(Model model, HttpServletRequest request) {
+      return handleResultPage(model, request);
   }
-
+  
+  @PostMapping("/modplus/result")
+  public String postResultPage(Model model, HttpServletRequest request) {
+      return handleResultPage(model, request);
+  }
+  
+  private String handleResultPage(Model model, HttpServletRequest request) {
+      // 세션에서 id 확인 없으면 4(anony)로 지정
+      final Integer anony = 4;
+      HttpSession session = request.getSession();
+      String id = String.valueOf(session.getAttribute("id"));
+      if (id == null) {
+          session.setAttribute("id", anony);
+          id = (String) session.getAttribute("id");
+      }
+      ResultDto resultDto = ResultDto.builder()
+          .summary(null)
+          .mods(null)
+          .fileName("")
+          .isDBond(false)
+          .useTargetDecoy(false)
+          .minScore("")
+          .maxHit("")
+          .minFDR("")
+          .sort("")
+          .userId(null)
+          .jobState(null)
+          .max(0)
+          .proteins(new ProteinInfo[0])
+          .maxProteins(0)
+          .level(1)
+          .build();
+  
+      try {
+          resultDto = resultService.result(id, request, session);
+      } catch (Exception e) {
+          logger.error("result service error: {}", e.getMessage());
+          e.printStackTrace();
+      }
+  
+      logger.info("ResultDto Information:");
+      logger.info("Summary: " + resultDto.getSummary());
+      logger.info("Mods: " + resultDto.getMods());
+      logger.info("File Name: " + resultDto.getFileName());
+      logger.info("Is DBond: " + resultDto.isDBond());
+      logger.info("Use Target Decoy: " + resultDto.isUseTargetDecoy());
+      logger.info("Min Score: " + resultDto.getMinScore());
+      logger.info("Max Hit: " + resultDto.getMaxHit());
+      logger.info("Min FDR: " + resultDto.getMinFDR());
+      logger.info("Sort: " + resultDto.getSort());
+      logger.info("User ID: " + resultDto.getUserId());
+      logger.info("Job State: " + resultDto.getJobState());
+      logger.info("Max: " + resultDto.getMax());
+      logger.info("Proteins: " + resultDto.getProteins());
+      logger.info("Max Proteins: " + resultDto.getMaxProteins());
+  
+      model.addAttribute("resultDto", resultDto);
+      return "livesearch/result";
+  }
+  
   /**
    * process에서 취소 요청시 cancel 페이지 - 미완 추가 수정 필요 0528
    */

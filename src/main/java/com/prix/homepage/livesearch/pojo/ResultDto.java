@@ -35,4 +35,5 @@ public class ResultDto {
   double max;
   ProteinInfo[] proteins;
   int maxProteins;
+  Integer level;
 }
