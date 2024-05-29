@@ -24,12 +24,12 @@ public class UserModificationServiceImpl implements UserModificationService{
   }
 
   @Override
-  public Integer countModifications(Integer userId, Boolean engine) {
-    return userModificationMapper.countModifications(userId, engine);
+  public Integer countModifications(Integer userId, Boolean variable, Boolean engine) {
+    return userModificationMapper.countModifications(userId, variable, engine);
   }
 
   @Override
-  public void deleteByUserIdAndModId(Integer userId, String engine, String[] modIds) throws Exception {
+  public void deleteByUserIdAndModId(Integer userId, Boolean engine, String[] modIds) throws Exception {
     userModificationMapper.deleteByUserIdAndModId(userId, engine, modIds);
   }
 

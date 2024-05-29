@@ -37,14 +37,6 @@ function uncheck(obj) {
 
 function sortBy(by) {
 	document.mod_list.sort.value = by;
-	document.mod_list.action = "var_ptms_list";
-	document.mod_list.method = "get";
-	document.mod_list.submit();
-}
-
-function doSubmit() {
-	document.mod_list.action = "var_ptms_list";
-	document.mod_list.method = "post";
 	document.mod_list.submit();
 }
 
@@ -64,31 +56,28 @@ function openUserList(button) {
 <script th:inline="javascript">
   /*<![CDATA[*/
   function handlePageLoad() {
-      var id = /*[[${id}]]*/ null;
-      var finished = /*[[${finished}]]*/ false;
-      var varValue = /*[[${var}]]*/ null;
-      var engineValue = /*[[${engine}]]*/ null;
-      var reloadParent = /*[[${reloadParent}]]*/ false;
+      let id = /*[[${id}]]*/ null;
+      let varValue = /*[[${var}]]*/ null;
+      let engineValue = /*[[${engine}]]*/ null;
       
       if (id == null) {
-          opener.opener.location = '../login?url=modi/search';
+          opener.location = '../login?url=modi/search';
           opener.close();
           window.close();
-      } else if (finished) {
-          opener.location = 'var_ptms_list?var=' + varValue + '&engine=' + engineValue;
-          if (reloadParent) {
-              opener.opener.location.href = opener.opener.document.URL;
-          }
+      } else {
+        if(varValue === "1"){
+						window.opener.loadVarMods(id, engineValue);
+					}else{
+						window.opener.loadFixedMods(id, engineValue);
+					}
       }
   }
   /*]]>*/
 </script>
 </head>
 
-<!--ㅈㅍㅈㅅ 
-	<body A <% if (id == null) out.print("onload='opener.location = \"../login?url=modplus/search\"; window.close();'"); else if (reloadParent) out.print("onload='opener.location.href = opener.document.URL;'"); %>> -->
 <body onload="handlePageLoad()">
-<form name="mod_list" method="get" action="javascript:doSubmit();">
+<form name="mod_list" method="post" th:action="@{/modplus/var_ptms_list}">
 	<input type="hidden" name="sort" th:value="${sortBy}"/>
 	<input type="hidden" name="var" th:value="${var}"/>
 	<input type="hidden" name="engine" th:value="${engine}"/>
@@ -139,7 +128,7 @@ function openUserList(button) {
 <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
     <tr>
       <td class="grayTH"><div align="center">
-		<input name="check_all" type="checkbox" class="CHECK" onclick="checkAllMods();" />
+		<input name="check_all" type="checkbox" class="CHECK" th:onclick="checkAllMods();" />
 	  </div></td>      
       <td class="grayTH" ><div align="left">
         <table border="0" cellspacing="0" cellpadding="0">
@@ -218,7 +207,7 @@ function openUserList(button) {
             onmouseover="this.style.backgroundColor='#f7f7f7'"
             onmouseout="this.style.backgroundColor='#ffffff'">
             <td class="grayTD" align="center">
-                <input type="checkbox" class="CHECK" th:value="${modification.id}" onclick="uncheck(this);" />
+                <input name="mod" type="checkbox" class="CHECK" th:value="${modification.id}" onclick="uncheck(this);" />
             </td>
             <td class="grayTD" align="left">
                 <span th:text="${modification.name}"></span>

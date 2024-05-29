@@ -11,7 +11,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @Service
-public class UserSettingServiceImpl implements UserSettingService{
+public class UserSettingServiceImpl implements UserSettingService {
 
   private final UserSettingMapper userSettingMapper;
 
@@ -34,27 +34,46 @@ public class UserSettingServiceImpl implements UserSettingService{
     String msResolution = "";
     String msmsResolution = "";
 
-    UserSetting userSetting = userSettingMapper.findByUserIdModeye(id);
-    
-    enzyme = "" + userSetting.getEnzyme();
-    missedCleavage = "" + userSetting.getMmc();
-    minNumEnzTerm = "" + userSetting.getMet();
-    pTolerance = "" + userSetting.getPtol();
-    pUnit = "" + userSetting.getPtol_unit();
-    fTolerance = "" + userSetting.getFtol();
-    minMM = "" + userSetting.getMm_min();
-    maxMM = "" + userSetting.getMm_max();
-    dataFormat = userSetting.getData_format();
-    instrument = userSetting.getInstrument();
-    msResolution = userSetting.getMs_resolution();
-    if (msResolution == null)
-      msResolution = "";
-    msmsResolution = userSetting.getMsms_resolution();
-    if (msmsResolution == null)
-      msmsResolution = "";
+    // id에 해당하는 usersetting이 존재하지 않을시 보낼 dummy
+    UserSettingDto dummyUserSettingDto = UserSettingDto.builder()
+        .version(version)
+        .enzyme(enzyme)
+        .missedCleavage(missedCleavage)
+        .minNumEnzTerm(minNumEnzTerm)
+        .pTolerance(pTolerance)
+        .minChar(minChar)
+        .pUnit(pUnit)
+        .fTolerance(fTolerance)
+        .minIE(minIE)
+        .maxIE(maxIE)
+        .minMM(minMM)
+        .maxMM(maxMM)
+        .dataFormat(dataFormat)
+        .instrument(instrument)
+        .msResolution(msResolution)
+        .msmsResolution(msmsResolution)
+        .build();
 
-    UserSettingDto userSettingDto = 
-      UserSettingDto.builder()
+    UserSetting userSetting = userSettingMapper.findByUserIdModeye(id);
+    if (userSetting != null) {
+      enzyme = "" + userSetting.getEnzyme();
+      missedCleavage = "" + userSetting.getMmc();
+      minNumEnzTerm = "" + userSetting.getMet();
+      pTolerance = "" + userSetting.getPtol();
+      pUnit = "" + userSetting.getPtol_unit();
+      fTolerance = "" + userSetting.getFtol();
+      minMM = "" + userSetting.getMm_min();
+      maxMM = "" + userSetting.getMm_max();
+      dataFormat = userSetting.getData_format();
+      instrument = userSetting.getInstrument();
+      msResolution = userSetting.getMs_resolution();
+      if (msResolution == null)
+        msResolution = "";
+      msmsResolution = userSetting.getMsms_resolution();
+      if (msmsResolution == null)
+        msmsResolution = "";
+
+      UserSettingDto userSettingDto = UserSettingDto.builder()
           .version(version)
           .enzyme(enzyme)
           .missedCleavage(missedCleavage)
@@ -73,6 +92,8 @@ public class UserSettingServiceImpl implements UserSettingService{
           .msmsResolution(msmsResolution)
           .build();
 
-    return userSettingDto;
+      return userSettingDto;
+    }
+    return dummyUserSettingDto;
   }
 }

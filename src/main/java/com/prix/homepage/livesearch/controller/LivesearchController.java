@@ -62,32 +62,12 @@ public class LivesearchController {
       id = (Integer) session.getAttribute("id");
     }
 
-    // id에 해당하는 usersetting이 존재하지 않을시 보낼 dummy
-    UserSettingDto userSettingDto = UserSettingDto.builder()
-        .version("1.0.1")
-        .enzyme(null)
-        .missedCleavage(null)
-        .minNumEnzTerm(null)
-        .pTolerance("10")
-        .minChar(null)
-        .pUnit(null)
-        .fTolerance("0.05")
-        .minIE(null)
-        .maxIE(null)
-        .minMM("-150")
-        .maxMM("+250")
-        .dataFormat(null)
-        .instrument(null)
-        .msResolution(null)
-        .msmsResolution(null)
-        .build();
-
     // id와 일치하는 usersetting을 가져오거나 reuqest param에 따라 delete usermodification 수행
-    if (id.compareTo(anony) != 0) 
-    {
-      userSettingDto = userSettingService.getUsersettingById(id);
-    } 
-    else if (request.getParameter("entry") == null) 
+    UserSettingDto userSettingDto = userSettingService.getUsersettingById(id);
+    // id에 해당하는 userSetting전달, 없으면 더미 전달
+    model.addAttribute("userSetting", userSettingDto);
+
+    if (request.getParameter("entry") == null) 
     {
       try {
         // delete modification data for the anonymous user
@@ -108,14 +88,16 @@ public class LivesearchController {
 
     
     Boolean engine = false;
-    Integer varMods = userModificationService.countModifications(id, engine);
-    if(varMods == null) varMods = 0;
+    Boolean variable = true;
+    Integer varModCount = userModificationService.countModifications(id, variable, engine);
+    if(varModCount == null) varModCount = 0;
+    variable = false;
+    Integer fixedModCount = userModificationService.countModifications(id, variable, engine);
+    if(fixedModCount == null) fixedModCount = 0;
 
-    //Variable Modifications의 표기 숫자 varmods전달
-    model.addAttribute("varMods", varMods);
-
-    // id에 해당하는 userSetting전달, 없으면 더미 전달
-    model.addAttribute("userSetting", userSettingDto);
+    //Modifications 개수 전달
+    model.addAttribute("varModCount", varModCount);
+    model.addAttribute("fixedModCount", fixedModCount);
 
     // px_database : id, name, file # 비었으면 빈 List []
     List<Database> listDatabaseResponseDto = databaseService.getAllDatabase();
