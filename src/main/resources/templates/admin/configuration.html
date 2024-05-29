@@ -43,34 +43,25 @@
                                 <td class="grayTH" >File</td>
                                 <td class="grayTH"><div align="right">&nbsp;</div></td>
                             </tr>
-                            <tr>
-                                <form method="post" th:action="@{/manage}">
-                                  <input name="db_index" type="hidden" value="<%=rs.getInt(1)%>"/>
-                                    <td class="grayTD"><input name="db_name" type="text" size="40" value="<%=rs.getString(2)%>" /></td>
-                                    <td class="grayTD" ><%=rs.getString(3)%></td>
-                                    <td class="grayTD"><div align="right"><input name="modify_db" type="submit" class="btnSmall" value=" edit " />&nbsp;
-                                  <input name="delete_db" type="button" class="btnSmall" value=" unlink " onclick="document.location='manage.jsp?delete_db=<%=rs.getInt(1)%>';" /></div></td>
-                                </form>
-                            </tr>
-                            <c:if test="${not empty listDatabaseResponseDto}">
-                                <c:forEach var="item" items="${listDatabaseResponseDto}">
-                                    <tr>
-                                        <form method="post" action="manage.jsp">
-                                            <input name="db_index" type="hidden" value="${item.id}"/>
-                                            <td class="grayTD">
-                                                <input name="db_name" type="text" size="40" value="${item.name}" />
-                                            </td>
-                                            <td class="grayTD">${item.file}</td>
-                                            <td class="grayTD">
-                                                <div align="right">
-                                                    <input name="modify_db" type="submit" class="btnSmall" value=" edit " />
-                                                </div>
-                                            </td>
-                                                        <input name="delete_db" type="button" class="btnSmall" value=" unlink " onclick="document.location='manage.jsp?delete_db=${item.id}';" /></div></td> 
-                                        </form>
+                            <tbody th:if="${listDatabaseResponseDto != null}">
+                                <form method="post" th:action="@{/admin/manage}">
+                                    <tr th:each="item : ${listDatabaseResponseDto}">
+                                        <input type="hidden" name="db_index" th:value="${item.id}" />
+                                        <td class="grayTD">
+                                            <input type="text" name="db_name" size="40" th:value="${item.name}" />
+                                        </td>
+                                        <td class="grayTD" th:text="${item.file}"></td>
+                                        <td class="grayTD">
+                                            <div align="right">
+                                                <input type="submit" name="modify_db" class="btnSmall" value=" edit " />
+                                            </div>
+                                        </td>
+                                        <td class="grayTD">
+                                            <input type="submit" name="delete_db" class="btnSmall" value=" unlink " />
+                                        </td>
                                     </tr>
-                                </c:forEach>
-                            </c:if>
+                                </form>
+                            </tbody>                            
                             <tr>
                                 <form method="post" action="manage_file.jsp" enctype="multipart/form-data">
                                 <td class="grayTD"><input name="db_name" type="text" size="40" /></td>
@@ -96,46 +87,31 @@
                                 <td class="grayTH">At Cterm</div></td>
                                 <td class="grayTH"><div align="right">&nbsp;</div></td>
                             </tr>
+                            <tbody th:if="${listEnzymeResponseDto != null}">
+                                <tr th:each="item : ${listEnzymeResponseDto}">
+                                    <form method="post" th:action="@{/admin/manage}">
+                                        <input type="hidden" name="enzyme_id" th:value="${item.id}" />
+                                        <td class="grayTD">
+                                            <input type="text" name="enzyme_name" size="40" th:value="${item.name}" />
+                                        </td>
+                                        <td class="grayTD">
+                                            <input type="text" name="enzyme_nt_cut" size="40" th:value="${item.nt_cleave}" />
+                                        </td>
+                                        <td class="grayTD">
+                                            <input type="text" name="enzyme_ct_cut" size="40" th:value="${item.ct_cleave}" />
+                                        </td>
+                                        <td class="grayTD">
+                                            <div align="right">
+                                                <input type="submit" name="modify_enzyme" class="btnSmall" value=" edit " />
+                                                &nbsp;
+                                                <input type="submit" name="delete_enzyme" class="btnSmall" value=" delete " />
+                                            </div>
+                                        </td>
+                                    </form>
+                                </tr>
+                            </tbody>                            
                             <tr>
-                                <form method="post" action="manage.jsp">
-                                    <input name="enzyme_id" type="hidden" value="<%=rs.getInt(4)%>"/>
-                                    <td class="grayTD"><input name="enzyme_name" type="text" value="<%=rs.getString(1)%>"/></td>
-                                    <td class="grayTD"><input name="enzyme_nt_cut" type="text" value="<%=rs.getString(2)%>"/></td>
-                                    <td class="grayTD"><input name="enzyme_ct_cut" type="text" value="<%=rs.getString(3)%>"/></td>
-                                    <td class="grayTD">
-                                        <div align="right">
-                                            <input name="modify_enzyme" type="submit" class="btnSmall" value=" edit " />&nbsp;<input name="delete_enzyme" type="button" class="btnSmall" value=" delete " onclick="document.location='manage.jsp?delete_enzyme=<%=rs.getInt(4)%>';" />
-                                        </div>
-                                    </td>
-                               </form>
-                            </tr> 
-                            <c:if test="${not empty listEnzymeResponseDto}">
-                                <c:forEach var="item" items="${listEnzymeResponseDto}">
-                                    <tr>
-                                        <form method="post" action="manage.jsp">
-                                            <input name="enzyme_id" type="hidden" value="${item.id}"/>
-                                            <td class="grayTD">
-                                                <input name="enzyme_name" type="text" size="40" value="${item.name}" />
-                                            </td>
-                                                        <td class="grayTD">
-                                                <input name="enzyme_name" type="text" size="40" value="${item.nt_cleave}" />
-                                            </td>
-                                                        <td class="grayTD">
-                                                <input name="enzyme_name" type="text" size="40" value="${item.ct_cleave}" />
-                                            </td>
-                                            <td class="grayTD">
-                                                <div align="right">
-                                                    <input name="modify_enzyme" type="submit" class="btnSmall" value=" edit " />
-                                                                        &nbsp;<input name="delete_enzyme" type="button" class="btnSmall" value=" delete " onclick="document.location='manage.jsp?delete_enzyme=${item.id}';" />
-                                                </div>
-                                            </td>
-                                                        
-                                        </form>
-                                    </tr>
-                                </c:forEach>
-                            </c:if>
-                            <tr>
-                                <form method="post" action="manage.jsp">
+                                <form method="post" th:action="@{/admin/manage}">
                                 <td class="grayTD"><input name="enzyme_name" type="text"/></td>
                                 <td class="grayTD"><input name="enzyme_nt_cut" type="text"/></td>
                                 <td class="grayTD"><input name="enzyme_ct_cut" type="text"/></td>
@@ -161,35 +137,20 @@
                                 <td class="grayTH" >File</td>
                                 <td class="grayTH"><div align="right">&nbsp;</div></td>
                             </tr>
-                            <tr>
-                                <td class="grayTD"><%=rs.getString(1)%></td>		
-                                <td class="grayTD"><%=rs.getString(2)%></td>
-                                <td class="grayTD"><%=rs.getString(3)%></td>
-                                <td class="grayTD"><div align="right">&nbsp;</div></td>
-                            </tr> 
-                            <c:if test="${not empty listModificationLogResponseDto}">
-                                <c:forEach var="item" items="${listModificationLogResponseDto}">
-                                    <tr>
-                                        <form method="post" action="manage.jsp">
-                                            <td class="grayTD">
-                                                            ${item.date}
-                                            </td>
-                                                        <td class="grayTD">
-                                                            ${item.version}
-                                            </td>
-                                                        <td class="grayTD">
-                                                            ${item.file}
-                                            </td>
-                                            <td class="grayTD">
-                                                <div align="right">
-                                                                        &nbsp;
-                                                </div>
-                                            </td>
-                                                        
-                                        </form>
-                                    </tr>
-                                </c:forEach>
-                            </c:if>
+                            <tbody th:if="${listModificationLogResponseDto != null}">
+                                <tr th:each="item : ${listModificationLogResponseDto}">
+                                    <form method="post" th:action="@{/admin/manage}">
+                                        <td class="grayTD" th:text="${item.date}"></td>
+                                        <td class="grayTD" th:text="${item.version}"></td>
+                                        <td class="grayTD" th:text="${item.file}"></td>
+                                        <td class="grayTD">
+                                            <div align="right">
+                                                &nbsp;
+                                            </div>
+                                        </td>
+                                    </form>
+                                </tr>
+                            </tbody>
                             <tr>
                                 <form method="post" action="manage_file.jsp" enctype="multipart/form-data">
                                 <td class="grayTD"><input name="ptm_date" type="date" size="20" /></td>
@@ -217,26 +178,21 @@
                                 <td class="grayTH">File</td>
                                 <td class="grayTH"><div align="right">&nbsp;</div></td>
                             </tr>
+                            <tbody th:if="${listSoftwareLogResponseDto != null}">
+                                <tr th:each="softwareLog : ${listSoftwareLogResponseDto}">
+                                    <td class="grayTD" th:text="${softwareLog.name}"></td>
+                                    <td class="grayTD" th:text="${softwareLog.date}"></td>
+                                    <td class="grayTD" th:text="${softwareLog.version}"></td>
+                                    <td class="grayTD" th:text="${softwareLog.file}"></td>
+                                    <td class="grayTD">
+                                        <div align="right">
+                                            &nbsp;
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
                             <tr>
-                                <td class="grayTD"><%=rs.getString(1)%></td>		
-                                <td class="grayTD"><div align="left"><%=rs.getString(2)%></div></td>
-                                <td class="grayTD"><div align="left"><%=rs.getString(3)%></div></td>
-                                <td class="grayTD"><%=rs.getString(4)%></td>
-                                <td class="grayTD"><div align="right">&nbsp;</div></td>
-                            </tr>
-                            <c:if test="${not empty listSoftwareLogResponseDto}">
-                                <c:forEach var="softwareLog" items="${listSoftwareLogResponseDto}">
-                                    <tr>
-                                        <td class="grayTD">${softwareLog.name}</td>
-                                        <td class="grayTD">${softwareLog.date}</td>
-                                        <td class="grayTD">${softwareLog.version}</td>
-                                        <td class="grayTD">${softwareLog.file}</td>
-                                        <td class="grayTD"><div align="right">&nbsp;</div></td>
-                                    </tr>
-                                </c:forEach>
-                            </c:if>
-                            <tr>
-                                <form name="software" method="post" action="manage_file.jsp" enctype="multipart/form-data">
+                                <form name="software" method="post" th:action="${manage_file}" enctype="multipart/form-data">
                                     <td class="grayTD"><select name="sftw_name">
                                         <option value="">Select --</option>
                                         <option value="MODa">MODa</option>
@@ -266,101 +222,41 @@
                         <tr>
                             <td class="grayTD" valign="top" width="70"><div align="right">MODa</div></td>
                             <td class="grayTD">
-                            <%-- wt
-                            <%
-                            if ( conn != null ) {
-                                Statement state = conn.createStatement();
-                                ResultSet rs = state.executeQuery("select message from px_software_msg where id='moda';");							
-                            %>
-                            <textarea name="modamsg" rows="8" style="width:100%"><%if( rs.next() ) out.print(rs.getString(1));%></textarea>
-                            <%
-                                rs.close();
-                                state.close();
-                            }
-                            %> --%>
-    
-                                <%-- 졸프용 추가한 코드 --%>
-                                <c:if test="${not empty listSoftwareMsgMode}">
-                                    <c:forEach var="msg" items="${listSoftwareMsgMode}">
-                                        <textarea rows="8" style="width:100%"><c:out value="${msg.message}" /></textarea>
-                                    </c:forEach>
-                                </c:if>
-    
+                                <div th:if="${#lists.isNotEmpty(listSoftwareMsgMode)}">
+                                    <div th:each="msg : ${listSoftwareMsgMode}">
+                                        <textarea rows="8" style="width:100%" th:text="${msg.message}"></textarea>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         <tr>
                             <td class="grayTD" valign="top" width="70"><div align="right">DBond</div></td>
                             <td class="grayTD">
-                            <%-- wt
-                            <%
-                            if ( conn != null ) {
-                                Statement state = conn.createStatement();
-                                ResultSet rs = state.executeQuery("select message from px_software_msg where id='dbond';");							
-                            %>
-                            <textarea name="dbondmsg" rows="8" style="width:100%"><%if( rs.next() ) out.print(rs.getString(1));%></textarea>
-                            <%
-                                rs.close();
-                                state.close();
-                            }
-                            %> --%>
-                                <%-- 졸프용 추가한 코드 --%>
-                                <c:if test="${not empty listSoftwareMsgDbond}">
-                                    <c:forEach var="msg" items="${listSoftwareMsgDbond}">
-                                        <textarea rows="8" style="width:100%"><c:out value="${msg.message}" /></textarea>
-                                    </c:forEach>
-                                </c:if>
-    
+                                <div th:if="${#lists.isNotEmpty(listSoftwareMsgDbond)}">
+                                    <div th:each="msg : ${listSoftwareMsgDbond}">
+                                        <textarea rows="8" style="width:100%" th:text="${msg.message}"></textarea>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         <tr>
                             <td class="grayTD" valign="top" width="70"><div align="right">NextSearch</div></td>
                             <td class="grayTD">
-                            <%-- wt
-                            <%
-                            if ( conn != null ) {
-                                Statement state = conn.createStatement();
-                                ResultSet rs = state.executeQuery("select message from px_software_msg where id='nextsearch';");							
-                            %>
-                            <textarea name="nextmsg" rows="8" style="width:100%"><%if( rs.next() ) out.print(rs.getString(1));%></textarea>
-                            <%
-                                rs.close();
-                                state.close();
-                            }
-                            %> --%>
-    
-                                <%-- 졸프용 추가한 코드 --%>
-                                <c:if test="${not empty listSoftwareMsgNextsearch}">
-                                    <c:forEach var="msg" items="${listSoftwareMsgNextsearch}">
-                                        <textarea rows="8" style="width:100%"><c:out value="${msg.message}" /></textarea>
-                                    </c:forEach>
-                                </c:if>
-    
+                                <div th:if="${#lists.isNotEmpty(listSoftwareMsgNextsearch)}">
+                                    <div th:each="msg : ${listSoftwareMsgNextsearch}">
+                                        <textarea rows="8" style="width:100%" th:text="${msg.message}"></textarea>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                         <tr>
                             <td class="grayTD" valign="top" width="70"><div align="right">Signature</div></td>
                             <td class="grayTD">
-                            <%-- wt
-                            <%
-                            if ( conn != null ) {
-                                Statement state = conn.createStatement();
-                                ResultSet rs = state.executeQuery("select message from px_software_msg where id='signature';");							
-                            %>
-                            <textarea name="signature" rows="8" style="width:100%"><%if( rs.next() ) out.print(rs.getString(1));%></textarea>
-                            <%
-                                rs.close();
-                                state.close();
-                            }
-                            %> --%>
-    
-                                <%-- 졸프용 추가한 코드 --%>
-                                <c:if test="${not empty listSoftwareMsgSignature}">
-                                    <c:forEach var="msg" items="${listSoftwareMsgSignature}">
-                                        <textarea rows="8" style="width:100%"><c:out value="${msg.message}" /></textarea>
-                                    </c:forEach>
-                                </c:if>
-    
-    
+                                <div th:if="${#lists.isNotEmpty(listSoftwareMsgSignature)}">
+                                    <div th:each="msg : ${listSoftwareMsgSignature}">
+                                        <textarea rows="8" style="width:100%" th:text="${msg.message}"></textarea>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     </form></table>
@@ -373,8 +269,4 @@
         </td>
     </tr>
 </table>
-
-
-
-
 </html>

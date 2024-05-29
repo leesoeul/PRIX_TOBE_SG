@@ -11,4 +11,6 @@ import com.prix.homepage.user.pojo.SoftwareMsg;
 @Repository
 public interface SoftwareMsgMapper {
     List<SoftwareMsg> findById(String id);
+
+    void update(SoftwareMsg softwareMsg);
 }

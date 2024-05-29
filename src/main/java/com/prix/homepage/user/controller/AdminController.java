@@ -134,5 +134,26 @@ public class AdminController {
     public String gotoAdminIndexPage() {
         return "admin/index";
     }
+    /**
+     * prix.hanyang.ac.kr/admin/searchlog으로의 get request 매핑
+     */
+    @GetMapping("/admin/searchlog")
+    public String gotoSearchLogPage() {
+        return "admin/searchlog";
+    }
+    /**
+     * prix.hanyang.ac.kr/admin/users로의 get request 매핑
+     */
+    @GetMapping("/admin/users")
+    public String gotoAdminUsersPage() {
+        return "admin/users";
+    }
+    /**
+     * prix.hanyang.ac.kr/admin/requestlog로의 get request 매핑
+     */
+    @GetMapping("/admin/requestlog")
+    public String gotoRequestLogPage() {
+        return "admin/requestlog";
+    }
 
 }

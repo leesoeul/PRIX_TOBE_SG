@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.prix.homepage.user.dao.EnzymeMapper;
 import com.prix.homepage.user.pojo.Enzyme;
@@ -58,6 +59,19 @@ public class EnzymeServiceImpl implements EnzymeService{
   @Override
   public void deleteEnzyme(Integer id, Integer userId) throws Exception {
     enzymeMapper.deleteEnzyme(id, userId);
+  }
+
+  @Override
+  @Transactional
+  public void updateEnzyme(Integer id, Integer userId, String name, String ntCleave, String ctCleave) throws Exception {
+    Enzyme enzyme = Enzyme.builder()
+        .id(id)
+        .user_id(userId)
+        .name(name)
+        .nt_cleave(ntCleave)
+        .ct_cleave(ctCleave)
+        .build();
+    enzymeMapper.updateEnzyme(enzyme);
   }
 
 }

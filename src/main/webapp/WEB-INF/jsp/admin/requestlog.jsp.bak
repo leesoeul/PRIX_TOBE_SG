@@ -1,0 +1,208 @@
+<jsp:include page="/inc/misc.jsp" flush="true" />
+<!-- header end-->
+
+<%@ page import="javax.naming.Context" %>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.sql.DataSource" %>
+<%@ page import="java.sql.Connection" %>
+<%@ page import="java.sql.Statement" %>
+<%@ page import="java.sql.ResultSet" %>
+<%@ page import="mail.Mailer" %>
+<%@ page import="java.io.File" %>
+
+<%
+	response.setCharacterEncoding("UTF-8");
+	
+	String id = (String)session.getAttribute("id");
+	Integer level = (Integer)session.getAttribute("level");
+	if (id == null) response.sendRedirect("adlogin.jsp?url=requestlog.jsp");	
+	else if (level == null || level <= 1) response.sendRedirect("index.jsp?url=requestlog.jsp");
+
+	Context initContext = new InitialContext();
+	Context envContext = (Context)initContext.lookup("java:/comp/env");
+	DataSource ds = (DataSource)envContext.lookup("jdbc/PrixDB");
+	Connection conn = ds.getConnection();
+	
+	String swroot = "E:\\Software Archive\\release";
+	int success = 0;
+	int update = 0, delete = 0;
+	String userid = "";
+	if (request.getParameter("accept") != null) {
+		update = 1;
+		userid = request.getParameter("accept");
+	}
+	else if (request.getParameter("reject") != null) {
+		update = 2;
+		userid = request.getParameter("reject");
+	}
+	else if (request.getParameter("delete") != null) {
+		delete = 1;
+		userid = request.getParameter("delete");
+	}
+
+	if ( update > 0 && conn != null ) {
+		Statement state = conn.createStatement();
+		String sql = "select name, email, software from px_software_request where id=" + userid + ";";
+		try {
+			if( update == 1 ){				
+				ResultSet rs = state.executeQuery(sql);
+				if ( rs.next() ) {
+					Mailer mt = new Mailer();
+					String username = rs.getString(1);
+					String useremail = rs.getString(2);
+					String software = rs.getString(3);					
+					File protDir = new File(swroot);
+					for( File file : protDir.listFiles() ) {
+						if( file.getName().startsWith( software.toLowerCase() ) ){
+						//	mt.sendEmailToUser(username, useremail, software, file.getPath());
+							
+							rs = state.executeQuery("select message from px_software_msg where id='" + software.toLowerCase() + "';");
+							String message= (rs.next())? rs.getString(1) : "";
+							rs = state.executeQuery("select message from px_software_msg where id='signature';");
+							String signature= (rs.next())? rs.getString(1) : "";
+							mt.sendEmailToUser(username, useremail, software, message, signature, file.getPath());
+
+							success = 1;							
+							String version = file.getName();
+							version = version.substring(version.indexOf("_v")+2, version.lastIndexOf("."));
+							sql = "update px_software_request set state=" + update + ", version='" + version + "', senttime=now() where id=" + userid + ";";
+							state.executeUpdate(sql);
+							success = 2;
+							break;
+						}
+					}
+				}
+			}
+		/*	if( success == 1 ){
+				sql = "update px_software_request set state=" + update + ", senttime=now() where id=" + userid + ";";
+				state.executeUpdate(sql);
+				success = 2;
+			}//*/
+		} catch (Exception e) {
+		//	state.executeUpdate(sql);
+		}
+		state.close();
+	}
+
+	if ( delete > 0 && conn != null ) {
+		Statement state = conn.createStatement();
+		String sql = "delete from px_software_request where id=" + userid + ";";
+		try {
+			state.executeUpdate(sql);
+		} catch (Exception e) {
+			state.executeUpdate(sql);
+		}
+		state.close();
+	}
+
+%>
+
+<table width="99%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+
+    <td width="10" height="100%" rowspan="2" align="right" valign="top" style="padding-right:15px">
+		&nbsp;
+	</td>
+
+    <td>
+	
+		<table border="0" cellspacing="2" cellpadding="2" id="TitTable">
+		  <tr>
+			<td align="left"><font class="drakBR" size="3">ADMINISTRATION&nbsp;&nbsp;</font>
+			<img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="configuration.jsp" class="menu">Configuration</a>&nbsp;&nbsp;&nbsp;&nbsp;
+			<img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="searchlog.jsp" class="menu">Search Log</a>&nbsp;&nbsp;&nbsp;&nbsp;
+			<img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="users.jsp" class="menu">Users</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		    <img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<u>Request Log</u>
+			</td>
+			<td align="right" valign="bottom" style="padding-right:5px;">&nbsp;</td>
+		  </tr>
+		  <tr align="left">
+            <td><font color="blue"> &gt; Request Log</td>
+          </tr>
+		</table>
+	<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
+    <tr>    
+      <td class="grayTH"><div align="center">No.</div></td>
+	  <td class="grayTH"><div align="center">Request&nbsp;&nbsp;&nbsp;Time</div></td>
+	  <td class="grayTH"><div align="center">Name</div></td>
+      <td class="grayTH"><div align="center">Affiliation</div></td>
+	  <td class="grayTH"><div align="center">Title</div></td>
+      <td class="grayTH"><div align="center">E-mail</div></td>
+	  <td class="grayTH"><div align="center">Instrument</div></td>
+	  <td class="grayTH"><div align="center">Software</div></td>
+	  <td class="grayTH"><div align="center">Ver.</div></td>
+	  <td class="grayTH"><div align="center">State</div></td>
+	  <td class="grayTH"><div align="center">&nbsp;</div></td>
+	  <td class="grayTH"><div align="center">Delete</div></td>
+    </tr>
+<%
+	if (conn != null)
+	{
+		int index = 0;
+		Statement state = conn.createStatement();
+		String sql = "select count(*) from px_software_request";
+		ResultSet rs = null;
+		try {
+			rs = state.executeQuery(sql);
+		} catch (Exception e) {
+			rs = state.executeQuery(sql);
+		}
+		if (rs.next()) totalreq = rs.getInt(1);			
+		rs.close();
+
+		sql = "select * from px_software_request order by date desc,id desc;";
+		rs = null;
+		try {
+			rs = state.executeQuery(sql);
+		} catch (Exception e) {
+			rs = state.executeQuery(sql);
+		}
+	//	int index = 1;
+		while (rs.next())
+		{
+			int address_state = rs.getInt(10);
+			String address = "pending";
+			if( address_state == 1 ) address = "accepted";
+			else if( address_state == 2 ) address = "rejected";
+			String reqtime = rs.getString(2);
+			reqtime = reqtime.substring(2, reqtime.lastIndexOf('.'));
+%>
+	<tr onMouseOver="this.style.backgroundColor='#fafad2'" onMouseOut="this.style.backgroundColor='#ffffff'">
+	  <td class="grayTD"><div align="center"><%=index--%></div></td>
+	  <td class="grayTD"><div align="center"><%=reqtime%></div></td>
+	  <td class="grayTD"><div align="center"><%=rs.getString(3)%></div></div></td>
+	  <td class="grayTD"><div align="center"><%=rs.getString(4)%></div></td>
+	  <td class="grayTD"><div align="center"><%=rs.getString(5)%></div></td>
+	  <td class="grayTD"><div align="center"><%=rs.getString(6)%></div></td>
+	  <td class="grayTD"><div align="center"><%=rs.getString(7)%></div></td>
+	  <td class="grayTD"><div align="center"><%=rs.getString(8)%></div></td>
+	  <td class="grayTD"><div align="center"><%=rs.getString(9)%></div></td>
+	  <td class="grayTD"><div align="center"><%=address%></div></td>
+	  <td class="grayTD"><div align="letf">
+<%
+			if ( address_state == 0 ) {
+%>
+		<input name="btup" type="button" class="btnBlueSmall" value="Accept" onclick="document.location='requestlog.jsp?accept=<%=rs.getInt(1)%>';" /></div></td>
+<%
+			} else {
+%>
+		<% String acttime = rs.getString(11); acttime = acttime.substring(2, acttime.lastIndexOf('.')); out.print(acttime); %></div></td>
+<%
+			}
+%>
+	<td class="grayTD"><div align="center">
+		<input name="deluser" type="button" class="btnSmall" value=" Del " onclick="if(window.confirm('Sure to delete it??')) document.location='requestlog.jsp?delete=<%=rs.getInt(1)%>';" /></div></td>
+	</tr> 
+<%		
+		}
+		rs.close();
+		state.close();
+		conn.close();
+	}
+%>
+</table></td>
+  </tr>
+ 
+</table>
+
+<jsp:include page="/inc/footer.jsp" flush="true" />

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!-- layout의 content로 table 을, links에는 link들을, scripts에는 script들을 넘긴다. 필요 없을 경우 ~{} empty fragment-->
+<html th:replace="~{inc/layout::layout(~{::table}, ~{::link}, ~{::script})}" xmlns:th="http://www.thymeleaf.org">
+
+  <!-- 페이지 개별 css를 어떻게 추가하는지 예시 -->
+  <link href="/css/example.css" th:href="@{/css/example.css}" rel="stylesheet" type="text/css" />
+  <link href="/css/example2.css" th:href="@{/css/example2.css}" rel="stylesheet" type="text/css" />
+
+  <!-- 페이지 개별 javascript 등 기타 script를 추가하는 예시 -->
+  <script>
+  </script>
+
+<!-- Main content -->
+
+
+<table width="99%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+  
+      <td width="10" height="100%" rowspan="2" align="right" valign="top" style="padding-right:15px">
+          &nbsp;
+      </td>
+  
+      <td>
+      
+          <table border="0" cellspacing="2" cellpadding="2" id="TitTable">
+            <tr>
+              <td align="left"><font class="drakBR" size="3">ADMINISTRATION&nbsp;&nbsp;</font>
+              <img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="configuration" class="menu">Configuration</a>&nbsp;&nbsp;&nbsp;&nbsp;
+              <img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="searchlog" class="menu">Search Log</a>&nbsp;&nbsp;&nbsp;&nbsp;
+              <img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<u>Users</u>&nbsp;&nbsp;&nbsp;&nbsp;
+              <img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="requestlog" class="menu">Request Log</a>
+              </td>
+              <td align="right" valign="bottom" style="padding-right:5px;">&nbsp;</td>
+            </tr>
+            <tr align="left">
+              <td><font color="blue"> &gt; Users</td>
+            </tr>
+          </table>
+      <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
+      <tr>    
+        <td class="grayTH"><div align="center">ID</div></td>
+        <td class="grayTH">Name</td>
+        <td class="grayTH">Affiliation</td>
+        <td class="grayTH">E-mail</td>
+        <td class="grayTH"><div align="center">Group (user/admin)</div></td>
+        <td class="grayTH"><div align="center">Level</div></td>
+        <td class="grayTH"><div align="center">Delete</div></td>
+      </tr>
+      <tr onMouseOver="this.style.backgroundColor='#fafad2'" onMouseOut="this.style.backgroundColor='#ffffff'">
+        <td class="grayTD"><div align="center"><%=rs.getInt(1)%><a/></div></td>
+        <td class="grayTD"><%=name%></td>
+        <td class="grayTD"><%=affiliation%></td>
+        <td class="grayTD"><%=email%></td>
+        <td class="grayTD"><div align="center"><%=rs.getInt(5) > 1 ? "admin" : "user"%></div></td>
+        <td class="grayTD"><div align="center">
+
+            &nbsp;</div></td><td class="grayTD"><div align="center">&nbsp;</div></td>
+
+            <input name="btup" type="button" class="btnSmall" value=" up " onclick="document.location='users.jsp?up=<%=rs.getInt(1)%>';" />&nbsp;
+			<input name="btdown" type="button" class="btnSmall" value=" dn " onclick="document.location='users.jsp?down=<%=rs.getInt(1)%>';"  /></div></td>
+
+		<td class="grayTD"><div align="center">
+		<input name="deluser" type="button" class="btnBlueSmall" value=" del " onclick="if(window.confirm('Sure to delete it??')) document.location='users.jsp?del=<%=rs.getInt(1)%>'" /></div></td>
+
+    </table></td>
+</tr>
+</table>
+
+</html>
