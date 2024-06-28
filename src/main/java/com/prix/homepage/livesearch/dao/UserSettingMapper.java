@@ -8,7 +8,7 @@ import com.prix.homepage.livesearch.pojo.UserSetting;
 @Mapper
 @Repository
 public interface UserSettingMapper {
-    UserSetting findByUserIdModeye(Integer userId);
+    UserSetting find(Integer userId, String engine);
 
     Integer existsByUserId(Integer userId);
 

@@ -35,7 +35,7 @@ public class PtmsListController {
    * @param paramsMap id, var, engine, sort
    * @param request 세션 접근 용도
    */
-  @GetMapping("/modplus/var_ptms_list")
+  @GetMapping({"/modplus/var_ptms_list", "/dbond/var_ptms_list"})
   public String varPtmsListPopUp(Model model, @RequestParam Map<String, String> paramsMap,
       HttpServletRequest request) {
 
@@ -72,7 +72,7 @@ public class PtmsListController {
    * @param request
    * @return
    */
-  @PostMapping("/modplus/var_ptms_list")
+  @PostMapping({"/modplus/var_ptms_list", "/dbond/var_ptms_list"})
   public String postVarPtmsListPopUp(Model model, @RequestParam Map<String, String> paramsMap,
       HttpServletRequest request) {
 
@@ -117,7 +117,7 @@ public class PtmsListController {
    * @param paramsMap var, engine, act request parameter
    * @param request 세션 접근 용도
    */
-  @GetMapping("/modplus/user_ptms_list")
+  @GetMapping({"/modplus/user_ptms_list", "/dbond/user_ptms_list"})
   public String userPtmsListPopUp(Model model, @RequestParam Map<String, String> paramsMap,
       HttpServletRequest request) {
 
@@ -161,7 +161,7 @@ public class PtmsListController {
    * @param paramsMap var, engine, act request parameter
    * @param request session 접근 용도
    */
-  @PostMapping("/modplus/user_ptms_list")
+  @PostMapping({"/modplus/user_ptms_list", "/dbond/user_ptms_list"})
   public String postUserPtmsListPopUp(Model model, @RequestParam Map<String, String> paramsMap,
       HttpServletRequest request) {
 
@@ -302,7 +302,7 @@ public class PtmsListController {
    * @param paramsMap var, engine, act request parameter
    * @param request 세션 접근 용도
    */
-  @GetMapping("/modplus/unimod_ptms_list")
+  @GetMapping({"/modplus/unimod_ptms_list", "/dbond/unimod_ptms_list"})
   public String unimodPtmsListPopUp(Model model, @RequestParam Map<String, String> paramsMap,
       HttpServletRequest request) {
 
@@ -355,7 +355,7 @@ public class PtmsListController {
    * @param paramsMap var, engine, act request parameter
    * @param request 세션 접근 용도
    */
-  @PostMapping("/modplus/unimod_ptms_list")
+  @PostMapping({"/modplus/unimod_ptms_list", "/dbond/unimod_ptms_list"})
   public String postUnimodPtmsListPopUp(Model model, @RequestParam Map<String, String> paramsMap,
       HttpServletRequest request) {
 
