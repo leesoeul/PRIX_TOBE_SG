@@ -220,7 +220,7 @@ function stateChanged() {
     </td>
   </tr>
   <tr>
-		<form name="search" method="post" action="process.jsp" enctype="multipart/form-data">
+		<form name="search" method="post"  th:action="@{/dbond/search}"  enctype="multipart/form-data">
 		<input type="hidden" name="engine" value="dbond"/>
 				<td valign="top" style="padding:10px;"><table width="100%" border="0" cellpadding="0" cellspacing="0" id="gray" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
 				<tr>
@@ -272,9 +272,9 @@ function stateChanged() {
 						<td colspan="3">
 								<select name="database">
 										<option value="">Select ------------------------</option>
-										<tr th:each="database : ${listDatabase}">
-												<option th:value="${database.id}" th:text="${database.name}"></option>
-										</tr>
+										<option th:each="database : ${listDatabase}"
+										th:value="${database.id}" 
+										th:text="${database.name}" />
 								</select>&nbsp;&nbsp;
 						</td>
 					</tr>
