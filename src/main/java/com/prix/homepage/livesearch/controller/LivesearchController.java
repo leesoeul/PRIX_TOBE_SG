@@ -203,6 +203,7 @@ public class LivesearchController {
     model.addAttribute("listEnzymeId", listEnzymeResponseDto);
 
     // dbond에 맞게 새로 추가한 것들
+    model.addAttribute("userId", id);
     model.addAttribute("msIndex", msIndex);
     model.addAttribute("inst", inst);
     model.addAttribute("msType", msType);

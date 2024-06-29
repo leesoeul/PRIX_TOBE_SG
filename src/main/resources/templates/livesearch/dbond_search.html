@@ -2,118 +2,94 @@
 <!-- layout의 content로 table 을, links에는 link들을, scripts에는 script들을 넘긴다. 필요 없을 경우 ~{} empty fragment-->
 <html th:replace="~{inc/layout::layout(~{::table}, ~{}, ~{::script})}" xmlns:th="http://www.thymeleaf.org">
 <script th:inline="javascript">
-
-    // user와 admin의 enzyme list를 받아서 select블록을 대체한다.
-    function getEnzymeList(userId) {
-        let xhr = new XMLHttpRequest();
-        let url = '/user_enzyme?userId=' + userId;
-        xhr.open('GET', url);
-				xhr.onload = function() {
-        if (xhr.status === 200) {
-            let responseText = xhr.responseText;
-            let enzymeData = JSON.parse(responseText);
-            let options = '';
-            enzymeData.forEach(function(enzyme) {
-                options += '<option value="' + enzyme.id + '">' + enzyme.name + '</option>';
-            });
-            // th:block를 대체할 HTML 코드를 삽입
-            let blockElement = document.getElementById('enzyme-block');
-            blockElement.innerHTML = options;
-        } else {
-            console.error('Request failed. Status code: ' + xhr.status);
-        }
-    };
-        xhr.send();
-    }
-
-var xmlhttp;
-function getXMLHTTP() {
-	if (xmlhttp == null)
-	{
-		if (window.XMLHttpRequest)
-			xmlhttp = new XMLHttpRequest();
-		else
-			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-}
-
-function trimText(str) {
-	var text = str;
-	var pos = -1;
-	for (var i = 0; i < text.length; i++)
-	{
-		if (text.charAt(i) != ' ' && text.charAt(i) != '\n' && text.charAt(i) != '\r' && text.charAt(i) != '\t')
-		{
-			pos = i;
-			break;
-		}
-	}
-	if (pos >= 0)
-		text = text.substr(pos);
-	else
-		text = '';
-	return text;
-}
+ /*<![CDATA[*/
+  // user와 admin의 enzyme list를 받아서 select블록을 대체한다.
+  function getEnzymeList(userId) {
+  	let xhr = new XMLHttpRequest();
+    let url = '/user_enzyme?userId=' + userId;
+  	xhr.open('GET', url);
+		xhr.onload = function() {
+			if (xhr.status === 200) {
+				let responseText = xhr.responseText;
+				let enzymeData = JSON.parse(responseText);
+				let options = '';
+				enzymeData.forEach(function(enzyme) {
+				options += '<option value="' + enzyme.id + '">' + enzyme.name + '</option>';
+			});
+			// th:block를 대체할 HTML 코드를 삽입
+			let blockElement = document.getElementById('enzyme-block');
+			blockElement.innerHTML = options;
+			} else {
+				console.error('Request failed. Status code: ' + xhr.status);
+			}
+		};
+  	xhr.send();
+  }
 
 function process() {
-	var form = document.search;
+	let form = document.search;
 
 	if( !validateText(form.user.value, form.title.value ) ){
 		alert("Sorry! Character ' | ' cannot be used in UserName or Search Title field.");
 		return;
 	}
-//  ㅈㅍㅈㅅ <%
-// 	if (msIndex == null)
-// 	{
-// %>
-// 	if( form.ms_format.value == '' ){
-// 		alert("Please select Data format.");
-// 		return;
-// 	}
+	let msIndex = /*[[${msIndex}]]*/ null;
+  if (msIndex == null) 
+	{
+    if( form.ms_format.value == '' ){
+      alert("Please select Data format.");
+      return;
+    }
 
-// 	if( form.ms_instrument.value == '' ){
-// 		alert("Please select Instrument type.");
-// 		return;
-// 	}
+		if( form.ms_instrument.value == '' ){
+			alert("Please select Instrument type.");
+      return;
+    }
 
-// 	if( form.ms_file.value == '' ){
-// 		alert("Please select MS/MS Data file.");
-// 		return;
-// 	}
+    if( form.ms_file.value == '' ){
+      alert("Please select MS/MS Data file.");
+      return;
+    }
 
-// 	if( form.database.value == '' && form.fasta.value == '' ){
-// 		alert("Please specify Database or upload protein database file(*.fasta).");
-// 		return;
-// 	}
+    if( form.database.value == '' && form.fasta.value == '' ){
+      alert("Please specify Database or upload protein database file(*.fasta).");
+      return;
+    }
 
-// 	if( !validateDataFormat(form.ms_file.value, form.ms_format.value) ){
-// 		alert("Specified Data Format and MS/MS Data are inconsistent. Please check it.");
-// 		return;
-// 	}
-// <%
-// 	}
-// %>
-	if( !validateTolerance(form.pept_tolerance.value, form.frag_tolerance.value) ){
+		if( !validateDataFormat(form.ms_file.value, form.ms_format.value) ){
+      alert("Specified Data Format and MS/MS Data are inconsistent. Please check it.");
+      return;
+    }
+  }
+	if( !validateTolerance(form.pept_tolerance.value, form.frag_tolerance.value) )
+	{
 		alert("Peptide Tol. and Fragment Tol. should be real number.");
 		return;
 	}
 
-	getXMLHTTP();
-	if (xmlhttp != null)
-	{
-		xmlhttp.open("GET", "var_ptms_count.jsp", false);
-		xmlhttp.send(null);
-		var count = trimText(xmlhttp.responseText);
-		if (parseInt(count) > 20)
-		{
-			alert("Number of variable modifications should be no greater than 20.");
-			return;
-		}
-	}
+	// check number of varmods 
+	let xhr = new XMLHttpRequest();
+	let userId = /*[[${userId}]]*/ 4;
+  let url = '/countModifications?userId=' + userId + '&variable=1&engine=1';
+  xhr.open('GET', url);
+  xhr.onload = function() {
+		if (xhr.status === 200) {
+			let varModCount = xhr.responseText;
+			if (parseInt(varModCount) > 20)
+			{
+				alert("Number of variable modifications should be no greater than 20.");
+				return;
+			}
+		} else {
+  		console.error('Request failed. Status code: ' + xhr.status);
+    }
+  };
+  xhr.send();
 
 	form.submit();
 }
-
+ /*]]>*/
+ 
 function validateText(user, title) {
 	if( user.indexOf("|") > -1 || title.indexOf("|") > -1 )
 		return false;
@@ -145,57 +121,6 @@ function changeDB(){
 	else form.fasta.disabled = false;
 }
 
-// ㅈㅍㅈㅅ var fixed = <%
-// 	if (state != null)
-// 	{
-// 		ResultSet rs = state.executeQuery("select count(1) from px_enzyme where user_id=0;");
-// 		if (rs.next())
-// 		{
-// 			out.print("" + rs.getInt(1));
-// 		}
-// 		else
-// 			out.print("0");
-// 		rs.close();
-// 	}
-// 	else
-// 		out.print("0");
-// %>;
-function enzymeList() {
-	getXMLHTTP();
-	if (xmlhttp == null)
-		return;
-	
-	//xmlhttp.onreadystatechange = stateChanged;
-	xmlhttp.open("GET", "user_enzyme.jsp", false);
-	xmlhttp.send(null);
-	stateChanged();
-}
-
-function stateChanged() {
-	var obj = document.search.enzyme;
-	if (xmlhttp.readyState == 4)
-	{
-		var length = obj.length;
-		var text = trimText(xmlhttp.responseText);
-		var nodes = text.split(',');
-		for (var i = 0; i < nodes.length; i++)
-		{
-			var values = nodes[i].split(':');
-			if (values[0] != null && values[0] != '')
-			{
-				if (i + fixed < length)
-				{
-					if (values[1] != obj.options[i + fixed].value)
-						obj.options[i + fixed] = new Option(values[0], values[1]);
-				}
-				else
-					obj.options.add(new Option(values[0], values[1]));
-			}
-		}
-		for (var i = fixed + nodes.length - 1; i < length; i++)
-			obj.options.remove(i);
-	}
-}
 </script>
 <table>
 <table width="990" border="0" cellpadding="0" cellspacing="0">
@@ -235,19 +160,19 @@ function stateChanged() {
 					<th><div align="right"><a href="/help#DATA_FORMAT" class="thmenu">Data Format</a> </div></th>
 					<td>
 
-					<select name="ms_format">
-						<option value="">Select -------------</option>
-						<option value="mgf" th:selected="${userSetting.dataFormat == 'mgf'}">Mascot (*.mgf)</option>
-						<option value="dta" th:selected="${userSetting.dataFormat == 'dta'}">Sequest (*.dta)</option>
-						<option value="pkl" th:selected="${userSetting.dataFormat == 'pkl'}">Micromass (*.pkl)</option>
-					</select>
+						<select name="ms_format">
+							<option value="">Select -------------</option>
+							<option value="mgf" th:selected="${userSetting.dataFormat == 'mgf'}">Mascot (*.mgf)</option>
+							<option value="dta" th:selected="${userSetting.dataFormat == 'dta'}">Sequest (*.dta)</option>
+							<option value="pkl" th:selected="${userSetting.dataFormat == 'pkl'}">Micromass (*.pkl)</option>
+						</select>
 
 					</td>
 						<th><div align="right"><a href="/help#INST" class="thmenu">Instrument</a> </div></th>
 						<td>
 
 						<select name="ms_instrument">
-							<option value="">Select ---</option>
+							<option value="" th:selected="${userSetting.instrument == ''}">Select ---</option>
 							<option value="ESI-ION-TRAP" th:selected="${userSetting.instrument == 'ESI-ION-TRAP'}">ESI-TRAP</option>
 							<option value="QTOF" th:selected="${userSetting.instrument == 'QTOF'}">HCD/QTOF</option>
 						</select>
@@ -280,7 +205,7 @@ function stateChanged() {
 					</tr>
 
 					<tr>	  
-						<th rowspan="1"><div align="right"><a href="/help.jsp#DB" class="thmenu">Local  DB</a> </div></th>
+						<th rowspan="1"><div align="right"><a href="/help#DB" class="thmenu">Local  DB</a> </div></th>
 				<td colspan="3">
 					
 					<span th:if="${msIndex != null}">Created with selected proteins</span>
@@ -291,11 +216,11 @@ function stateChanged() {
 				</td>
 				</tr>	  
 				<tr>	  
-						<th><div align="right"><a href="/help.jsp#TARDEC" class="thmenu">Target-Decoy </div></th>
+						<th><div align="right"><a href="/help#TARDEC" class="thmenu">Target-Decoy </div></th>
 				<td colspan="3"><input name="decoy" type="checkbox" class="CHECK" value="O" /><font size="2" color="blue"> Search with decoy proteins<font></td>
 				</tr> 
 					<tr>
-						<th><div align="right"><a href="/help.jsp#ENZYME" class="thmenu">Enzyme</a> </div></th>
+						<th><div align="right"><a href="/help#ENZYME" class="thmenu">Enzyme</a> </div></th>
 						<td colspan="3">
 
 								<select name="enzyme" id="enzyme-block" th:userId="${session.id}" th:onmousedown="getEnzymeList(getAttribute('userId'))">
