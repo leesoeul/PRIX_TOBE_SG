@@ -55,8 +55,6 @@ public class LivesearchController {
   private final DatabaseService databaseService;
   private final EnzymeService enzymeService;
   private final ProcessService processService;
-  private final ResultService resultService;
-
   private final DataMapper dataMapper;
 
   private final PrixDataWriter prixDataWriter;
