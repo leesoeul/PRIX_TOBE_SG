@@ -1,5 +1,8 @@
 package com.prix.homepage.download.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +22,7 @@ import com.prix.homepage.download.service.RequestService;
  */
 @Controller
 public class RequestController {
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   /**
    * prix.hanyang.ac.kr/reuqest?software= 로의 get reuqest 매핑
@@ -82,11 +86,13 @@ public class RequestController {
         if (sent == 1) {
           System.out
               .println(name + ", " + affiliation + ", " + title + ", " + email + ", " + instrument + ", " + software);
-          requestService.saveRequest(name, affiliation, title, email, instrument, software);
+          requestService.insert(name, affiliation, title, email, instrument, software);
           success = 1;
         }
 
       } catch (Exception e) {
+        logger.error("Error inserting  : {}", e.getMessage());
+
         success = 2;
       }
     }

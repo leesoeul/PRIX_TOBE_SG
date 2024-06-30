@@ -20,12 +20,10 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
+// @Entity
 @Table(name = "px_software_request")
 public class SoftwareRequest {
 
-  @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
   @NotNull
@@ -49,11 +47,10 @@ public class SoftwareRequest {
   private String software;
 
   private String version;
-  
+
   @NotNull
   private Integer state;
 
   private Timestamp senttime;
-
 
 }
