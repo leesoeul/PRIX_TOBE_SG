@@ -78,6 +78,6 @@ public class DownloadController {
 
   @GetMapping("/USE")
   public String USEPage() {
-    return "download/use_index";
+    return "download/USE";
   }
 }
