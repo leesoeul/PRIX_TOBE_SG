@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.prix.homepage.livesearch.pojo.UserSettingDto;
 import com.prix.homepage.livesearch.service.UserModificationService;
@@ -67,8 +68,7 @@ public class LivesearchController {
     // id에 해당하는 userSetting전달, 없으면 더미 전달
     model.addAttribute("userSetting", userSettingDto);
 
-    if (request.getParameter("entry") == null) 
-    {
+    if (request.getParameter("entry") == null) {
       try {
         // delete modification data for the anonymous user
         userModificationService.deleteByUserId(anony);
@@ -86,16 +86,17 @@ public class LivesearchController {
       }
     }
 
-    
     Boolean engine = false;
     Boolean variable = true;
     Integer varModCount = userModificationService.countModifications(id, variable, engine);
-    if(varModCount == null) varModCount = 0;
+    if (varModCount == null)
+      varModCount = 0;
     variable = false;
     Integer fixedModCount = userModificationService.countModifications(id, variable, engine);
-    if(fixedModCount == null) fixedModCount = 0;
+    if (fixedModCount == null)
+      fixedModCount = 0;
 
-    //Modifications 개수 전달
+    // Modifications 개수 전달
     model.addAttribute("varModCount", varModCount);
     model.addAttribute("fixedModCount", fixedModCount);
 
@@ -104,7 +105,9 @@ public class LivesearchController {
     model.addAttribute("listDatabase", listDatabaseResponseDto);
 
     // px_enzyme : id, name where user_id = 0
-    List<Enzyme> listEnzymeZeroResponseDto = enzymeService.getAllEnzymeByUserId(0);
+    List<Enzyme>
+
+    listEnzymeZeroResponseDto = enzymeService.getAllEnzymeByUserId(0);
     model.addAttribute("listEnzymeId0", listEnzymeZeroResponseDto);
 
     // px_enzyme : id, name where user_id = id
@@ -114,6 +117,15 @@ public class LivesearchController {
     return "livesearch/modplus";
   }
 
+  @GetMapping("/livesearch/patternMatchFrm")
+  public String patternMatchPage() {
+    System.out.println("PatternMatchFrm");
+    return "livesearch/patternMatchFrm";
+  }
 
+  @GetMapping("/livesearch/USE")
+  public String USEPage() {
+    return "livesearch/USE";
+  }
 
 }
