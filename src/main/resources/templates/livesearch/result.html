@@ -5,36 +5,22 @@
   xmlns:th="http://www.thymeleaf.org"
 >
 
-<table>
-<!-- 원래 코드 190줄부터 251줄까지 -->
-<!--  일단 주석 처리 원래 이 코드임 2024
-	<meta http-equiv="refresh" content="10; URL='result?file=' + ${resultDto.fileName}"/> -->
-<div th:if="${!resultDto?.jobState?.isNumJob() and resultDto?.jobState?.isCorrectJob() and resultDto.userId != null and !resultDto?.jobState?.checkJobCompleted()}">
-    <p th:if="${resultDto.jobState.progress < 0}">
-        <font class="blue"><b>NOTICE:</b></font>
-        <font class="red" th:text="${resultDto.jobState.message}"></font><br>
-        We are sorry for this inconvenience. Please re-submit your job.<br>
-        If you have the same problem again, please contact us.<br>
-        Thank you for your cooperation and patience.
-    </p>
-    <p th:if="${resultDto.jobState.progress >= 0}">
-        <font class="blue">Search in progress......</font> 
-        (<font class="red" th:text="${resultDto.jobState.progress} + '% complete'"></font>)<br>
-        <font class="blue"><br><br>Job Information:<br></font>
-        <span th:text="${resultDto.jobState.description}"></span>
-    </p>
-</div>
+<table border="0" width="100%">
+	<div th:if="${notauthorized}">
 
-<div th:if="${!resultDto?.jobState?.correctJob or (resultDto.jobState.numJob and resultDto.level <= 1 and (session.id == 4 or resultDto.userId == null))}">
-    <p th:if="${!resultDto.jobState.correctJob}">
-        Your link is NOT valid.
-    </p>
-    <p th:if="${resultDto.jobState.correctJob}">
-        You are NOT authorized to see this result.
-    </p>
-</div>
+	<tr>
+	<td width="5">&nbsp;</td>
+	<td></td>
+	</tr>
+	<tr>
+	<td>&nbsp;</td>	
+	<td>
+	<p>You are NOT authorized to see this result.</p>
+	</td>
+	</tr>
+	</div>
 
-
+	<div th:unless="${notauthorized}">
 <script type="text/javascript">
 function checkAll(obj, flag) {
 	if (obj != null)
@@ -98,7 +84,7 @@ function getChecked(form) {
 function doSearch() {
 	var form = document.result;
 	form.method = "post";
-	form.action = "dbond_search.jsp";
+	form.action = "/dbond/dbond_search";
 	
 	var count = 0;
 	if (form.protein_list.length > 0)
@@ -170,9 +156,9 @@ function doSearch() {
     <td><b>Search Engine</b></td>
     <td>
         : 
-        <span th:text="${'dbond'.equals(resultDto.summary.getEngineName())} ? 'dbond' : 'modplus'"></span>
+        <span th:text="${resultDto.summary.getEngineName()}"></span>
         ( version 
-        <span th:text="${'dbond'.equals(resultDto.summary.getEngineName())} ? resultDto.summary.version : '1.01'"></span>
+        <span th:text="${resultDto.summary.getVersion()}"></span>
         )
     </td>
 	</tr>
@@ -298,7 +284,7 @@ function doSearch() {
 
 
 <!-- Check if MODMapRun is true -->
-<tr th:if="${resultDto != null and resultDto.summary != null and resultDto.summary.mODMapRun}">
+<tr th:if="${resultDto != null and resultDto.summary != null and resultDto.summary.isMODMapRun()}">
   <td><b>MODmap</b></td>
   <td>: <a href="#PTMAP">Checked</a></td>
 </tr>
@@ -353,7 +339,7 @@ function doSearch() {
 
 <table border="0" bgcolor="#D2D2D2" width="90%">
 <!--table border="0" width="90%" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid;"-->
-<form name="view_as" th:action="@{/modplus/result}" th:onsubmit="checkSubmit()" method="post">
+<form name="view_as" th:action="@{/dbond/result}" th:onsubmit="checkSubmit()" method="post">
 	<input type="hidden" name="file" th:value="${resultDto.fileName}" />
 	<tr>
 			<td width="100" valign="top">
@@ -626,5 +612,6 @@ th:unless="${info == null || info.peptideLines == null || info.peptideLines.leng
 	</tr>
 </table>
 </form>
+</div>
 </table>
 </html>

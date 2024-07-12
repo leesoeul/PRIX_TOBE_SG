@@ -20,9 +20,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.prix.homepage.constants.PrixDataWriter;
+import com.prix.homepage.constants.ProteinInfo;
 import com.prix.homepage.livesearch.dao.DataMapper;
 import com.prix.homepage.livesearch.pojo.Data;
 import com.prix.homepage.livesearch.pojo.ProcessDto;
+import com.prix.homepage.livesearch.pojo.ResultDto;
 import com.prix.homepage.livesearch.pojo.UserSettingDto;
 import com.prix.homepage.livesearch.service.UserModificationService;
 import com.prix.homepage.livesearch.service.UserSettingService;
@@ -56,6 +58,7 @@ public class LivesearchController {
   private final EnzymeService enzymeService;
   private final ProcessService processService;
   private final DataMapper dataMapper;
+  private final ResultService resultService;
 
   private final PrixDataWriter prixDataWriter;
 
@@ -279,4 +282,79 @@ public class LivesearchController {
     return "livesearch/process";
   }
 
+  /**
+   * process 완료시 result로 넘어감
+   * 
+   * @param request ResultService로 넘기고 ResultService에서 param 접근
+   */
+  @GetMapping("/dbond/result")
+  public String getResultPage(Model model, HttpServletRequest request) {
+    return handleResultPage(model, request);
+  }
+
+  @PostMapping("/dbond/result")
+  public String postResultPage(Model model, HttpServletRequest request) {
+    return handleResultPage(model, request);
+  }
+
+  private String handleResultPage(Model model, HttpServletRequest request) {
+    // 세션에서 id 확인 없으면 4(anony)로 지정
+    final Integer anony = 4;
+    HttpSession session = request.getSession();
+    String id = String.valueOf(session.getAttribute("id"));
+    if (id == null) {
+      session.setAttribute("id", anony);
+      id = (String) session.getAttribute("id");
+    }
+    ResultDto resultDto = ResultDto.builder()
+        .summary(null)
+        .mods(null)
+        .fileName("")
+        .isDBond(false)
+        .useTargetDecoy(false)
+        .minScore("")
+        .maxHit("")
+        .minFDR("")
+        .sort("")
+        .userId(null)
+        .max(0)
+        .proteins(new ProteinInfo[0])
+        .maxProteins(0)
+        .level(1)
+        .build();
+
+    try {
+      resultDto = resultService.result(id, request, session);
+    } catch (Exception e) {
+      logger.error("result service error: {}", e.getMessage());
+      e.printStackTrace();
+    }
+
+    logger.info("ResultDto Information:");
+    logger.info("Summary: " + resultDto.getSummary());
+    logger.info("Mods: " + resultDto.getMods());
+    logger.info("File Name: " + resultDto.getFileName());
+    logger.info("Is DBond: " + resultDto.isDBond());
+    logger.info("Use Target Decoy: " + resultDto.isUseTargetDecoy());
+    logger.info("Min Score: " + resultDto.getMinScore());
+    logger.info("Max Hit: " + resultDto.getMaxHit());
+    logger.info("Min FDR: " + resultDto.getMinFDR());
+    logger.info("Sort: " + resultDto.getSort());
+    logger.info("User ID: " + resultDto.getUserId());
+    logger.info("Max: " + resultDto.getMax());
+    logger.info("Proteins: " + resultDto.getProteins());
+    logger.info("Max Proteins: " + resultDto.getMaxProteins());
+
+    model.addAttribute("resultDto", resultDto);
+
+    boolean notauthorized = true;
+    if (resultDto.getUserId() != null) {
+      notauthorized = !resultDto.getFileName().equals("390") && !resultDto.getFileName().equals("396")
+          && resultDto.getLevel() <= 1
+          && !id.equals(Integer.toString(resultDto.getUserId()));
+    }
+
+    model.addAttribute("notauthorized", notauthorized);
+    return "livesearch/result";
+  }
 }

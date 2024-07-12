@@ -14,5 +14,7 @@ public interface SearchLogMapper {
       Integer result,
       String engine);
 
-  Integer findUserId(Integer userId, Integer result);
+  // 이거 db에선 result가 int인데 result.jsp에선 String fileName을
+  // 인자로 넣길래 일단 이렇게 함
+  Integer findUserId(Integer userId, String result);
 }

@@ -31,7 +31,6 @@ public class ResultDto {
   String sort;
   
   Integer userId;
-  JobProcess jobState;
   double max;
   ProteinInfo[] proteins;
   int maxProteins;
