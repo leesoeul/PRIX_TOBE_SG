@@ -8,4 +8,12 @@
     SELECT id, name, file FROM px_database
   </select>
 
+  <delete id="deleteById">
+    DELETE FROM px_database WHERE id = #{id}
+  </delete>
+
+  <update id="update">
+    UPDATE px_database SET name = #{name} WHERE id = #{id}
+  </update>
+
 </mapper>

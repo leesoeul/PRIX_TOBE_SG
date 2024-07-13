@@ -44,8 +44,8 @@
                                 <td class="grayTH"><div align="right">&nbsp;</div></td>
                             </tr>
                             <tbody th:if="${listDatabaseResponseDto != null}">
-                                <form method="post" th:action="@{/admin/manage}">
-                                    <tr th:each="item : ${listDatabaseResponseDto}">
+                                <tr th:each="item : ${listDatabaseResponseDto}">
+                                    <form method="post" th:action="@{/admin/manage}">
                                         <input type="hidden" name="db_index" th:value="${item.id}" />
                                         <td class="grayTD">
                                             <input type="text" name="db_name" size="40" th:value="${item.name}" />
@@ -59,9 +59,9 @@
                                         <td class="grayTD">
                                             <input type="submit" name="delete_db" class="btnSmall" value=" unlink " />
                                         </td>
-                                    </tr>
-                                </form>
-                            </tbody>                            
+                                    </form>
+                                </tr>
+                            </tbody>                                                     
                             <tr>
                                 <form method="post" action="manage_file.jsp" enctype="multipart/form-data">
                                 <td class="grayTD"><input name="db_name" type="text" size="40" /></td>

@@ -151,7 +151,7 @@ function del()
 	<tr onMouseOver="this.style.backgroundColor='#fafad2'" onMouseOut="this.style.backgroundColor='#ffffff'">
 	  <td class="grayTD"><div align="center"><%=rs.getInt(1)%><a/></div></td>
 	  <td class="grayTD"><%=name%></td>
-      <td class="grayTD"><%=affiliation%></td>
+      <td class="grayTD"><%=affiliation%></td> 계정 없는 유저 소속
       <td class="grayTD"><%=email%></td>
 	  <td class="grayTD"><div align="center"><%=rs.getInt(5) > 1 ? "admin" : "user"%></div></td>
 	  <td class="grayTD"><div align="center">

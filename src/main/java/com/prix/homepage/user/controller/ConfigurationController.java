@@ -48,6 +48,7 @@ public class ConfigurationController {
         HttpSession session = request.getSession();
         Object idObject = session.getAttribute("id");
         Integer level = (Integer)session.getAttribute("level");
+        Integer userId = (Integer) session.getAttribute("id");
         if(idObject == null){
             return "redirect:/admin/adlogin";
         } else if(level == null || level <= 1){
@@ -59,7 +60,7 @@ public class ConfigurationController {
         model.addAttribute("listDatabaseResponseDto", listDatabaseResponseDto);
     
         // 2. px_enzyme : id, name, nt_cleave, ct_cleave where user_id = 0
-        List<Enzyme> listEnzymeResponseDto = enzymeService.getAllEnzymeByUserId(0);
+        List<Enzyme> listEnzymeResponseDto = enzymeService.getAllEnzymeByUserId(userId);
         model.addAttribute("listEnzymeResponseDto", listEnzymeResponseDto);
     
         // 3. px_modification_log :  date, version, file 
