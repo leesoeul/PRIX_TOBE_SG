@@ -122,16 +122,33 @@ try catch 처리 해줘야함
     }
     %>
   -->
-          <font style="font-size: 11pt"><li>Pattern Syntax</li></font><br />
+          <font style="font-size: 11pt"><li>Select DATABASE</li></font><br />
           &nbsp;&nbsp;<input
             type="radio"
-            name="format_type"
+            name="db_type"
             value="1"
             checked="on"
           />
-          PROSITE regular expression<br />
-          &nbsp;&nbsp;<input type="radio" name="format_type" value="0" /> PYTHON
-          regular expression
+          SWISS-PROT
+          <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Release
+          <span th:text="${gd}"></span><br />
+          &nbsp;&nbsp;<input type="radio" name="db_type" value="0" /> GENBANK
+          <br />
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Release
+          <span th:text="${sd}"></span>
+          <p>
+            <font style="font-size: 11pt"><li>Pattern Syntax</li></font><br />
+            &nbsp;&nbsp;<input
+              type="radio"
+              name="format_type"
+              value="1"
+              checked="on"
+            />
+            PROSITE regular expression<br />
+            &nbsp;&nbsp;<input type="radio" name="format_type" value="0" />
+            PYTHON regular expression
+          </p>
+
           <p>
             <font style="font-size: 11pt"><li>Input Pattern</li></font><br />
             &nbsp;&nbsp;<input

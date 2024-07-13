@@ -54,20 +54,21 @@ public class RequestController {
    **/
   @PostMapping("/request")
   public String submitRequest(
-    // Model model, @RequestBody SoftwareRequest form, @RequestParam String agreement,
-    //   @RequestParam String software) {
-    // String name = form.getName();
-    // String affiliation = form.getAffiliation();
-    // String title = form.getTitle();
-    // String email = form.getEmail();
-    // String instrument = form.getInstrument();
-    // // String software = form.getSoftware();
+      // Model model, @RequestBody SoftwareRequest form, @RequestParam String
+      // agreement,
+      // @RequestParam String software) {
+      // String name = form.getName();
+      // String affiliation = form.getAffiliation();
+      // String title = form.getTitle();
+      // String email = form.getEmail();
+      // String instrument = form.getInstrument();
+      // // String software = form.getSoftware();
 
-    Model model, @RequestParam String name, @RequestParam String affiliation,
-    @RequestParam String title, @RequestParam String email,
-    @RequestParam String instrument, @RequestParam String software,
-    @RequestParam String agreement,
-    RedirectAttributes redirectAttributes) {
+      Model model, @RequestParam String name, @RequestParam String affiliation,
+      @RequestParam String title, @RequestParam String email,
+      @RequestParam String instrument, @RequestParam String software,
+      @RequestParam String agreement,
+      RedirectAttributes redirectAttributes) {
 
     if (agreement == null)
       agreement = "0xno";

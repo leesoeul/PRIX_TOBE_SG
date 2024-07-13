@@ -9,7 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.prix.homepage.livesearch.pojo.PatternMatch;
 import com.prix.homepage.livesearch.pojo.UserSettingDto;
+import com.prix.homepage.livesearch.service.PatternMatchService;
 import com.prix.homepage.livesearch.service.UserModificationService;
 import com.prix.homepage.livesearch.service.UserSettingService;
 import com.prix.homepage.user.pojo.Database;
@@ -32,6 +34,7 @@ public class LivesearchController {
   private final UserModificationService userModificationService;
   private final DatabaseService databaseService;
   private final EnzymeService enzymeService;
+  private final PatternMatchService patternMatchService;
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -118,8 +121,18 @@ public class LivesearchController {
   }
 
   @GetMapping("/livesearch/patternMatchFrm")
-  public String patternMatchPage() {
+  public String patternMatchPage(Model model) {
     System.out.println("PatternMatchFrm");
+
+    String gd = "";
+    String sd = "";
+
+    gd = patternMatchService.getUpdateDay("genbank");
+    sd = patternMatchService.getUpdateDay("swiss_prot");
+
+    model.addAttribute("gd", gd);
+    model.addAttribute("sd", sd);
+
     return "livesearch/patternMatchFrm";
   }
 
