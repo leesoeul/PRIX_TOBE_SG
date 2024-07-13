@@ -124,7 +124,9 @@ public class LivesearchController {
   public String patternMatchPage(Model model) {
     System.out.println("PatternMatchFrm");
 
+    // genbank update date
     String gd = "";
+    // swiss_prot update date
     String sd = "";
 
     gd = patternMatchService.getUpdateDay("genbank");
