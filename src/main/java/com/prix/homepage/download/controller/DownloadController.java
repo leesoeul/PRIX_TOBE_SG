@@ -76,8 +76,8 @@ public class DownloadController {
     return "download/PatternMatchFrm";
   }
 
-  @GetMapping("/viewer")
-  public String spectralViewerPage() {
-    return "download/viewer";
+  @GetMapping("/USE")
+  public String USEPage() {
+    return "download/use_index";
   }
 }
