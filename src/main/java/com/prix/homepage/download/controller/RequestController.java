@@ -2,27 +2,27 @@ package com.prix.homepage.download.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.prix.homepage.download.Mailer;
-import com.prix.homepage.download.pojo.SoftwareRequest;
 import com.prix.homepage.download.service.RequestService;
+
+import lombok.AllArgsConstructor;
 
 /**
  * prix.hanyang.ac.kr/request?software=example 페이지
  * prix.hanyang.ac.kr/download/example에서 software download 클릭시 이동
  */
 @Controller
+@AllArgsConstructor
 public class RequestController {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final RequestService requestService;
 
   /**
    * prix.hanyang.ac.kr/reuqest?software= 로의 get reuqest 매핑
@@ -43,9 +43,6 @@ public class RequestController {
     return "download/request";
   }
 
-  @Autowired
-  private RequestService requestService;
-
   /**
    * Retrieve user information by id
    * 
@@ -54,19 +51,13 @@ public class RequestController {
    **/
   @PostMapping("/request")
   public String submitRequest(
-      // Model model, @RequestBody SoftwareRequest form, @RequestParam String
-      // agreement,
-      // @RequestParam String software) {
-      // String name = form.getName();
-      // String affiliation = form.getAffiliation();
-      // String title = form.getTitle();
-      // String email = form.getEmail();
-      // String instrument = form.getInstrument();
-      // // String software = form.getSoftware();
-
-      Model model, @RequestParam String name, @RequestParam String affiliation,
-      @RequestParam String title, @RequestParam String email,
-      @RequestParam String instrument, @RequestParam String software,
+      Model model,
+      @RequestParam String name,
+      @RequestParam String affiliation,
+      @RequestParam String title,
+      @RequestParam String email,
+      @RequestParam String instrument,
+      @RequestParam String software,
       @RequestParam String agreement,
       RedirectAttributes redirectAttributes) {
 
@@ -85,6 +76,7 @@ public class RequestController {
         sent = 1;
 
         if (sent == 1) {
+
           System.out
               .println(name + ", " + affiliation + ", " + title + ", " + email + ", " + instrument + ", " + software);
           requestService.insert(name, affiliation, title, email, instrument, software);
@@ -92,7 +84,7 @@ public class RequestController {
         }
 
       } catch (Exception e) {
-        logger.error("Error inserting  : {}", e.getMessage());
+        logger.error("Error inserting request: {}", e.getMessage(), e);
 
         success = 2;
       }
