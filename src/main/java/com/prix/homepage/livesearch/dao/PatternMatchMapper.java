@@ -12,9 +12,9 @@ import com.prix.homepage.livesearch.pojo.PatternMatch;
 @Repository
 public interface PatternMatchMapper {
 
-    @Select("SELECT * FROM pm_update_table WHERE dbname = 'swiss_prot'")
+    // @Select("SELECT * FROM pm_update_table WHERE dbname = 'swiss_prot'")
     public List<PatternMatch> findUpdateDayGenbank();
 
-    @Select("SELECT * FROM pm_update_table WHERE dbname = 'genbank'")
+    // @Select("SELECT * FROM pm_update_table WHERE dbname = 'genbank'")
     public List<PatternMatch> findUpdateDaySwissProt();
 }
