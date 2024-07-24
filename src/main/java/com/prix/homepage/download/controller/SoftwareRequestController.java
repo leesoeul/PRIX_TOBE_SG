@@ -10,46 +10,46 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.prix.homepage.download.Mailer;
-import com.prix.homepage.download.service.RequestService;
+import com.prix.homepage.download.service.SoftwareRequestService;
 
 import lombok.AllArgsConstructor;
 
 /**
- * prix.hanyang.ac.kr/request?software=example 페이지
- * prix.hanyang.ac.kr/download/example에서 software download 클릭시 이동
+ * prix.hanyang.ac.kr/software_request?software=[parameter] 페이지
+ * prix.hanyang.ac.kr/download/[parameter]에서 software download 클릭시 이동
+ * 요청한 software를 db에 저장 후 메일로 발송하는 controller
  */
 @Controller
 @AllArgsConstructor
-public class RequestController {
+public class SoftwareRequestController {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
-  private final RequestService requestService;
+  private final SoftwareRequestService softwareRequestService;
 
   /**
    * prix.hanyang.ac.kr/reuqest?software= 로의 get reuqest 매핑
    * 
    * @param software download 요청한 소프트웨어 이름
-   * @param model    download/request.html에서 소프트웨어명 전달 용도
-   * @return download/request.html 렌더링
+   * @param model    download/software_request.html에서 소프트웨어명 전달 용도
+   * @return download/software_request.html 렌더링
    */
-  @GetMapping("/request")
+  @GetMapping("/software_request")
   public String gotoRequestSoftwaredPage(@RequestParam(required = false) String software,
       Model model) {
 
     if (software == null || software.isEmpty())
       return "redirect:/publications";
-    System.out.println(software);
     model.addAttribute("success", 0);
     model.addAttribute("software", software);
-    return "download/request";
+    return "download/software_request";
   }
 
   /**
    * Retrieve user information by id
    * 
-   * @param userId : user id
-   * @return download/request.html 렌더링
+   * @return download/software_request.html 렌더링
+   *         software request 메일 발송 성공 여부를 반환한다.
    **/
-  @PostMapping("/request")
+  @PostMapping("/software_request")
   public String submitRequest(
       Model model,
       @RequestParam String name,
@@ -79,14 +79,14 @@ public class RequestController {
 
           System.out
               .println(name + ", " + affiliation + ", " + title + ", " + email + ", " + instrument + ", " + software);
-          requestService.insert(name, affiliation, title, email, instrument, software);
-          success = 1;
+          softwareRequestService.insert(name, affiliation, title, email, instrument, software);
+          success = 1; // 메일 전송이 성공한 경우
         }
 
       } catch (Exception e) {
         logger.error("Error inserting request: {}", e.getMessage(), e);
 
-        success = 2;
+        success = 2; // 메일 전송이 실패한
       }
     }
 
@@ -94,7 +94,7 @@ public class RequestController {
     model.addAttribute("software", software);
     model.addAttribute("email", email);
 
-    return "download/request";
+    return "download/software_request";
   }
 
 }

@@ -7,7 +7,7 @@ import com.prix.homepage.download.pojo.SoftwareRequest;
 
 @Mapper
 @Repository
-public interface RequestMapper {
+public interface SoftwareRequestMapper {
 
-    void saveRequest(SoftwareRequest request);
+    void saveSoftwareRequest(SoftwareRequest request);
 }

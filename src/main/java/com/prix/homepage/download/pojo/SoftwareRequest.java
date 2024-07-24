@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.Builder;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,7 +18,7 @@ import java.sql.Timestamp;
 public class SoftwareRequest {
 
   @NotNull
-  private Timestamp date;
+  private LocalDateTime date;
 
   @NotNull
   private String name;
@@ -37,11 +37,7 @@ public class SoftwareRequest {
 
   private String software;
 
-  private String version;
-
   @NotNull
   private Integer state;
-
-  private Timestamp senttime;
 
 }
