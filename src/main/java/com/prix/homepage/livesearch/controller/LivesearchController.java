@@ -122,7 +122,6 @@ public class LivesearchController {
 
   @GetMapping("/livesearch/patternMatchFrm")
   public String patternMatchPage(Model model) {
-    System.out.println("PatternMatchFrm");
 
     // genbank update date
     String gd = "";

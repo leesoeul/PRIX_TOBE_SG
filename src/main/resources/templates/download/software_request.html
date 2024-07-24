@@ -76,7 +76,7 @@ function request()
 
   </tr>
 
-  <form th:if="${success == 0}" name="req" method="post" th:action="@{/request}">
+  <form th:if="${success == 0}" name="req" method="post" th:action="@{/software_request}">
   <input type="hidden" name="software" th:value="${software}"/>
   <tr>
 	<td>
