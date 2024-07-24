@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<!-- layout? content? table ?, links?? link??, scripts?? script?? ???. ?? ?? ?? ~{} empty fragment-->
+<html th:replace="~{inc/layout::layout(~{::table}, ~{}, ~{})}" xmlns:th="http://www.thymeleaf.org">
+
+<table width="990" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td width="10" height="100%" rowspan="2" align="right" valign="top" style="padding-right:15px">
+		&nbsp;
+	</td>
+
+    <td>	
+		<table border="0" cellspacing="0" cellpadding="0" id="TitTable">
+		  <tr>
+			<td align="left"><font class="drakBR" size="3">HELP</td>
+			<td align="right" valign="bottom" style="padding-right:5px;">&nbsp;</td>
+		  </tr>
+		</table>
+		<table width="700" border="0" align="left" cellpadding="1">
+			<tr>
+			  <td align="left"><img src="/images/p_st1.GIF" width="4" height="9"/><font class="drakBR"> Search Parameters<br/><br/>
+			  </td>
+			</tr>
+			<tr>
+			  <td align="left"><li><font class="drakBR"><a name="NAME">User Name</a></font><br/>&nbsp;Put your name or id.<br/><br/></td>
+			</tr>
+
+			<tr>
+			  <td align="left"><li><font class="drakBR"><a name="TIT">Mapping Title</a></font><br/>&nbsp;Put title for the search. It will be printed at the top of result page. If the title is left blank, it will be named automatically.<br/><br></td>
+			</tr>
+
+			<tr>
+			  <td align="left"><img src="/images/p_st1.GIF" width="4" height="9"/><font class="drakBR"> Mapping Environment (this option is applied all kinds of mapping)<br/><br/></td>
+			</tr>
+
+			<tr>
+			  <td align="left"><li><font class="drakBR"><a name="PEP">Peptide List</a></font><br>&nbsp;Put a peptide list file. This format is followed below.<br><br>
+			  DFKLSDEETATILSFNR<br>
+			  ISLSPEYVFSVSTFQELPSLEQK<br>
+			  TLVTLPLLFLLPK<br>
+			  FISGHTSELGNFR<br>
+			  FQTIDIEPDIEALLSQGLSCA<br>
+			  GETGPAGPPGAPGAPGAPGPVGPAGKSGDRGETGPAGPAGPVGPVGAR<br>
+			  IIEDLGVHFLQYVLK<br>
+			  KDEGEGAAGAGDHQDPSLGAGEAASK<br>
+			  AAECSDFPVPSTEGTPIQGSK<br><br>
+			  </td>
+			</tr>
+
+			<tr>
+			  <td align="left"><li><font class="drakBR"><a name="METHODS">Supported mapping methods</a></font><br/>
+			  &nbsp;&nbsp;PV: Mapping protein database first to filter out known peptides, and then mapping variant splice graph.<br>
+			  &nbsp;&nbsp;PS: Mapping protein database first to filter out known peptides, and then mapping six-frame translation database.<br>
+			  &nbsp;&nbsp;VO: Mapping variant splice graph only.<br>
+			  &nbsp;&nbsp;VO: Mapping six-frame translation database only.<br><br>
+			  </td>
+			</tr>
+
+			<tr>
+			  <td align="left"><li><font class="drakBR"><a name="IL">Isoleucine is equivalent to leucine</a></font><br/>&nbsp;Identified peptides from tandem mass spectrometry do not recongnize isoleucine and leucine.<br>
+			  This is because their mass are same; therefore, this option assumes that isoleucines in a peptide can be interpreted as leucine, vice versa.<br/><br></td>
+			</tr>
+
+			<tr>
+			  <td align="left"><img src="/images/p_st1.GIF" width="4" height="9"/><font class="drakBR"> Protein Database Mapping <br/><br/></td>
+			</tr>
+
+			<tr>
+			  <td align="left"><li><font class="drakBR"><a name="PROTEIN">Supported protein database</a></font><br/>&nbsp;To filter out known peptides, reference protein database mapping is useful.<br>
+			  This mapping is only for filtering out, not for mapping.<br/><br></td>
+			</tr>
+
+			<tr>
+			  <td align="left"><li><font class="drakBR"><a name="SAV">Single amino acid variations</a></font><br/>&nbsp;When map peptides on a reference protein database, it can be consider single amino acid variations (SAVs).<br>
+			  This option is useful for the sake of automatically detecting possible SAVs<br/><br></td>
+			</tr>
+
+			<tr>
+			  <td align="left"><img src="/images/p_st1.GIF" width="4" height="9"/><font class="drakBR"> Variant Splice Graph Mapping <br/><br/></td>
+			</tr>
+
+			<tr>
+			  <td align="left"><li><font class="drakBR"><a name="VSG">Variant Splice Graph</a></font><br/>&nbsp; ACTG supports variants such as single exon skipping, splice junction variation, frame shift, and exon-extension (mapping on exon and intron both).<br>
+			  Variant splice graph is built from reference human genome and transcriptome models and this information is separated by comma i.e. ReferenceGenomeVersion,TranscriptomeModelVersion.
+			  <br/><br></td>
+			</tr>
+
+			<tr>
+			  <td align="left"><li><font class="drakBR"><a name="VCF">Mutations</a></font><br/>&nbsp;If a user want to map mutations, the user must provide mutation information formatted VCF. The format is followed below.<br><br>
+			1	32670862	.	G	A	.	PASS	SOMATIC;VT=SNP	GT:AD:BQ:DP:FA:SS	0:48,0:.:48:0.00:0	41	36	5	51	46	5		Somatic<br>
+			1	52553790	.	C	T	.	PASS	SOMATIC;VT=SNP	GT:AD:BQ:DP:FA:SS	0:22,0:.:22:0.00:0	90	90	0	11	8	3		Somatic<br>
+			1	75039014	.	C	A	.	DP	NT=ref;QSS=160;QSS_NT=160;SGT=CC->AC;SOMATIC;TQSS=2;TQSS_NT=2	DP:FDP:SDP:SUBDP:AU:CU:GU:TU	384:1:0:0:0,0:383,384:0,0:0,0	1	1	0	293	273	20		Somatic<br/><br>
+			
+			Each field must be deliminated by tab, and the number of fields are at least 10.<br><br>
+			</td>
+			</tr>
+
+			<tr>
+			  <td align="left"><li><font class="drakBR"><a name="ES">Exon Skipping</a></font><br/>&nbsp; It automatically detects single exon skipping variation if it turns on.
+			  <br/><br></td>
+			</tr>
+			 
+			<tr>
+			  <td align="left"><li><font class="drakBR"><a name="AAD">Alternative Acceptor & Donor</a></font><br/>&nbsp; It automatically detects splice junction varaition if it turns on.
+			  <br/><br></td>
+			</tr>
+
+			<tr>
+			  <td align="left"><li><font class="drakBR"><a name="INTRON">Intron Mapping</a></font><br/>&nbsp; It automatically detects exon-extension by mapping peptides on exon and intron both if it turns on.
+			  <br/><br></td>
+			</tr>
+
+			<tr>
+			  <td align="left"><img src="/images/p_st1.GIF" width="4" height="9"/><font class="drakBR"> Six-frame Translation Mapping <br/><br/></td>
+			</tr>
+
+			<tr>
+			  <td align="left"><li><font class="drakBR"><a name="SIX">Reference genome</a></font><br/>&nbsp; Support two reference human genome: GRCh37, GRCh38.
+			  <br/><br></td>
+			</tr>
+		</table>
+	</td>
+  </tr>
+
+</table>
+
+</html>

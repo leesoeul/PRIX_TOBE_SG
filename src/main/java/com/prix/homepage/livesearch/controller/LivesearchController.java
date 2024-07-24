@@ -407,5 +407,14 @@ public class LivesearchController {
 
     return "livesearch/actg";
   }
+
+  /**
+   * ACTG 화면에서 클릭시 help로 이동 
+   * ex) /ACTG/help#PEP
+   */
+  @GetMapping("/ACTG/help")
+  public String getHelp() {
+    return "livesearch/help";
+  }
   
 }
