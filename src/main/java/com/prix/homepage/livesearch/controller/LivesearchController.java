@@ -383,4 +383,22 @@ public class LivesearchController {
     model.addAttribute("notauthorized", notauthorized);
     return "livesearch/result";
   }
+
+  /**
+   * ACTG 화면
+   */
+  @GetMapping("/ACTG/search")
+  public String getACTG(Model model, HttpServletRequest request) {
+    // 세션에서 id 확인, 없을시 anonymous용 4부여
+    HttpSession session = request.getSession();
+    Integer id = (Integer) session.getAttribute("id");
+    final Integer anony = 4;
+    if (id == null) {
+      session.setAttribute("id", anony);
+      id = (Integer) session.getAttribute("id");
+    }
+    
+    return "livesearch/actg";
+  }
+  
 }
