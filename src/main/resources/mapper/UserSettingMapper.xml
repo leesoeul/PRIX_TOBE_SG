@@ -4,6 +4,64 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.prix.homepage.livesearch.dao.UserSettingMapper">
 
+<<<<<<< HEAD
+  <select id="find" resultType="com.prix.homepage.livesearch.pojo.UserSetting">
+    SELECT * 
+    FROM px_user_setting 
+    WHERE user_id = #{userId} 
+      AND engine = #{engine}
+  </select>
+
+  <select id="existsByUserId">
+    SELECT COUNT(*)
+    FROM px_user_setting
+    WHERE user_id = #{userId}
+  </select>
+
+  <update id="updateByUserIdDbond">
+    UPDATE px_user_setting
+    SET enzyme = #{enzyme},
+        mmc = #{missedCleavage},
+        ptol = #{pTolerance},
+        ptol_unit = #{pUnit},
+        ftol = #{fTolerance},
+        engine = #{engine},
+        data_format = #{dataFormat},
+        instrument = #{instrument}
+    WHERE user_id = #{userId}
+  </update>
+
+  <update id="updateByUserId">
+    UPDATE px_user_setting
+    SET enzyme = #{enzyme},
+        mmc = #{missedCleavage},
+        met = #{minNumEnzTerm},
+        ptol = #{pTolerance},
+        ptol_unit = #{pUnit},
+        ftol = #{fTolerance},
+        mm_min = #{minMM},
+        mm_max = #{maxMM},
+        engine = #{engine},
+        data_format = #{dataFormat},
+        instrument = #{instrument},
+        ms_resolution = #{msResolution},
+        msms_resolution = #{msmsResolution}
+    WHERE user_id = #{userId}
+  </update>
+
+  <insert id="insertDbond">
+    INSERT INTO px_user_setting (user_id, enzyme, mmc, ptol, ptol_unit, ftol, engine, data_format, instrument)
+    VALUES (#{userId}, #{enzyme}, #{missedCleavage}, #{pTolerance}, #{pUnit}, #{fTolerance}, #{engine}, #{dataFormat}, #{instrument})
+  </insert>
+
+  <insert id="insert">
+    INSERT INTO px_user_setting (user_id, enzyme, mmc, met, ptol, ptol_unit, ftol, mm_min, mm_max, engine, 
+                                  data_format, instrument, ms_resolution, msms_resolution)
+    VALUES (#{userId}, #{enzyme}, #{missedCleavage}, #{minNumEnzTerm}, #{pTolerance}, #{pUnit}, #{fTolerance}, 
+            #{minMM}, #{maxMM}, #{engine}, #{dataFormat}, #{instrument}, #{msResolution}, #{msmsResolution})
+  </insert>
+  
+=======
   <select id="findByUserIdModeye" resultType="com.prix.homepage.livesearch.pojo.UserSetting">
     SELECT * 
     FROM px_user_setting 
@@ -11,4 +69,5 @@
       AND engine = 'modeye'
   </select>
 
+>>>>>>> main
 </mapper>

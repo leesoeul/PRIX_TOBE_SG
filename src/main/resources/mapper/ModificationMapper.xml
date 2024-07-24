@@ -87,4 +87,33 @@
     </if>;
   </select>
 
+  <select id="selectMassDiffByName" parameterType="String" resultType="Double">
+    SELECT mass_diff
+    FROM px_modification
+    WHERE name = #{name}
+  </select>
+
+  <select id="selectFixedModInUserMod" parameterType="map" resultType="com.prix.homepage.livesearch.pojo.Modification">
+    SELECT name, mass_diff, residue, position
+    FROM px_modification
+    WHERE id IN (
+        SELECT mod_id
+        FROM px_user_modification
+        WHERE user_id = #{id}
+        AND variable = 0
+        AND engine = #{engine}
+    )
+  </select>
+
+  <select id="selectVarModInUserMod" parameterType="map" resultType="com.prix.homepage.livesearch.pojo.Modification">
+      SELECT name, mass_diff, residue, position
+      FROM px_modification
+      WHERE id IN (
+          SELECT mod_id
+          FROM px_user_modification
+          WHERE user_id = #{id}
+          AND variable = 1
+          AND engine = #{engine}
+      )
+  </select>
 </mapper>

@@ -19,5 +19,5 @@ public class Database {
 
   private String file;
 
-  private int data_id;
+  private int dataId;
 }

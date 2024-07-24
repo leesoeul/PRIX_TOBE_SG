@@ -17,4 +17,6 @@ public interface EnzymeMapper {
   void insertEnzyme(Integer userId, String name, String ntCleave, String ctCleave);
   
   void deleteEnzyme(Integer id, Integer userId);
+
+  Enzyme selectById(Integer id);
 }

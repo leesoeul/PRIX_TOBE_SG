@@ -1,6 +1,4 @@
-package com.prix.homepage.constants.pojo;
-
-import java.time.LocalDate;
+package com.prix.homepage.livesearch.pojo;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -12,23 +10,16 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SearchLog {
+public class JobQueue {
   
   private Integer id;
 
   @NotNull
   private Integer user_id;
 
+  @NotNull
+  private String job_code;
+
   private String title;
-
-  private LocalDate date;
-
-  private Integer msfile;
-
-  private Integer db;
-
-  private Integer result;
-
-  private String engine;
 
 }

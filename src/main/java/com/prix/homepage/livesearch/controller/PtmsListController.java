@@ -20,8 +20,8 @@ import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 
 /**
- * modplus, actg에서 Variable modification list룰 보여주는 팝업창
- * 예시: https://prix.hanyang.ac.kr/modplus/var_ptms_list?var=1&engine=0
+ * dbond에서 Variable modification list룰 보여주는 팝업창
+ * 예시: https://prix.hanyang.ac.kr/dbond/var_ptms_list?var=1&engine=0
  */
 @Controller
 @AllArgsConstructor
@@ -31,11 +31,11 @@ public class PtmsListController {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   /**
-   * modplus/search에서 variable modifications의 + 버튼 클릭시 뜨는 팝업창
+   * dbond/dbond_search에서 variable modifications의 + 버튼 클릭시 뜨는 팝업창
    * @param paramsMap id, var, engine, sort
    * @param request 세션 접근 용도
    */
-  @GetMapping("/modplus/var_ptms_list")
+  @GetMapping("/dbond/var_ptms_list")
   public String varPtmsListPopUp(Model model, @RequestParam Map<String, String> paramsMap,
       HttpServletRequest request) {
 
@@ -72,7 +72,7 @@ public class PtmsListController {
    * @param request
    * @return
    */
-  @PostMapping("/modplus/var_ptms_list")
+  @PostMapping("/dbond/var_ptms_list")
   public String postVarPtmsListPopUp(Model model, @RequestParam Map<String, String> paramsMap,
       HttpServletRequest request) {
 
@@ -117,7 +117,7 @@ public class PtmsListController {
    * @param paramsMap var, engine, act request parameter
    * @param request 세션 접근 용도
    */
-  @GetMapping("/modplus/user_ptms_list")
+  @GetMapping("/dbond/user_ptms_list")
   public String userPtmsListPopUp(Model model, @RequestParam Map<String, String> paramsMap,
       HttpServletRequest request) {
 
@@ -161,7 +161,7 @@ public class PtmsListController {
    * @param paramsMap var, engine, act request parameter
    * @param request session 접근 용도
    */
-  @PostMapping("/modplus/user_ptms_list")
+  @PostMapping("/dbond/user_ptms_list")
   public String postUserPtmsListPopUp(Model model, @RequestParam Map<String, String> paramsMap,
       HttpServletRequest request) {
 
@@ -302,7 +302,7 @@ public class PtmsListController {
    * @param paramsMap var, engine, act request parameter
    * @param request 세션 접근 용도
    */
-  @GetMapping("/modplus/unimod_ptms_list")
+  @GetMapping("/dbond/unimod_ptms_list")
   public String unimodPtmsListPopUp(Model model, @RequestParam Map<String, String> paramsMap,
       HttpServletRequest request) {
 
@@ -355,7 +355,7 @@ public class PtmsListController {
    * @param paramsMap var, engine, act request parameter
    * @param request 세션 접근 용도
    */
-  @PostMapping("/modplus/unimod_ptms_list")
+  @PostMapping("/dbond/unimod_ptms_list")
   public String postUnimodPtmsListPopUp(Model model, @RequestParam Map<String, String> paramsMap,
       HttpServletRequest request) {
 

@@ -1,4 +1,4 @@
-package com.prix.homepage.constants.pojo;
+package com.prix.homepage.livesearch.pojo;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

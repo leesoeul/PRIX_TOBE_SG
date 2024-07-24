@@ -8,4 +8,16 @@
     SELECT id, name, file FROM px_database
   </select>
 
+  <select id="selectById" resultType="com.prix.homepage.user.pojo.Database">
+    SELECT data_id, file
+    FROM px_database
+    WHERE id = #{id}
+  </select>
+
+  <select id="selectIdByDataId" resultType="java.lang.Integer">
+    SELECT id 
+    FROM px_database 
+    WHERE data_id = #{dataId}
+  </select>
+
 </mapper>

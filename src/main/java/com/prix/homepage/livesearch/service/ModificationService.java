@@ -14,4 +14,10 @@ public interface ModificationService {
   List<Modification> selectModListNotInUserMod(Integer userId, String var, Boolean engine);
 
   List<Modification> selectModJoinClass(Integer userId, Boolean variable, Integer engine, String filter, String sortBy);
+
+  Double selectMassDiffByName(String name);
+
+  List<Modification> selectFixedModInUserMod(Integer id, Integer engine);
+
+  List<Modification> selectVarModInUserMod(Integer id, Integer engine);
 }

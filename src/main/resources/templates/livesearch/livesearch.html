@@ -23,8 +23,8 @@
             <td align="left"><font class="drakBR" size="3">MS/MS ANALYSIS</td>
             
             <td id = "yourTable" align="right" valign="bottom" style="padding-right:5px;"><table border="0" cellspacing="0" cellpadding="0">
-                <tr th:if="${#ctx.session.id != null and #ctx.session.id ne '4'}">
-                    <td><img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="/modplus/history.jsp" class="menu">History</a> &nbsp; &nbsp;</td>
+                <tr th:if="${session.id != null and session.id ne 4}">
+                    <td><img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="/modplus/history" class="menu">History</a> &nbsp; &nbsp;</td>
                     <td><img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="/login?action=logout" class="menu">Logout</a> &nbsp; &nbsp;</td>
                   </tr>
             </table></td>
@@ -37,14 +37,6 @@
             </tr>
         </table>
         <table width="95%" border="0" align="center" cellpadding="1">
-                <tr>
-                    <!-- on the construction -->
-                    <td align="left"><img src="images/p_st1.GIF" width="6" height="12">&nbsp;&nbsp;<a href="/modplus/search" class="thmenu"><font size="3" color="#0033FF">MODPlus</font></a><font class="drakBR">&nbsp;&nbsp;- advanced version of MOD<sup>i</sup></font><br/></td>
-                <!--<td align="left"><img src="images/p_st1.GIF" width="6" height="12">&nbsp;&nbsp;<font size="3" color="#0033FF">MODPlus</font></a><font class="drakBR">&nbsp;&nbsp;- advanced version of MOD<sup>i</sup></font><br/></td>-->
-                </tr>
-                <tr>
-                    <td align="left">&nbsp;&nbsp;Identification of multiple post-translational modifications<br/><br/></td>
-                </tr>
                 <tr>
                 <!-- on the construction -->
                     <td align="left"><img src="images/p_st1.GIF" width="6" height="12">&nbsp;&nbsp;<a href="/dbond/dbond_search" class="thmenu"><font size="3" color="#0033FF">DBond</font></a><br/></td>
