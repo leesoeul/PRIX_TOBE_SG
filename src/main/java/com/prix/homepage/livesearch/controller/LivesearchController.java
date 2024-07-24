@@ -397,7 +397,14 @@ public class LivesearchController {
       session.setAttribute("id", anony);
       id = (Integer) session.getAttribute("id");
     }
-    
+
+    Account userAccount = accountService.getAccount(id);
+    String username = "anonymous";
+    if (userAccount != null) {
+      username = userAccount.getName();
+    }
+    model.addAttribute("username", username);
+
     return "livesearch/actg";
   }
   

@@ -2,37 +2,7 @@
 <!-- layout? content? table ?, links?? link??, scripts?? script?? ???. ?? ?? ?? ~{} empty fragment-->
 <html th:replace="~{inc/layout::layout(~{::table}, ~{}, ~{::script})}" xmlns:th="http://www.thymeleaf.org">
 <!-- header ³¡-->
-
-<!-- ????
-<%@ page import="javax.naming.Context" %>
-<%@ page import="javax.naming.InitialContext" %>
-<%@ page import="javax.sql.DataSource" %>
-<%@ page import="java.sql.Connection" %>
-<%@ page import="java.sql.Statement" %>
-<%@ page import="java.sql.PreparedStatement" %>
-<%@ page import="java.sql.ResultSet" %>
-<%
-
-	// User ID
-	final String anony = "4";
-	String id = (String)session.getAttribute("id");
-	if (id == null){
-		session.setAttribute("id", anony);
-		id = (String)session.getAttribute("id");
-	}
-	
-	// DB Connection
-	Context initContext = new InitialContext();
-	Context envContext = (Context)initContext.lookup("java:/comp/env");
-	DataSource ds = (DataSource)envContext.lookup("jdbc/PrixDB");
-	Connection conn = ds.getConnection();
-	Statement state = null;
-	if (conn != null)
-	{
-		state = conn.createStatement();
-	}
-%> -->
-<script language="javascript">
+<script th:inline="javascript">
 
 function adjustIFrameSize(iframeWindow) {
     var iframeElement = document.getElementById("IFRM_Result");
@@ -51,7 +21,7 @@ function adjustIFrameSize(iframeWindow) {
     document.getElementById("RIGHT").style.height = hei + 'px';
 }
 function reset() {
-		location.href="http://prix.hanyang.ac.kr/ACTG/search.jsp";
+		location.href="http://prix.hanyang.ac.kr/ACTG/search";
 }
 
 function process() {
@@ -169,47 +139,32 @@ function hideID(ID){
       <tr>
         <td style="padding-left:15px;"><font color="#0033FF" size="3"><b>ACTG (Amino aCids To Genome)</b>&nbsp;&nbsp;&nbsp;</font>peptide mapping ( <font color="#000000">version 1.10</font> )</td>
         <td align="right" valign="bottom" style="padding-right:5px;"><table border="0" cellspacing="0" cellpadding="0">
-<!-- ????
-					<%
-	if (id != null && id.compareTo("4") != 0)
-	{
-%>
-          <tr>
-            <td><img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="history.jsp" class="menu">History</a> &nbsp; &nbsp;</td>
-            <td><img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="/login.jsp?action=logout" class="menu">Logout</a> &nbsp; &nbsp;</td>
+          
+					<tr th:if="${session.id != null and session.id != 4}">
+            <td><img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="history" class="menu">History</a> &nbsp; &nbsp;</td>
+            <td><img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="/login?action=logout" class="menu">Logout</a> &nbsp; &nbsp;</td>
           </tr>
-<%
-	}
-%> -->
+					
         </table></td>
       </tr>
     </table>
     </td>
   </tr>
   <tr>
-<form name="search" method="post" action="process.jsp" enctype="multipart/form-data">
+<form name="search" method="post"  th:action="@{/ACTG/search}" enctype="multipart/form-data">
 <input type="hidden" name="engine" value="modeye">
     <td valign="top" style="padding:10px;"><table width="100%" border="0" cellpadding="0" cellspacing="0" id="gray" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
 
 
-<!-- ????
-			<%
-	// Get User Name
-	String userName = "";
-	if (state != null)
-	{
-		ResultSet rs = state.executeQuery("select name from px_account where id=" + id + ";");
-		if (rs.next())
-			userName = rs.getString(1);
-	}
-%> -->
-
 	  <tbody><tr>
-        <th><div align="right"><a href="help.jsp#NAME" class="thmenu">User Name</a> </div></th>
-        <td colspan="3"><input name="user" type="text" size="60" value="<%=userName%>"></td>
+        <th><div align="right"><a href="help#NAME" class="thmenu">User Name</a> </div></th>
+				<td colspan="3">
+					<input name="user" type="text" size="60" th:value="${username}">
+				</td>
+			
       </tr>
       <tr>
-        <th align="right"><div align="right"><a href="help.jsp#TIT" class="thmenu">Mapping Title</a> </div></th>
+        <th align="right"><div align="right"><a href="help#TIT" class="thmenu">Mapping Title</a> </div></th>
         <td colspan="3"><input name="title" type="text" size="60"></td>
       </tr>
 
@@ -218,11 +173,11 @@ function hideID(ID){
 	    <th colspan="4"><div align="center" style="margin: auto; width: 400px;" ><b class="thmenu" style="cursor:default">Mapping Environment</b></div></th>
       </tr>
 	  <tr>
-        <th><div align="right"><a href="help.jsp#PEP" class="thmenu">Peptide List</a> </div></th>
+        <th><div align="right"><a href="help#PEP" class="thmenu">Peptide List</a> </div></th>
         <td colspan="3"><input id="filePeptide" name="peptideFile" type="file" size="45"> &nbsp; File size limit : 100KB</td>            
       </tr>
 	  <tr>
-        <th><div align="right"><a href="help.jsp#METHODS" class="thmenu">Mapping Method</a> <br>
+        <th><div align="right"><a href="help#METHODS" class="thmenu">Mapping Method</a> <br>
 		PV: Protein DB filtering / Variant splice graph mapping<br>
 		PS: Protein DB filtering / Six-frame translation mapping<br>
 		VO: Mapping variant splice graph only<br>
@@ -236,7 +191,7 @@ function hideID(ID){
         </select></td>    
       </tr>
 	  <tr>	  
-        <th><div align="right"><a href="help.jsp#IL" class="thmenu">Isoleucine is equivalent to leucine</a></div></th>
+        <th><div align="right"><a href="help#IL" class="thmenu">Isoleucine is equivalent to leucine</a></div></th>
 		<td colspan="3"><input id="IL" name="IL" type="checkbox" class="CHECK" value="yes"><font size="2" color="blue"> Apply</font></td>
 	  </tr>
 	  </tbody>
@@ -247,14 +202,14 @@ function hideID(ID){
 	    <th colspan="4"><div align="center" style="margin: auto; width: 400px;" ><b class="thmenu" style="cursor:default">Protein DB Filtering</b></div></th>
       </tr>
 	  <tr>
-        <th><div align="right"><a href="help.jsp#PROTEIN" class="thmenu">Protein DB</a> </div></th>
+        <th><div align="right"><a href="help#PROTEIN" class="thmenu">Protein DB</a> </div></th>
         <td colspan="3"><select name="proteinDB" onchange="changeDB()">
 			<option value="swissprot_2016_07.fasta">Swissprot 2016-07</option>
 			<option value="uniprot_2016_07.fasta">Uniprot 2016-07</option>
         </select></td>    
       </tr>
 	  <tr>
-        <th><div align="right"><a href="help.jsp#SAV" class="thmenu">Filter out single AA variations</a></div></th>
+        <th><div align="right"><a href="help#SAV" class="thmenu">Filter out single AA variations</a></div></th>
 		<td colspan="3"><input id="SAV" name="SAV" type="checkbox" class="CHECK" value="yes"><font size="2" color="blue"> Apply</font></td>
 	  </tr>
 	  </tbody>
@@ -265,7 +220,7 @@ function hideID(ID){
 	    <th colspan="4"><div align="center" style="margin: auto; width: 400px;" ><b class="thmenu" style="cursor:default">Variant Splice Graph Mapping</b></div></th>
       </tr>
       <tr>
-        <th><div align="right"><a href="help.jsp#VSG" class="thmenu">Variant Splice Graph</a> </div></th>
+        <th><div align="right"><a href="help#VSG" class="thmenu">Variant Splice Graph</a> </div></th>
         <td colspan="3"><select name="variantSpliceGraphDB">
 			<option value="GRCh38.Ensembl.83.ser">GRCh38, Ensembl Release 83</option>
 			<option value="GRCh37.Ensembl.78.ser">GRCh37, Ensembl Release 78</option>
@@ -274,17 +229,17 @@ function hideID(ID){
         </select></td>    
       </tr>
 	   <tr>	  
-        <th><div align="right"><a href="help.jsp#VCF" class="thmenu">Mutations (VCF) </a></div></th>
+        <th><div align="right"><a href="help#VCF" class="thmenu">Mutations (VCF) </a></div></th>
 		<td colspan="3">
 		<div><input name="mutation" type="checkbox" class="CHECK" value="yes" onclick="mutationCheck()"><font size="2" color="blue"> Apply </font></div>
 		<div id="divMutation" style="display:none;"><input id="fileMutation" name="mutationFile" type="file" size="45"> File size limit : 20MB</div></td>
 	  </tr> 
 	  <tr>	  
-        <th><div align="right"><a href="help.jsp#ES" class="thmenu">Exon Skipping </a></div></th>
+        <th><div align="right"><a href="help#ES" class="thmenu">Exon Skipping </a></div></th>
 		<td colspan="3"><input id="exonSkipping" name="exonSkipping" type="checkbox" class="CHECK" value="yes"><font size="2" color="blue"> Apply</font></td>
 	  </tr> 
     	  <tr>	  
-        <th><div align="right"><a href="help.jsp#AAD" class="thmenu">Alternative Acceptor & Donor </a></div></th>
+        <th><div align="right"><a href="help#AAD" class="thmenu">Alternative Acceptor & Donor </a></div></th>
 		<td colspan="3"><input id="altAD" name="altAD" type="checkbox" class="CHECK" value="yes"><font size="2" color="blue"> Apply</font></td>
 	  </tr> 
 	  	  
@@ -292,7 +247,7 @@ function hideID(ID){
 	  </tr>
 	  	  
 	  <tr>	  
-        <th><div align="right"><a href="help.jsp#INTRON" class="thmenu">Intron retention</a></div></th>
+        <th><div align="right"><a href="help#INTRON" class="thmenu">Intron retention</a></div></th>
 		<td colspan="3"><input id="intron" name="intron" type="checkbox" class="CHECK" value="yes"><font size="2" color="blue"> Apply</font> (it takes about 10 minutes)</td>
 	  </tr>
 	  </tbody>
@@ -302,7 +257,7 @@ function hideID(ID){
 	    <th colspan="4"><div align="center" style="margin: auto; width: 400px;" ><b class="thmenu" style="cursor:default">Six-frame Translation Mapping</b></div></th>
       </tr>
 	  <tr>
-        <th><div align="right"><a href="help.jsp#SIX" class="thmenu">Reference genome</a> </div></th>
+        <th><div align="right"><a href="help#SIX" class="thmenu">Reference genome</a> </div></th>
         <td colspan="3"><select name="referenceGenome" onchange="changeDB()">
 			<option value="GRCh38">GRCh38</option>
 			<option value="GRCh37">GRCh37</option>
@@ -315,7 +270,7 @@ function hideID(ID){
         <tbody><tr>
 
 
-		<td align="left"><a class="under" href="ACTG_test_data.zip"> Download sample data </a>
+		<td align="left"><a class="under" th:href="@{/files/ACTG_test_data.zip}"> Download sample data </a>
 
           </a></td><td align="right"> 
 			  <input name="Reset" type="reset" class="btn" onclick="javascript:reset()" value="Reset">
