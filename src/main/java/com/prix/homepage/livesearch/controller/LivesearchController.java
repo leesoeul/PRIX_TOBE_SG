@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
 import com.prix.homepage.constants.PrixDataWriter;
 import com.prix.homepage.constants.ProteinInfo;
 import com.prix.homepage.livesearch.dao.DataMapper;
@@ -26,6 +25,7 @@ import com.prix.homepage.livesearch.pojo.Data;
 import com.prix.homepage.livesearch.pojo.ProcessDto;
 import com.prix.homepage.livesearch.pojo.ResultDto;
 import com.prix.homepage.livesearch.pojo.UserSettingDto;
+import com.prix.homepage.livesearch.service.PatternMatchService;
 import com.prix.homepage.livesearch.service.UserModificationService;
 import com.prix.homepage.livesearch.service.UserSettingService;
 import com.prix.homepage.livesearch.service.impl.ProcessService;
@@ -61,6 +61,7 @@ public class LivesearchController {
   private final ResultService resultService;
 
   private final PrixDataWriter prixDataWriter;
+  private final PatternMatchService patternMatchService;
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -196,7 +197,9 @@ public class LivesearchController {
     model.addAttribute("listDatabase", listDatabaseResponseDto);
 
     // px_enzyme : id, name where user_id = 0
-    List<Enzyme> listEnzymeZeroResponseDto = enzymeService.getAllEnzymeByUserId(0);
+    List<Enzyme>
+
+    listEnzymeZeroResponseDto = enzymeService.getAllEnzymeByUserId(0);
     model.addAttribute("listEnzymeId0", listEnzymeZeroResponseDto);
 
     // px_enzyme : id, name where user_id = id
@@ -216,6 +219,29 @@ public class LivesearchController {
     return "livesearch/dbond_search";
   }
 
+  @GetMapping("/livesearch/patternMatchFrm")
+  public String patternMatchPage(Model model) {
+
+    // genbank update date
+    String gd = "";
+    // swiss_prot update date
+    String sd = "";
+
+    gd = patternMatchService.getUpdateDay("genbank");
+    sd = patternMatchService.getUpdateDay("swiss_prot");
+
+    model.addAttribute("gd", gd);
+    model.addAttribute("sd", sd);
+
+    return "livesearch/patternMatchFrm";
+  }
+
+  @GetMapping("/livesearch/USE")
+  public String USEPage() {
+    return "livesearch/USE";
+  }
+
+  
   /**
    * dbond 페이지에서 submit할 경우, process 페이지로 이동한다.
    * 

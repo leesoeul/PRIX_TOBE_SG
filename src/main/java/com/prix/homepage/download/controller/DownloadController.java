@@ -71,13 +71,4 @@ public class DownloadController {
     return "download/mutcombinator";
   }
 
-  @GetMapping("/PatternMatchFrm")
-  public String patternMatchPage() {
-    return "download/PatternMatchFrm";
-  }
-
-  @GetMapping("/USE")
-  public String USEPage() {
-    return "download/use_index";
-  }
 }
