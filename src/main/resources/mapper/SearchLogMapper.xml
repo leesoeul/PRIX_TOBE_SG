@@ -18,6 +18,16 @@
       AND result = #{result}
   </select>
 
+  <select id="getSearchLog" resultType="com.prix.homepage.livesearch.pojo.SearchLog">
+    SELECT title, user_id, date
+    FROM px_search_log
+    WHERE actg = #{index}
+  </select>
 
+  <select id="getUserNameById" resultType="String">
+    SELECT name
+    FROM px_account
+    WHERE id = #{userId}
+  </select>
 
 </mapper>

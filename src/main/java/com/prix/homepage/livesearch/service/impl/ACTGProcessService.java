@@ -85,8 +85,7 @@ public class ACTGProcessService {
 
     String processPath = logDir + processName;
 
-    if (request.getParameter("execute") == null) 
-    {
+    if (request.getParameter("execute") == null) {
 
       Instant instant = Instant.now();
       long timestamp = instant.toEpochMilli(); // 밀리초 단위의 타임스탬프
@@ -291,7 +290,8 @@ public class ACTGProcessService {
         Process process = runtime.exec(command);
       }
     } // if (request.getParameter("execute") == null)
-    else {
+    else // process에서 redirect 받으면서 새로고침 반복해서 일어나는데 이때 이 작업 수행
+    {
       FileInputStream fis = new FileInputStream(processPath);
       StringWriter writer = new StringWriter();
       StringWriter allWriter = new StringWriter();
@@ -331,7 +331,7 @@ public class ACTGProcessService {
       fis.close();
       output = allWriter.toString();
 
-      if (finished) {
+      if (finished) {// 모든 작업이 정상 종료
 
         String prixIndex = processPath.replace("process_" + id + "_", "");
         prixIndex = prixIndex.replace(logDir, "");
@@ -344,11 +344,18 @@ public class ACTGProcessService {
         // date는 mybatis mapper xml에서 처리
         searchLogMapper.insert(
             Integer.parseInt(id), title.replace("'", "\\'"), 0, 0, 0, "ACTG");
+
+        ACTGProcessDto processDto = ACTGProcessDto.builder().failed(failed).finished(finished).output(output)
+            .processName(processName).prixIndex(prixIndex).rate(Integer.parseInt(rate)).title(title).build();
+        logger.warn("processNAme2:~~~~~~~~~~~{}", processName);
+
+        return processDto;
       }
+
     }
     ACTGProcessDto processDto = ACTGProcessDto.builder().failed(failed).finished(finished).output(output)
-        .processName(processName).rate(Integer.parseInt(rate)).title(title).build();
-        logger.warn("processNAme2:~~~~~~~~~~~{}", processName);
+        .processName(processName).prixIndex("").rate(Integer.parseInt(rate)).title(title).build();
+    logger.warn("processNAme2:~~~~~~~~~~~{}", processName);
 
     return processDto;
   }

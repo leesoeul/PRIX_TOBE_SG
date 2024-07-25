@@ -22,6 +22,7 @@ import com.prix.homepage.constants.PrixDataWriter;
 import com.prix.homepage.constants.ProteinInfo;
 import com.prix.homepage.livesearch.dao.DataMapper;
 import com.prix.homepage.livesearch.pojo.ACTGProcessDto;
+import com.prix.homepage.livesearch.pojo.ACTGResultDto;
 import com.prix.homepage.livesearch.pojo.Data;
 import com.prix.homepage.livesearch.pojo.DbondProcessDto;
 import com.prix.homepage.livesearch.pojo.DbondResultDto;
@@ -30,6 +31,7 @@ import com.prix.homepage.livesearch.service.PatternMatchService;
 import com.prix.homepage.livesearch.service.UserModificationService;
 import com.prix.homepage.livesearch.service.UserSettingService;
 import com.prix.homepage.livesearch.service.impl.ACTGProcessService;
+import com.prix.homepage.livesearch.service.impl.ACTGResultService;
 import com.prix.homepage.livesearch.service.impl.DbondProcessService;
 import com.prix.homepage.livesearch.service.impl.DbondResultService;
 import com.prix.homepage.user.pojo.Account;
@@ -62,6 +64,7 @@ public class LivesearchController {
   private final DataMapper dataMapper;
   private final DbondResultService dbondResultService;
   private final ACTGProcessService actgProcessService;
+  private final ACTGResultService actgResultService;
 
   private final PrixDataWriter prixDataWriter;
   private final PatternMatchService patternMatchService;
@@ -421,7 +424,9 @@ public class LivesearchController {
 
   /**
    * ACTG process에서 rate 확인 목적으로 windows.location 변경할때 접속되는 용도
-   * @param paramsMap /*[[@{/process(execute='no', process=${processName}, title=${title})}]]
+   * 
+   * @param paramsMap /*[[@{/process(execute='no', process=${processName},
+   *                  title=${title})}]]
    */
   @GetMapping("/ACTG/process")
   public String getACTG(Model model, HttpServletRequest request, @RequestParam Map<String, String> paramsMap) {
@@ -457,8 +462,9 @@ public class LivesearchController {
 
   /**
    * actg에서 submit시 진행과정 보여주는 process 화면
-   * @param paramsMap form 으로 제출 받은 input들
-   * @param peptideFile type이 file인 pepetide file
+   * 
+   * @param paramsMap    form 으로 제출 받은 input들
+   * @param peptideFile  type이 file인 pepetide file
    * @param mutationFile type이 file인 mutation file
    */
   @PostMapping("/ACTG/process")
@@ -482,10 +488,25 @@ public class LivesearchController {
       logger.error("process service error: {}", e.getMessage());
       e.printStackTrace();
     }
+    if (processDto.isFinished()) {// 정상종료시 result페이지로 이동
+      return "redirect:/ACTG/result?index=" + processDto.getPrixIndex();
+    }
 
     model.addAttribute("processDto", processDto);
 
     return "livesearch/actg_process";
   }
 
+  /**
+   * process 완료시 result로 넘어감
+   * 
+   * @param request ResultService로 넘기고 ResultService에서 param 접근
+   */
+  @GetMapping("/ACTG/result")
+  public String ACTGResultPage(Model model, HttpServletRequest request, HttpSession session) {
+    ACTGResultDto actgResultDto = actgResultService.result(request, session);
+
+    model.addAttribute("resultDto", actgResultDto);
+    return "livesearch/actg_result";
+  }
 }

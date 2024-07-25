@@ -15,12 +15,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ACTGProcessDto {
-  Boolean finished;
-  Boolean failed;
+  boolean finished;
+  boolean failed;
 
   String processName;
   String title;
   String output;
+  String prixIndex;
 
   Integer rate;
+
 }
