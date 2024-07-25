@@ -38,25 +38,19 @@ public class SearchLogController {
         Map<Integer, String> userNames = new HashMap<>();
         for(SearchLog searchLog : searchLogDto){
             Integer id = searchLog.getUserId();
-            System.out.println(id);
             String userName = searchLogService.findName(id);
-            System.out.println(userName);
             userNames.put(id, userName);
         }
         Map<Integer, String> msFiles = new HashMap<>();
         for(SearchLog searchLog : searchLogDto){
             Integer id = searchLog.getMsfile();
-            System.out.println(id);
             String fileName = searchLogService.findFile(id);
-            System.out.println(fileName);
             msFiles.put(id, fileName);
         }
         Map<Integer, String> dbNames = new HashMap<>();
         for(SearchLog searchLog : searchLogDto){
             Integer id = searchLog.getDb();
-            System.out.println(id);
             String fileName = searchLogService.findFile(id);
-            System.out.println(fileName);
             dbNames.put(id, fileName);
         }
 
