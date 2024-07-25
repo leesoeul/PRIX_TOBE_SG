@@ -20,7 +20,7 @@ public interface SearchLogMapper {
   // 인자로 넣길래 일단 이렇게 함
   Integer findUserId(Integer userId, String result);
 
-  SearchLog getSearchLog(Integer index);
+  SearchLog getSearchLog(String index);
 
   String getUserNameById(String userId);
 }

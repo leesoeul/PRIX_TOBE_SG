@@ -61,7 +61,7 @@ public class ACTGResultService {
     
     SearchLog searchLog = null;
     if(index != null){
-      searchLog = searchLogMapper.getSearchLog(Integer.parseInt(index));
+      searchLog = searchLogMapper.getSearchLog(index);
     }
     if (searchLog != null) {
       title = searchLog.getTitle();
