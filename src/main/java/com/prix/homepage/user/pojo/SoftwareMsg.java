@@ -1,6 +1,5 @@
 package com.prix.homepage.user.pojo;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,9 +13,5 @@ import lombok.Setter;
 @Builder
 public class SoftwareMsg {
 
-  @NotNull
-  private String id;
-
-  @NotNull
   private String message;
 }

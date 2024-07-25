@@ -22,8 +22,8 @@ public class Enzyme {
   @NotNull
   private String name;
 
-  private String nt_cleave;
+  private String ntCleave;
 
-  private String ct_cleave;
+  private String ctCleave;
   
 }

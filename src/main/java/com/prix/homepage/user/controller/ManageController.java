@@ -28,21 +28,20 @@ public class ManageController {
         }
 
         try {
-            String deleteEnzymeId = request.getParameter("delete_enzyme");
-            if (deleteEnzymeId != null) {
+            if (request.getParameter("delete_enzyme") != null) {
                 enzymeService.deleteEnzyme(Integer.parseInt(request.getParameter("enzyme_id")), userId);
-            } else if (request.getParameter("enzyme_name") != null) {
+            } else if (request.getParameter("add_enzyme") != null) {
+                String name = request.getParameter("nenzyme_name");
+                String cut = request.getParameter("nenzyme_nt_cut");
+                String term = request.getParameter("nenzyme_ct_cut");
+                enzymeService.insertEnzyme(userId, name, cut, term);
+            } else if(request.getParameter("modify_enzyme") != null){
+                Integer enzymeId = Integer.parseInt(request.getParameter("enzyme_id"));
                 String name = request.getParameter("enzyme_name");
                 String cut = request.getParameter("enzyme_nt_cut");
                 String term = request.getParameter("enzyme_ct_cut");
-                String enzymeId = request.getParameter("enzyme_id");
-
-                if (enzymeId == null) {
-                    enzymeService.insertEnzyme(userId, name, cut, term);
-                } else {
-                    Integer id = Integer.parseInt(enzymeId);
-                    enzymeService.updateEnzyme(id, userId, name, cut, term);
-                }
+                enzymeService.updateEnzyme(enzymeId, userId, name, cut, term);
+                System.out.println("aaasdadas");
             } else if (request.getParameter("delete_db") != null) {
                 databaseService.deleteDatabase(Integer.parseInt(request.getParameter("db_index")));
             } else if (request.getParameter("db_name") != null) {
@@ -53,17 +52,26 @@ public class ManageController {
                     Integer id = Integer.parseInt(dbId);
                     databaseService.updateDatabase(id, name);
                 }
+            //메시지 바꾸기 영역 (update 기능)
             } else if (request.getParameter("modify_swmsg") != null) {
-                softwareMsgService.updateSoftwareMsg("moda", request.getParameter("modamsg").replace("'", "\\'"));
-                softwareMsgService.updateSoftwareMsg("dbond", request.getParameter("dbondmsg").replace("'", "\\'"));
-                softwareMsgService.updateSoftwareMsg("signature", request.getParameter("signature").replace("'", "\\'"));
+                softwareMsgService.updateSoftwareMsg("mode", request.getParameter("modeMessage"));
+                softwareMsgService.updateSoftwareMsg("dbond", request.getParameter("dbondMessage"));
+                softwareMsgService.updateSoftwareMsg("nextsearch", request.getParameter("nxtsrchMessage"));
+                softwareMsgService.updateSoftwareMsg("signature", request.getParameter("signatureMessage"));
+                
+            } else if (request.getParameter("add_db") != null){
+                //DB에 파일 추가
+            } else if (request.getParameter("ptm_add") != null){
+                //Modifications 부분 파일 추가
+            } else if (request.getParameter("sftw_add") != null){
+                //소프트웨어 부분 파일 추가
             }
         } catch (Exception e) {
             //문제 생기면 에러 반환
             redirectAttributes.addFlashAttribute("errorMessage", "An error occurred while processing your request.");
             return "redirect:/admin/configuration";
         }
-
+        
         return "redirect:/admin/configuration";
     }
 }

@@ -37,7 +37,7 @@ public class SearchLogController {
         //Map 형태로 name, msfile, db의 이름 가져오기
         Map<Integer, String> userNames = new HashMap<>();
         for(SearchLog searchLog : searchLogDto){
-            Integer id = searchLog.getUser_id();
+            Integer id = searchLog.getUserId();
             System.out.println(id);
             String userName = searchLogService.findName(id);
             System.out.println(userName);

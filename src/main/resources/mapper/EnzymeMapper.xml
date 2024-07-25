@@ -28,8 +28,8 @@
   <update id="updateEnzyme" parameterType="com.prix.homepage.user.pojo.Enzyme">
         UPDATE px_enzyme
         SET name = #{name},
-            nt_cleave = #{nt_cleave},
-            ct_cleave = #{ct_cleave}
+            nt_cleave = #{ntCleave},
+            ct_cleave = #{ctCleave}
         WHERE id = #{id} AND user_id = #{user_id}
     </update>
 

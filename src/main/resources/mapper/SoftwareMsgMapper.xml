@@ -8,4 +8,8 @@
     SELECT message FROM px_software_msg WHERE id = #{id}
   </select>
 
+  <update id="updateSoftwareMsg">
+    UPDATE px_software_msg SET message = #{message} WHERE id = #{id}
+  </update>
+
 </mapper>

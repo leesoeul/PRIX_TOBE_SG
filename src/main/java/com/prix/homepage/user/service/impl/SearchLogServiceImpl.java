@@ -23,7 +23,7 @@ public class SearchLogServiceImpl implements SearchLogService {
             listSearchLog.add(
                 SearchLog.builder()
                     .id(searchLog.getId())
-                    .user_id(searchLog.getUser_id())
+                    .userId(searchLog.getUserId())
                     .title(searchLog.getTitle())
                     .date(searchLog.getDate())
                     .msfile(searchLog.getMsfile())

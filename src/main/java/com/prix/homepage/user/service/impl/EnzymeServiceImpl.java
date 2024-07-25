@@ -36,8 +36,8 @@ public class EnzymeServiceImpl implements EnzymeService{
             .id(enzyme.getId())
             .name(enzyme.getName())
             .user_id(enzyme.getUser_id())
-            .ct_cleave(enzyme.getCt_cleave())
-            .nt_cleave(enzyme.getNt_cleave())
+            .ctCleave(enzyme.getCtCleave())
+            .ntCleave(enzyme.getNtCleave())
             .build()
       );
     }
@@ -68,8 +68,8 @@ public class EnzymeServiceImpl implements EnzymeService{
         .id(id)
         .user_id(userId)
         .name(name)
-        .nt_cleave(ntCleave)
-        .ct_cleave(ctCleave)
+        .ntCleave(ntCleave)
+        .ctCleave(ctCleave)
         .build();
     enzymeMapper.updateEnzyme(enzyme);
   }
