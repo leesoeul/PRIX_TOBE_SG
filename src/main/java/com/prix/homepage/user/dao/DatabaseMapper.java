@@ -12,7 +12,6 @@ import com.prix.homepage.user.pojo.Database;
 @Repository
 public interface DatabaseMapper {
   List<Database> findAll();
-
   Database selectById(Integer id);
 
   Integer selectIdByDataId(Integer dataId);

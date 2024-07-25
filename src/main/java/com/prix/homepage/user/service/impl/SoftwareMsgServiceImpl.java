@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.prix.homepage.user.dao.SoftwareMsgMapper;
 import com.prix.homepage.user.pojo.SoftwareMsg;
@@ -39,6 +40,14 @@ public class SoftwareMsgServiceImpl implements SoftwareMsgService{
 
     return listSoftwareMsg;
   }
-
+  @Override
+  @Transactional
+  public void updateSoftwareMsg(String id, String message) {
+      SoftwareMsg softwareMsg = SoftwareMsg.builder()
+          .id(id)
+          .message(message)
+          .build();
+      softwareMsgMapper.update(softwareMsg);
+  }
   
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.prix.homepage.user.dao.RequestLogMapper">
+
+    <select id="findAll" resultType="com.prix.homepage.user.pojo.RequestLog">
+        SELECT Id, date, name, affiliation, title, email, instrument, software, version, state FROM px_software_request
+    </select>
+
+    <delete id="deleteRequest">
+    DELETE FROM px_software_request WHERE Id = #{id}
+    </delete>
+
+    <update id="updateState">
+    UPDATE px_software_request SET state = #{state} WHERE Id = #{id}
+    </update>
+
+</mapper>
