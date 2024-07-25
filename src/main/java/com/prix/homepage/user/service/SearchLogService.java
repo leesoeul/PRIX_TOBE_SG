@@ -5,9 +5,9 @@ import com.prix.homepage.user.pojo.SearchLog;
 
 public interface SearchLogService {
 
-    List<SearchLog> getAllSearchLog(Integer userId);
+    List<SearchLog> getAllSearchLog();
     
-    List<SearchLog> getSearchLogs(int userId, int offset, int pageSize);
-    
-    int getTotalLogs(int userId);
+    String findFile(Integer id);
+
+    String findName(Integer id);
 }

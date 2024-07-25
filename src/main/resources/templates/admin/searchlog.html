@@ -13,65 +13,59 @@
 <!-- Main content -->
 <table width="99%" border="0" cellpadding="0" cellspacing="0">
   <tr>
-      <td width="10" height="100%" rowspan="2" align="left" valign="top" style="padding-right:15px">&nbsp;</td>
-      <td>
-          <table border="0" cellspacing="2" cellpadding="2" id="TitTable">
-              <tr>
-                  <td align="left">
-                      <font class="drakBR" size="3">ADMINISTRATION&nbsp;&nbsp;</font>
-                      <img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="configuration" class="menu">Configuration</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                      <img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<u>Search Log</u>&nbsp;&nbsp;&nbsp;&nbsp;
-                      <img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="users" class="menu">Users</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                      <img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="requestlog" class="menu">Request Log</a>
-                  </td>
-              </tr>
-              <tr align="left">
-                  <td><font color="blue"> &gt; Search Log</td>
-              </tr>
-          </table>
-          
-          <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid;">
-              <tr>
-                  <td class="grayTH"><div align="center">Index</div></td>
-                  <td class="grayTH"><div align="center">User</div></td>
-                  <td class="grayTH"><div align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div></td>
-                  <td class="grayTH"><div align="center">Title</div></td>
-                  <td class="grayTH"><div align="center">MS/MS data</div></td>
-                  <td class="grayTH"><div align="center">Database</div></td>
-                  <td class="grayTH"><div align="center">Engine</div></td>
-              </tr> 
 
-              <tbody th:if="${listSearchLogDto != null}">
-                  <tr th:each="item : ${listSearchLogDto}">
-                      <tr onMouseOver="this.style.backgroundColor='#fafad2'" onMouseOut="this.style.backgroundColor='#ffffff'">
-                          <!--<td class="grayTD"><div align="center"><a th:href="@{/modplus/result(file=${item.fileId})}" target="_blank" th:text="${iterStat.index + 1}"></a></div></td>-->
-                          <td class="grayTD"><div align="center" th:text="${item.id}"></div></td>
-                          <td class="grayTD"><div align="center" th:text="${item.date}"></div></td>
-                          <td class="grayTD"><div align="center" th:text="${item.title}"></div></td>
-                          <td class="grayTD"><div align="center" th:text="${item.msfile}"></div></td>
-                          <td class="grayTD"><div align="center" th:text="${item.db}"></div></td>
-                          <td class="grayTD"><div align="center" th:text="${item.engine}"></div></td>
-                      </tr>
-                  </tr>
-              </tbody>
-          </table>
-      </td>
+    <td width="10" height="100%" rowspan="2" align="left" valign="top" style="padding-right:15px">
+		&nbsp;
+	</td>
+
+    <td>	
+	
+	<table border="0" cellspacing="2" cellpadding="2" id="TitTable">
+	  <tr>
+		<td align="left"><font class="drakBR" size="3">ADMINISTRATION&nbsp;&nbsp;</font>
+		<img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="configuration" class="menu">Configuration</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<u>Search Log</u>&nbsp;&nbsp;&nbsp;&nbsp;
+		<img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="users" class="menu">Users</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="requestlog" class="menu">Request Log</a>
+		</td>
+		
+	  </tr>
+	  <tr align="left">
+		<td><font color="blue"> &gt; Search Log</td>
+	  </tr>
+	</table>
+	
+	<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
+    <tr>    
+      <td class="grayTH"><div align="center">Index</div></td>
+	  <td class="grayTH"><div align="center">User</div></td>
+      <td class="grayTH"><div align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div></td>
+      <td class="grayTH"><div align="center">Title</div></td>
+      <td class="grayTH"><div align="center">MS/MS data</div></td>
+	  <td class="grayTH"><div align="center">Database</div></td>
+	  <td class="grayTH"><div align="center">Engine</div></td>
+    </tr>
+
+    <tbody th:if="${searchLogDto != null}">
+        <tr th:each="searchLog : ${searchLogDto}">
+            <td class="grayTD"><div align="center"><a href="/modplus/result.jsp?file=<%=rs.getInt(5)%>" target="_blank"><%=(logIndex--)%><a/></div></td>
+                <td class="grayTD"><div align="center" th:text="${searchLog.user_id}"></div></td>
+                <td class="grayTD"><div align="center" th:text="${searchLog.date}"></div></td>
+                <td class="grayTD"><div align="center" th:text="${searchLog.title}"></div></td>
+                <td class="grayTD"><div align="center" th:text="${msFiles[searchLog.msfile]}"></div></td>
+                <td class="grayTD"><div align="center" th:text="${dbNames[searchLog.db]}"></div></td>
+                <td class="grayTD"><div align="center" th:text="${searchLog.engine}"></div></td>
+        </tr>
+    </tbody> 
+
+</table></td>
   </tr>
-  <tr>
-    <!--
-      <td><br/><div align="center">
-          <span th:if="${currentPage > 0}">
-              <a th:href="@{/admin/searchlog(p=${currentPage - 1})}">&lt;</a>&nbsp;
-          </span>
-          <span th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-              <a th:href="@{/admin/searchlog(p=${i})}" th:text="${i + 1}" th:classappend="${currentPage == i} ? 'active' : ''"></a>&nbsp;
-          </span>
-          <span th:if="${currentPage < totalPages - 1}">
-              <a th:href="@{/admin/searchlog(p=${currentPage + 1})}">&gt;</a>&nbsp;
-          </span>
-      </div></td>
-      -->
-  </tr>
+  <!-- <tr>
+    <td><br/><div align="center">
+      <a href="searchlog.jsp?p=<%=i - 1%>">&lt;</a>&nbsp;
+      <a href="searchlog.jsp?p=<%=i%>"><%=i + 1%></a>&nbsp;
+      <a href="searchlog.jsp?p=<%=i%>">&gt;</a>&nbsp;
+    </div></td>
+  </tr> -->
 </table>
-
 </html>

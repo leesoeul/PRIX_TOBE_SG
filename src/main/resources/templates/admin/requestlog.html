@@ -50,7 +50,44 @@
 	  <td class="grayTH"><div align="center">Delete</div></td>
     </tr>
     
-    <tr onMouseOver="this.style.backgroundColor='#fafad2'" onMouseOut="this.style.backgroundColor='#ffffff'">
+    <tbody th:if="${requestLogDto != null}">
+      <tr th:each="request, stat : ${requestLogDto}">
+        <form method="post" th:action="@{/admin/reqAccDel}">
+          <input type="hidden" name="request_id" th:value="${request.id}" />
+          <input type="hidden" name="username" th:value="${request.name}" />
+          <input type="hidden" name="useremail" th:value="${request.email}" />
+          <input type="hidden" name="software" th:value="${request.software}" />
+        <td class="grayTD"><div align="center" th:text="${stat.index + 1}"></div></td>
+        <td class="grayTD"><div align="center" th:text="${request.date}"></div></td>
+        <td class="grayTD"><div align="center" th:text="${request.name}"></div></div></td>
+        <td class="grayTD"><div align="center" th:text="${request.affiliation}"></div></td>
+        <td class="grayTD"><div align="center" th:text="${request.title}"></div></td>
+        <td class="grayTD"><div align="center" th:text="${request.email}"></div></td>
+        <td class="grayTD"><div align="center" th:text="${request.instrument}"></div></td>
+        <td class="grayTD"><div align="center" th:text="${request.software}"></div></td>
+        <td class="grayTD"><div align="center" th:text="${request.version}"></div></td>
+        <td class="grayTD">
+          <div align="center">
+              <span th:if="${request.state == 0}" th:text="'pending'"></span>
+              <span th:if="${request.state == 1}" th:text="'accepted'"></span>
+              <span th:if="${request.state == 2}" th:text="'rejected'"></span>
+          </div>
+        </td>
+
+        <td class="grayTD">
+          <div align="letf"><input name="btup" type="submit" class="btnBlueSmall" value="Accept"/>
+          </div>
+        </td>
+        <td class="grayTD">
+          <div align="center"><input name="deluser" type="submit" class="btnSmall" value=" Del "/>
+          </div>
+        </td>
+        </form>
+      </tr> 
+      </tr>
+    </tbody>
+
+    <!-- <tr onMouseOver="this.style.backgroundColor='#fafad2'" onMouseOut="this.style.backgroundColor='#ffffff'">
       <td class="grayTD"><div align="center"><%=index--%></div></td>
       <td class="grayTD"><div align="center"><%=reqtime%></div></td>
       <td class="grayTD"><div align="center"><%=rs.getString(3)%></div></div></td>
@@ -67,7 +104,7 @@
 
       <td class="grayTD"><div align="center">
         <input name="deluser" type="button" class="btnSmall" value=" Del " onclick="if(window.confirm('Sure to delete it??')) document.location='requestlog.jsp?delete=<%=rs.getInt(1)%>';" /></div></td>
-      </tr> 
+      </tr> --> 
 
     </table></td>
   </tr>

@@ -3,6 +3,8 @@ package com.prix.homepage.user.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.prix.homepage.user.dao.SearchLogMapper;
 import com.prix.homepage.user.pojo.SearchLog;
 import com.prix.homepage.user.service.SearchLogService;
@@ -14,8 +16,8 @@ public class SearchLogServiceImpl implements SearchLogService {
     private final SearchLogMapper searchLogMapper;
 
     @Override
-    public List<SearchLog> getAllSearchLog(Integer userId) {
-        List<SearchLog> listSearchLogs = searchLogMapper.findAll(userId);
+    public List<SearchLog> getAllSearchLog() {
+        List<SearchLog> listSearchLogs = searchLogMapper.findAll();
         List<SearchLog> listSearchLog = new ArrayList<>();
         for(SearchLog searchLog : listSearchLogs) {
             listSearchLog.add(
@@ -35,12 +37,14 @@ public class SearchLogServiceImpl implements SearchLogService {
     }
 
     @Override
-    public List<SearchLog> getSearchLogs(int userId, int offset, int pageSize) {
-        return searchLogMapper.findLogs(userId, offset, pageSize);
+    @Transactional
+    public String findFile(Integer id) {
+        return searchLogMapper.findFile(id);
     }
 
     @Override
-    public int getTotalLogs(int userId) {
-        return searchLogMapper.countLogs(userId);
+    @Transactional
+    public String findName(Integer id) {
+        return searchLogMapper.findName(id);
     }
 }

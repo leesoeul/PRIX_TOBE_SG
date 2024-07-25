@@ -9,5 +9,9 @@ import java.util.List;
 public interface RequestLogMapper {
 
     List<RequestLog> findAll();
+
+    void deleteRequest(Integer id);
+
+    void updateState(Integer id, Integer state);
     
 }

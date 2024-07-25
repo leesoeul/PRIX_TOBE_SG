@@ -34,5 +34,4 @@ public class RequestLog {
 
     private Integer state;
 
-
 }

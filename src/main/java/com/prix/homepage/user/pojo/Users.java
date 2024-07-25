@@ -19,7 +19,7 @@ public class Users {
 
     private String email;
 
-    private String affilication;
+    private String affiliation;
 
     private Integer level;
 }

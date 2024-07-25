@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 //import org.eclipse.tags.shaded.org.apache.regexp.RE;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.prix.homepage.user.dao.RequestLogMapper;
 import com.prix.homepage.user.pojo.RequestLog;
 import com.prix.homepage.user.service.RequestLogService;
@@ -35,5 +37,17 @@ public class RequestLogServiceImpl implements RequestLogService{
             );
         }
         return listRequestLog;
+    }
+
+    @Override
+    @Transactional
+    public void deleteRequest(Integer id) {
+        requestLogMapper.deleteRequest(id);
+    }
+
+    @Override
+    @Transactional
+    public void updateState(Integer id, Integer state) {
+        requestLogMapper.updateState(id, state);
     }
 }

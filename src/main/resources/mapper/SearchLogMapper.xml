@@ -5,15 +5,15 @@
 <mapper namespace="com.prix.homepage.user.dao.SearchLogMapper">
 
     <select id="findAll" resultType="com.prix.homepage.user.pojo.SearchLog">
-        SELECT id, user_id, title, date, msfile, db, result, engine FROM px_search_log WHERE user_id = #{userId}
+        SELECT * FROM px_search_log
     </select>
 
-    <select id="findLogs" resultType="com.prix.homepage.user.pojo.SearchLog">
-        SELECT id, user_id, title, date, msfile, db, result, engine FROM px_search_log WHERE user_id = #{userId}
+    <select id="findFile" resultType="String">
+        SELECT name FROM px_data WHERE id = #{id}
     </select>
 
-    <select id="countLogs" resultType="com.prix.homepage.user.pojo.SearchLog">
-        SELECT id, user_id, title, date, msfile, db, result, engine FROM px_search_log WHERE user_id = #{userId}
+    <select id="findName" resultType="String">
+        SELECT name FROM px_account WHERE id = #{id}
     </select>
 
 </mapper>

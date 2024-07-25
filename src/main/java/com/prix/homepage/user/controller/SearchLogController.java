@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
+import java.util.*;
 
 @Controller
 @AllArgsConstructor
@@ -32,15 +32,40 @@ public class SearchLogController {
             return "redirect:/admin/index";
         }
 
-        //int offset = page * size;
-        List<SearchLog> listSearchLogDto = searchLogService.getAllSearchLog(userId);
-        //List<SearchLog> listSearchLogDto = searchLogService.getSearchLogs(userId, offset, size);
-        //int totalLogs = searchLogService.getTotalLogs(userId);
-        //int totalPages = (int) Math.ceil((double) totalLogs / size);
+        List<SearchLog> searchLogDto = searchLogService.getAllSearchLog();
+        
+        //Map 형태로 name, msfile, db의 이름 가져오기
+        Map<Integer, String> userNames = new HashMap<>();
+        for(SearchLog searchLog : searchLogDto){
+            Integer id = searchLog.getUser_id();
+            System.out.println(id);
+            String userName = searchLogService.findName(id);
+            System.out.println(userName);
+            userNames.put(id, userName);
+        }
+        Map<Integer, String> msFiles = new HashMap<>();
+        for(SearchLog searchLog : searchLogDto){
+            Integer id = searchLog.getMsfile();
+            System.out.println(id);
+            String fileName = searchLogService.findFile(id);
+            System.out.println(fileName);
+            msFiles.put(id, fileName);
+        }
+        Map<Integer, String> dbNames = new HashMap<>();
+        for(SearchLog searchLog : searchLogDto){
+            Integer id = searchLog.getDb();
+            System.out.println(id);
+            String fileName = searchLogService.findFile(id);
+            System.out.println(fileName);
+            dbNames.put(id, fileName);
+        }
 
-        model.addAttribute("listSearchLogDto", listSearchLogDto);
-        //model.addAttribute("currentPage", page);
-        //model.addAttribute("totalPages", totalPages);
+
+        model.addAttribute("searchLogDto", searchLogDto);
+        model.addAttribute("userNames", userNames);
+        model.addAttribute("msFiles", msFiles);
+        model.addAttribute("dbNames", dbNames);
+        
 
         return "admin/searchlog";
     }

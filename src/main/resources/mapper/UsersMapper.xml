@@ -8,5 +8,9 @@
         SELECT id, name, email, affiliation, level FROM px_account
     </select>
 
+    <delete id="deleteById">
+    DELETE FROM px_account WHERE id = #{id}
+    </delete>
+
 
 </mapper>

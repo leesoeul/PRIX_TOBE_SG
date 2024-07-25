@@ -8,9 +8,9 @@ import java.util.List;
 
 @Mapper
 public interface SearchLogMapper {
-    List<SearchLog> findAll(Integer userId);
+    List<SearchLog> findAll();
 
-    List<SearchLog> findLogs(@Param("userId") int userId, @Param("offset") int offset, @Param("pageSize") int pageSize);
+    String findFile(Integer id);
 
-    int countLogs(@Param("userId") int userId);
+    String findName(Integer id);
 }

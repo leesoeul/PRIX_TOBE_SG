@@ -46,21 +46,36 @@
         <td class="grayTH"><div align="center">Level</div></td>
         <td class="grayTH"><div align="center">Delete</div></td>
       </tr>
-      <tr onMouseOver="this.style.backgroundColor='#fafad2'" onMouseOut="this.style.backgroundColor='#ffffff'">
-        <td class="grayTD"><div align="center"><%=rs.getInt(1)%><a/></div></td>
-        <td class="grayTD"><%=name%></td>
-        <td class="grayTD"><%=affiliation%></td>
-        <td class="grayTD"><%=email%></td>
-        <td class="grayTD"><div align="center"><%=rs.getInt(5) > 1 ? "admin" : "user"%></div></td>
-        <td class="grayTD"><div align="center">
+      <tbody th:if="${usersDto != null}">
+        <tr th:each="users : ${usersDto}">
+          <form method="post" th:action="@{/admin/deluser}">
+          <input type="hidden" name="user_id" th:value="${users.id}" />
+          <td class="grayTD"><div align="center" th:text="${users.id}"></div></td>
+          <td class="grayTD" th:text="${users.name}"></td>
+          <td class="grayTD" th:text="${users.affiliation}"></td>
+          <td class="grayTD" th:text="${users.email}"></td>
+          <td class="grayTD">
+            <div align="center">
+                <span th:if="${users.level == 2}" th:text="'admin'"></span>
+                <span th:if="${users.level == 1}" th:text="'user'"></span>
+            </div>
+          </td>
+          <td class="grayTD"><div align="center" th:text="${users.level}"></div></td>
+          <td class="grayTD">
+            <div align="center"><input name="deluser" type="submit" class="btnBlueSmall" value=" del "/>
+            </div>
+          </td>
+        </form>
+        </tr>
+      </tbody>
 
-            &nbsp;</div></td><td class="grayTD"><div align="center">&nbsp;</div></td>
+        <!-- &nbsp;</div></td><td class="grayTD"><div align="center">&nbsp;</div></td> -->
 
-            <input name="btup" type="button" class="btnSmall" value=" up " onclick="document.location='users.jsp?up=<%=rs.getInt(1)%>';" />&nbsp;
-			<input name="btdown" type="button" class="btnSmall" value=" dn " onclick="document.location='users.jsp?down=<%=rs.getInt(1)%>';"  /></div></td>
+           <!--  <input name="btup" type="button" class="btnSmall" value=" up " onclick="document.location='users.jsp?up=<%=rs.getInt(1)%>';" />&nbsp;
+			<input name="btdown" type="button" class="btnSmall" value=" dn " onclick="document.location='users.jsp?down=<%=rs.getInt(1)%>';"  /></div></td> -->
 
-		<td class="grayTD"><div align="center">
-		<input name="deluser" type="button" class="btnBlueSmall" value=" del " onclick="if(window.confirm('Sure to delete it??')) document.location='users.jsp?del=<%=rs.getInt(1)%>'" /></div></td>
+		<!-- <td class="grayTD"><div align="center">
+		<input name="deluser" type="button" class="btnBlueSmall" value=" del " onclick="if(window.confirm('Sure to delete it??')) document.location='users.jsp?del=<%=rs.getInt(1)%>'" /></div></td> -->
 
     </table></td>
 </tr>

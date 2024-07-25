@@ -8,5 +8,6 @@ import java.util.List;
 
 @Mapper
 public interface UsersMapper {
-    
+    List<Users> findAll();
+    void deleteById(Integer id);
 }
