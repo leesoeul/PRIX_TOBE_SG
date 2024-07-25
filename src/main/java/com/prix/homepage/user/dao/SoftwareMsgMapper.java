@@ -10,5 +10,7 @@ import com.prix.homepage.user.pojo.SoftwareMsg;
 public interface SoftwareMsgMapper {
     List<SoftwareMsg> findById(String id);
 
+    String findByName(String id);
+
     void updateSoftwareMsg(String id, String message);
 }

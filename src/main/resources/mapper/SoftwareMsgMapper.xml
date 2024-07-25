@@ -12,4 +12,8 @@
     UPDATE px_software_msg SET message = #{message} WHERE id = #{id}
   </update>
 
+  <select id="findByName" resultType="String">
+    SELECT message FROM px_software_msg WHERE id = #{id}
+  </select>
+
 </mapper>

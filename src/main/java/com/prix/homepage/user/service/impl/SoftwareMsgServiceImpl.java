@@ -44,5 +44,11 @@ public class SoftwareMsgServiceImpl implements SoftwareMsgService{
   public void updateSoftwareMsg(String id, String message) {
       softwareMsgMapper.updateSoftwareMsg(id, message);
   }
+
+  @Override
+  @Transactional
+  public String getSoftwareMsg(String id) {
+      return softwareMsgMapper.findByName(id);
+  }
   
 }
