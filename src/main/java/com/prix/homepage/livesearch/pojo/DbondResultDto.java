@@ -19,7 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ResultDto {
+public class DbondResultDto {
   ProteinSummary summary;
   Modification[] mods;
   String fileName;

@@ -26,7 +26,7 @@ import com.prix.homepage.livesearch.dao.SearchLogMapper;
 import com.prix.homepage.livesearch.dao.UserSettingMapper;
 import com.prix.homepage.livesearch.pojo.Data;
 import com.prix.homepage.livesearch.pojo.Modification;
-import com.prix.homepage.livesearch.pojo.ProcessDto;
+import com.prix.homepage.livesearch.pojo.DbondProcessDto;
 import com.prix.homepage.livesearch.service.ModificationService;
 import com.prix.homepage.user.dao.DatabaseMapper;
 import com.prix.homepage.user.pojo.Database;
@@ -53,7 +53,7 @@ public class DbondProcessService {
 	private final DatabaseMapper databaseMapper;
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	public ProcessDto process(String id,
+	public DbondProcessDto process(String id,
 			HttpServletRequest request, Map<String, String> paramsMap, MultipartFile[] multipartFiles) throws IOException {
 
 		// initialization
@@ -571,7 +571,7 @@ public class DbondProcessService {
 					}
 				}
 				// response.sendRedirect("result.jsp?file=" + jobCode);
-				ProcessDto processDto = ProcessDto.builder()
+				DbondProcessDto processDto = DbondProcessDto.builder()
 						.finished(finished).failed(failed)
 						.logPath(logPath).xmlPath(xmlPath).msPath(msPath).dbPath(dbPath).decoyPath(decoyPath)
 						.title(title).msIndex(msIndex).dbIndex(dbIndex).multiPath(multiPath).engine(engine)
@@ -583,7 +583,7 @@ public class DbondProcessService {
 		}
 		// 별 문제 없으면 livesearch/process를 반환(컨트롤러에서 리턴할 값) process가 modplus외에도 사용될 경우 수정
 		// 필요할 수 있음
-		ProcessDto processDto = ProcessDto.builder()
+		DbondProcessDto processDto = DbondProcessDto.builder()
 				.finished(finished).failed(failed)
 				.logPath(logPath).xmlPath(xmlPath).msPath(msPath).dbPath(dbPath).decoyPath(decoyPath)
 				.title(title).msIndex(msIndex).dbIndex(dbIndex).multiPath(multiPath).engine(engine)

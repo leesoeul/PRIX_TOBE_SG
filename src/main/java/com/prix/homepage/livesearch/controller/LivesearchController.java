@@ -21,13 +21,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.prix.homepage.constants.PrixDataWriter;
 import com.prix.homepage.constants.ProteinInfo;
 import com.prix.homepage.livesearch.dao.DataMapper;
+import com.prix.homepage.livesearch.pojo.ACTGProcessDto;
 import com.prix.homepage.livesearch.pojo.Data;
-import com.prix.homepage.livesearch.pojo.ProcessDto;
-import com.prix.homepage.livesearch.pojo.ResultDto;
+import com.prix.homepage.livesearch.pojo.DbondProcessDto;
+import com.prix.homepage.livesearch.pojo.DbondResultDto;
 import com.prix.homepage.livesearch.pojo.UserSettingDto;
 import com.prix.homepage.livesearch.service.PatternMatchService;
 import com.prix.homepage.livesearch.service.UserModificationService;
 import com.prix.homepage.livesearch.service.UserSettingService;
+import com.prix.homepage.livesearch.service.impl.ACTGProcessService;
 import com.prix.homepage.livesearch.service.impl.DbondProcessService;
 import com.prix.homepage.livesearch.service.impl.DbondResultService;
 import com.prix.homepage.user.pojo.Account;
@@ -44,7 +46,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-
 /**
  * prix.hanyang.ac.kr/livesearch 페이지
  */
@@ -60,6 +61,7 @@ public class LivesearchController {
   private final DbondProcessService dbondProcessService;
   private final DataMapper dataMapper;
   private final DbondResultService dbondResultService;
+  private final ACTGProcessService actgProcessService;
 
   private final PrixDataWriter prixDataWriter;
   private final PatternMatchService patternMatchService;
@@ -242,7 +244,6 @@ public class LivesearchController {
     return "livesearch/USE";
   }
 
-  
   /**
    * dbond 페이지에서 submit할 경우, process 페이지로 이동한다.
    * 
@@ -260,7 +261,7 @@ public class LivesearchController {
       return "redirect:/login?url=modi/search";
 
     // 더미 processDto
-    ProcessDto processDto = ProcessDto.builder()
+    DbondProcessDto processDto = DbondProcessDto.builder()
         .finished(false).failed(true)
         .logPath("").xmlPath("").msPath("").dbPath("").decoyPath("")
         .title("").msIndex(0).dbIndex(0).multiPath("").engine("")
@@ -333,7 +334,7 @@ public class LivesearchController {
       session.setAttribute("id", anony);
       id = (String) session.getAttribute("id");
     }
-    ResultDto resultDto = ResultDto.builder()
+    DbondResultDto resultDto = DbondResultDto.builder()
         .summary(null)
         .mods(null)
         .fileName("")
@@ -410,7 +411,7 @@ public class LivesearchController {
   }
 
   /**
-   * ACTG 화면에서 클릭시 help로 이동 
+   * ACTG 화면에서 클릭시 help로 이동
    * ex) /ACTG/help#PEP
    */
   @GetMapping("/ACTG/help")
@@ -418,12 +419,73 @@ public class LivesearchController {
     return "livesearch/help";
   }
 
-  @PostMapping("/ACTG/process")
-  public String postACTG(Model model, HttpServletRequest request) {
-      //TODO: process POST request
-      
-      return "livesearch/actg_process";
+  /**
+   * ACTG process에서 rate 확인 목적으로 windows.location 변경할때 접속되는 용도
+   * @param paramsMap /*[[@{/process(execute='no', process=${processName}, title=${title})}]]
+   */
+  @GetMapping("/ACTG/process")
+  public String getACTG(Model model, HttpServletRequest request, @RequestParam Map<String, String> paramsMap) {
+    // 세션에서 id 확인
+    HttpSession session = request.getSession();
+    String id = String.valueOf(session.getAttribute("id"));
+    if (id == null) {
+      return "redirect:/login?url=ACTG/search";
+    }
+
+    // dummy process dto
+    ACTGProcessDto processDto = ACTGProcessDto.builder()
+        .rate(0)
+        .failed(false)
+        .finished(false)
+        .output("")
+        .title("")
+        .processName("")
+        .build();
+
+    try {
+      // GET 요청에서는 파일을 업로드할 수 없기 때문에 파일을 제외하고 처리
+      processDto = actgProcessService.process(id, request, paramsMap, null);
+    } catch (Exception e) {
+      logger.error("process service error: {}", e.getMessage());
+      e.printStackTrace();
+    }
+
+    model.addAttribute("processDto", processDto);
+
+    return "livesearch/actg_process";
   }
-  
-  
+
+  /**
+   * actg에서 submit시 진행과정 보여주는 process 화면
+   * @param paramsMap form 으로 제출 받은 input들
+   * @param peptideFile type이 file인 pepetide file
+   * @param mutationFile type이 file인 mutation file
+   */
+  @PostMapping("/ACTG/process")
+  public String postACTG(Model model, HttpServletRequest request, @RequestParam Map<String, String> paramsMap,
+      @RequestParam("peptideFile") MultipartFile peptideFile,
+      @RequestParam("mutationFile") MultipartFile mutationFile) {
+    // 세션에서 id 확인
+    HttpSession session = request.getSession();
+    String id = String.valueOf(session.getAttribute("id"));
+    if (id == null)
+      return "redirect:/login?url=ACTG/search";
+
+    // dummy process dto
+    ACTGProcessDto processDto = ACTGProcessDto.builder().rate(0).failed(false).finished(false)
+        .output("").title("").processName("").build();
+    // MultipartFile[] 배열로 변환
+    MultipartFile[] multipartFiles = { peptideFile, mutationFile };
+    try {
+      processDto = actgProcessService.process(id, request, paramsMap, multipartFiles);
+    } catch (Exception e) {
+      logger.error("process service error: {}", e.getMessage());
+      e.printStackTrace();
+    }
+
+    model.addAttribute("processDto", processDto);
+
+    return "livesearch/actg_process";
+  }
+
 }

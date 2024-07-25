@@ -1,0 +1,355 @@
+package com.prix.homepage.livesearch.service.impl;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.StringWriter;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.util.Map;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.time.Instant;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.prix.homepage.livesearch.dao.SearchLogMapper;
+import com.prix.homepage.livesearch.pojo.ACTGProcessDto;
+
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.AllArgsConstructor;
+
+/**
+ * actg에서 입력 받은 form을 바탕으로 db에 저장, file write하는 작업 수행
+ */
+@Service
+@AllArgsConstructor
+public class ACTGProcessService {
+
+  private final SearchLogMapper searchLogMapper;
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+  public ACTGProcessDto process(String id,
+      HttpServletRequest request, Map<String, String> paramsMap, MultipartFile[] multipartFiles) throws IOException {
+
+    String user = "";
+    String title = request.getParameter("title");
+    // Environment
+    String method = "";
+    String peptideFile = "";
+    String IL = "";
+
+    // Protein DB
+    String proteinDB = "";
+    String SAV = "";
+
+    // Variant Splice Graph DB
+    String variantSpliceGraphDB = "";
+    String mutation = "";
+    String mutationFile = "";
+    String exonSkipping = "";
+    String altAD = "";
+    String intron = "";
+
+    // Six-frame translation
+    String referenceGenome = "";
+
+    Enumeration params = request.getAttributeNames();
+    while (params.hasMoreElements()) {
+      String name = (String) params.nextElement();
+    }
+
+    String processName = request.getParameter("process");
+
+    String line = "";
+    String rate = "0";
+    boolean finished = false;
+    boolean failed = false;
+    String output = "";
+
+    // 이게 원래 진짜임 2024
+    // final String logDir = "/home/PRIX/ACTG_log/";
+    // final String dbDir = "/home/PRIX/ACTG_db/";
+    final String logDir = "C:/Users/KYH/Desktop/ACTG/log/";
+    final String dbDir = "C:/Users/KYH/Desktop/ACTG/db/";
+
+    String processPath = logDir + processName;
+
+    if (request.getParameter("execute") == null) 
+    {
+
+      Instant instant = Instant.now();
+      long timestamp = instant.toEpochMilli(); // 밀리초 단위의 타임스탬프
+      String key = id + "_" + timestamp;
+      processPath = "process_" + key + ".proc";
+      processName = processPath;
+      String xmlPath = "param_" + key + ".xml";
+      String proteinDBPath = "";
+      String peptideFilePath = "";
+      String variantSpliceGraphDBPath = "";
+      String mutationFilePath = "";
+      String referenceGenomePath = "";
+      String outputPath = logDir;
+
+      // form으로 제출된 param과 file을 paramsMap과 multipartFiles를 결합하여
+      // 반복문을 돌려 params를 초기화하거나
+      // peptideFile, mutationFile 의 경우 각 path에서 파일을 읽어온다 존재하지 않으면 파일 작성
+      List<Object> combinedList = new ArrayList<>();
+      for (Map.Entry<String, String> entry : paramsMap.entrySet()) {
+        combinedList.add(entry);
+      }
+      combinedList.addAll(Arrays.asList(multipartFiles));
+      // 컬렉션을 반복하면서 params냐 file이냐에 따라 다른 작업 수행
+      for (Object obj : combinedList) {
+        String name = "";
+        if (obj instanceof Map.Entry<?, ?>) {
+          // Map.Entry<String, String> 타입의 요소를 처리
+          Map.Entry<?, ?> entry = (Map.Entry<?, ?>) obj;
+          name = (String) entry.getKey();
+          String value = (String) entry.getValue();
+
+          switch (name) {
+            case "user":
+              user = value;
+              break;
+            case "title":
+              title = value;
+              break;
+            case "method":
+              method = value;
+              break;
+            case "IL":
+              IL = value;
+              break;
+            case "proteinDB":
+              proteinDB = value;
+              proteinDBPath = dbDir + proteinDB;
+              break;
+            case "SAV":
+              SAV = value;
+              break;
+            case "variantSpliceGraphDB":
+              variantSpliceGraphDB = value;
+              variantSpliceGraphDBPath = dbDir + variantSpliceGraphDB;
+              break;
+            case "mutation":
+              mutation = value;
+              break;
+            case "exonSkipping":
+              exonSkipping = value;
+              break;
+            case "altAD":
+              altAD = value;
+              break;
+            case "intron":
+              intron = value;
+              break;
+            case "referenceGenome":
+              referenceGenome = value;
+              referenceGenomePath = dbDir + referenceGenome;
+              break;
+          }
+        } // paramMap
+        else if (obj instanceof MultipartFile) {
+          // MultipartFile 타입의 요소를 처리
+          MultipartFile file = (MultipartFile) obj;
+          name = file.getName();
+
+          // 필드 이름에 따라 파일 처리 로직
+          switch (name) {
+            case "peptideFile":
+              peptideFile = "peptide_" + key + ".txt";
+              peptideFilePath = logDir + peptideFile;
+
+              if (file.getSize() > 1024 * 100) {
+                failed = true;
+                output = "The size of peptide list should not exceed 1KB.";
+                break;
+              }
+              if (file.getOriginalFilename().length() > 0) {
+                try {
+                  try (FileOutputStream fos = new FileOutputStream(peptideFilePath);
+                      OutputStreamWriter writer = new OutputStreamWriter(fos, "UTF-8");
+                      InputStream is = file.getInputStream()) {
+                    while (is.available() > 0) {
+                      writer.write(is.read());
+                    }
+                  }
+                  logger.info("peptideFile in actg process service done");
+
+                } catch (Exception e) {
+                  logger.warn("error in writing peptideFile:{}", e.getMessage());
+                }
+              }
+              break;
+            case "mutationFile":
+              mutationFile = "mutation_" + key + ".txt";
+              mutationFilePath = logDir + mutationFile;
+
+              if (file.getSize() > 20971520) {
+                failed = true;
+                output = "The size of VCF should not exceed 20MB.";
+                break;
+              }
+              if (file.getOriginalFilename().length() > 0) {
+                try {
+                  try (FileOutputStream fos = new FileOutputStream(mutationFilePath);
+                      OutputStreamWriter writer = new OutputStreamWriter(fos, "UTF-8");
+                      InputStream is = file.getInputStream()) {
+                    while (is.available() > 0) {
+                      writer.write(is.read());
+                    }
+                  }
+                  logger.info("peptideFile in actg process service done");
+
+                } catch (Exception e) {
+                  logger.warn("error in writing peptideFile:{}", e.getMessage());
+                }
+              }
+              break;
+            default:
+              logger.warn("Unknown file parameter: " + name);
+              break;
+          }
+        }
+        // XML maker
+        try {
+          // template.xml이라는 파일 필요 2024
+          FileReader FR = new FileReader(dbDir + "template.xml");
+          BufferedReader BR = new BufferedReader(FR);
+
+          FileWriter FW = new FileWriter(logDir + xmlPath);
+          BufferedWriter BW = new BufferedWriter(FW);
+
+          String line_ = null;
+
+          while ((line_ = BR.readLine()) != null) {
+            if (line_.contains("[METHOD]")) {
+              line_ = line_.replace("[METHOD]", method);
+            } else if (line_.contains("[IL]")) {
+              line_ = line_.replace("[IL]", IL);
+            } else if (line_.contains("[PEPTIDE_FILE]")) {
+              line_ = line_.replace("[PEPTIDE_FILE]", peptideFilePath);
+            } else if (line_.contains("[PROTEIN_DB]")) {
+              line_ = line_.replace("[PROTEIN_DB]", proteinDBPath);
+            } else if (line_.contains("[SAV]")) {
+              line_ = line_.replace("[SAV]", SAV);
+            } else if (line_.contains("[VARIANT_SPLICE_GRAPH_DB]")) {
+              line_ = line_.replace("[VARIANT_SPLICE_GRAPH_DB]", variantSpliceGraphDBPath);
+            } else if (line_.contains("[ALT_AD]")) {
+              line_ = line_.replace("[ALT_AD]", altAD);
+            } else if (line_.contains("[EXON_SKIPPING]")) {
+              line_ = line_.replace("[EXON_SKIPPING]", exonSkipping);
+            } else if (line_.contains("[INTRON]")) {
+              line_ = line_.replace("[INTRON]", intron);
+            } else if (line_.contains("[MUTATION]")) {
+              line_ = line_.replace("[MUTATION]", mutation);
+            } else if (line_.contains("[MUTATION_FILE]")) {
+              line_ = line_.replace("[MUTATION_FILE]", mutationFilePath);
+            } else if (line_.contains("[REFERENCE_GENOME]")) {
+              line_ = line_.replace("[REFERENCE_GENOME]", referenceGenomePath);
+            } else if (line_.contains("[OUTPUT]")) {
+              line_ = line_.replace("[OUTPUT]", outputPath);
+            }
+
+            BW.append(line_);
+            BW.newLine();
+          }
+
+          BR.close();
+          FR.close();
+          BW.close();
+          FW.close();
+        } catch (IOException e) {
+          output = e + "\n";
+        }
+      } // for (Object obj : combinedList)
+
+      if (!failed) {
+
+        Runtime runtime = Runtime.getRuntime();
+
+        // 원래 이 코드임 2024
+        // String[] command = { "/bin/bash", "-c",
+        // "java -Xmx10G -jar
+        // /usr/local/server/apache-tomcat-8.0.14/webapps/ROOT/ACTG/ACTG_Search.jar " +
+        // logDir
+        // + xmlPath + " " + logDir + processPath };
+        String[] command = { "cmd.exe", "/c",
+            "java -Xmx10G -jar C:/Users/KYH/Desktop/ACTG_Search.jar " + logDir + xmlPath + " " + logDir + processPath };
+
+        Process process = runtime.exec(command);
+      }
+    } // if (request.getParameter("execute") == null)
+    else {
+      FileInputStream fis = new FileInputStream(processPath);
+      StringWriter writer = new StringWriter();
+      StringWriter allWriter = new StringWriter();
+      while (fis.available() > 0) {
+        char c = (char) fis.read();
+        if (c == '\n') {
+          line = writer.toString();
+
+          if (line.indexOf("ERROR") >= 0 || line.indexOf("Exception") >= 0) {
+            failed = true;
+          } else if (line.startsWith("Elapsed Time")) {
+            finished = true;
+          }
+
+          if (line.contains(logDir)) {
+            line = line.replace(logDir, "");
+          }
+          if (line.contains(dbDir)) {
+            line = line.replace(dbDir, "");
+          }
+
+          if (line.contains("%")) {
+            rate = line;
+          } else {
+            allWriter.append(line + "\n");
+          }
+          writer = new StringWriter();
+        } else {
+          writer.append(c);
+        }
+
+      }
+
+      if (writer.toString().length() > 0)
+        line = writer.toString();
+
+      fis.close();
+      output = allWriter.toString();
+
+      if (finished) {
+
+        String prixIndex = processPath.replace("process_" + id + "_", "");
+        prixIndex = prixIndex.replace(logDir, "");
+        prixIndex = prixIndex.replace(".proc", "");
+
+        // "insert into px_search_log (user_id, title, date, msfile, db, result, actg,
+        // engine) values
+        // (" + id + ", '" + title.replace("'", "\\\'") + "',now(), 0, 0,
+        // 0,'"+prixIndex+"' ,'ACTG')");
+        // date는 mybatis mapper xml에서 처리
+        searchLogMapper.insert(
+            Integer.parseInt(id), title.replace("'", "\\'"), 0, 0, 0, "ACTG");
+      }
+    }
+    ACTGProcessDto processDto = ACTGProcessDto.builder().failed(failed).finished(finished).output(output)
+        .processName(processName).rate(Integer.parseInt(rate)).title(title).build();
+        logger.warn("processNAme2:~~~~~~~~~~~{}", processName);
+
+    return processDto;
+  }
+}

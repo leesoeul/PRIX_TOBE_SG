@@ -19,7 +19,7 @@ import com.prix.homepage.constants.ProteinInfo;
 import com.prix.homepage.constants.ProteinSummary;
 import com.prix.homepage.livesearch.dao.DataMapper;
 import com.prix.homepage.livesearch.dao.SearchLogMapper;
-import com.prix.homepage.livesearch.pojo.ResultDto;
+import com.prix.homepage.livesearch.pojo.DbondResultDto;
 import com.prix.homepage.user.pojo.Account;
 import com.prix.homepage.user.service.AccountService;
 
@@ -39,7 +39,7 @@ public class DbondResultService {
 	DataMapper dataMapper;
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	public ResultDto result(String id,
+	public DbondResultDto result(String id,
 			HttpServletRequest request, HttpSession session) throws FileNotFoundException {
 
 		if(id == null) id = "4";
@@ -151,7 +151,7 @@ public class DbondResultService {
 		if (proteins != null)
 			Arrays.sort(proteins, by);
 
-		ResultDto resultDto = ResultDto.builder()
+		DbondResultDto resultDto = DbondResultDto.builder()
 				.summary(summary)
 				.mods(mods)
 				.fileName(fileName)
