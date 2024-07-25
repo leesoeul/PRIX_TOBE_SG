@@ -36,8 +36,8 @@ public class DatabaseServiceImpl implements DatabaseService{
         Database.builder()
             .id(database.getId())
             .name(database.getName())
-            .file(database.getFile())
-            .data_id(database.getData_id())
+            .file(database.getName())
+            .dataId(database.getDataId())
             .build()
       );
     }

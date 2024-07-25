@@ -2,18 +2,21 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.prix.homepage.user.dao.SearchLogMapper">
 
-    <select id="findAll" resultType="com.prix.homepage.user.pojo.SearchLog">
-        SELECT * FROM px_search_log
-    </select>
+<mapper namespace="com.prix.homepage.livesearch.dao.SearchLogMapper">
 
-    <select id="findFile" resultType="String">
-        SELECT name FROM px_data WHERE id = #{id}
-    </select>
+  <insert id="insert">
+    INSERT INTO px_search_log 
+    (user_id, title, date, msfile, db, result, engine) 
+    VALUES 
+    (#{userId}, #{title}, NOW(), #{msFile}, #{db}, #{result}, #{engine})
+  </insert>
 
-    <select id="findName" resultType="String">
-        SELECT name FROM px_account WHERE id = #{id}
-    </select>
+  <select id="findUserId">
+    SELECT user_id 
+    FROM px_search_log 
+    WHERE user_id = #{userId} 
+      AND result = #{result}
+  </select>
 
 </mapper>

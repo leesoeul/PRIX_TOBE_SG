@@ -18,7 +18,7 @@ public class UserSetting {
     ppm
   }
   
-  private Integer user_id;
+  private Integer userId;
 
   private Integer enzyme;
 
@@ -28,21 +28,21 @@ public class UserSetting {
 
   private Float ptol;
 
-  private PtolEnum ptol_unit;
+  private PtolEnum ptolUnit;
 
   private Float ftol;
 
-  private Float mm_min;
+  private Float mmMin;
 
-  private Float mm_max;
+  private Float mmMax;
 
   private String engine;
 
-  private String data_format;
+  private String dataFormat;
 
   private String instrument;
 
-  private String ms_resolution;
+  private String msResolution;
 
-  private String msms_resolution;
+  private String msmsResolution;
 }

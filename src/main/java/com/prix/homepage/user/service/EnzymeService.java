@@ -14,6 +14,6 @@ public interface EnzymeService {
   void insertEnzyme(Integer userId, String name, String ntCleave, String ctCleave) throws Exception;
 
   void deleteEnzyme(Integer id, Integer userId) throws Exception;
-  
-  void updateEnzyme(Integer id, Integer userId, String name, String ntCleave, String ctCleave) throws Exception;
+
+  Enzyme selectById(Integer id);
 }

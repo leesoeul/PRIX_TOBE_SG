@@ -1,123 +1,128 @@
-
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
-<title>PRIX - PRoteome InformatiX</title>
-<link href="/css/home.css" rel="stylesheet" type="text/css" />
+  <meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+  <title>PRIX - PRoteome InformatiX</title>
+  <link href="/css/home.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
 
-<table border="0" cellspacing="0" cellpadding="0" id="TitTable">
-  <tr>
-    <td style="padding-left:15px;"><font class="blueB" size="3">ms/ms search </font> _ User enzyme list</td>
-  </tr>
-</table>
-<table width="95%" border="0" align="center" cellpadding="1">
- 	<tr>
-      <td align="left"><font class="blue"><em>Define new enzyme rule</em></font></td>
-	</tr>
-</table>
-<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
-    <tr>    
-      <td class="grayTH" >Name</td>
+  <table border="0" cellspacing="0" cellpadding="0" id="TitTable">
+    <tr>
+      <td style="padding-left:15px;">
+        <font class="blueB" size="3">ms/ms search </font> _ User enzyme list
+      </td>
+    </tr>
+  </table>
+  <table width="95%" border="0" align="center" cellpadding="1">
+    <tr>
+      <td align="left">
+        <font class="blue"><em>Define new enzyme rule</em></font>
+      </td>
+    </tr>
+  </table>
+  <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0"
+    style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
+    <tr>
+      <td class="grayTH">Name</td>
       <td class="grayTH">Nterm Cleave</td>
       <td class="grayTH">Cterm Cleave</td>
-      <td class="grayTH"><div align="right">Add&nbsp;&nbsp;&nbsp;</div></td>
+      <td class="grayTH">
+        <div align="right">Add&nbsp;&nbsp;&nbsp;</div>
+      </td>
     </tr>
 
-		<form id="enzyme_add" th:method="post" th:action="@{/modplus/enzyme_list}">
+    <form id="enzyme_add" th:method="post" th:action="@{/dbond/enzyme_list}">
 
-		<input type="hidden" name="action" value="add"/>
+      <input type="hidden" name="action" value="add" />
+      <tr>
+        <td class="grayTD"><input name="enzyme_name" type="text" size=10 />&nbsp;&nbsp;</td>
+        <td class="grayTD"><input name="nt_cleave" type="text" size=10 />&nbsp;&nbsp;</td>
+        <td class="grayTD"><input name="ct_cleave" type="text" size=10 />&nbsp;&nbsp;</td>
+        <td class="grayTD">
+          <div align="right"><input name="add_enzyme" type="submit" class="btnOrgSmall" value=" add " /></div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <font class="red">&nbsp;&nbsp;Ex)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Trypsin</font>
+        </td>
+        <td>
+          <font class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font>
+        </td>
+        <td>
+          <font class="red">&nbsp;&nbsp;&nbsp;KR</font>
+        </td>
+        <td align="right">&nbsp;</td>
+      </tr>
+    </form>
+  </table>
 
-    <tr>      
-      <td class="grayTD"><input name="enzyme_name" type="text" size=10/>&nbsp;&nbsp;</td>
-      <td class="grayTD"><input name="nt_cleave" type="text" size=10/>&nbsp;&nbsp;</td>
-      <td class="grayTD"><input name="ct_cleave" type="text" size=10/>&nbsp;&nbsp;</td>
-	  <td class="grayTD"><div align="right"><input name="add_enzyme" type="submit" class="btnOrgSmall" value=" add " /></div></td>
-    </tr> 
-	<tr>      
-      <td align="left"><font class="red">Ex)</font></td>
-      <td><font class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></td>
-      <td><font class="red">&nbsp;&nbsp;&nbsp;</font></td>
-	  <td align="right">&nbsp;</td>
-    </tr>
-	<tr>      
-      <td align="left"><font class="red">Trypsin</font></td>
-      <td><font class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></td>
-      <td><font class="red">&nbsp;&nbsp;&nbsp;KR</font></td>
-	  <td align="right">&nbsp;</td>
-    </tr>
-	<tr>      
-      <td align="left"><font class="red">Lys-N</font></td>
-      <td><font class="red">&nbsp;&nbsp;K&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></td>
-      <td><font class="red">&nbsp;&nbsp;&nbsp;&nbsp;</font></td>
-	  <td align="right">&nbsp;</td>
-    </tr>
-	<tr>      
-      <td align="left"><font class="red">Trypsin+Lys-N</font></td>
-      <td><font class="red">&nbsp;&nbsp;K&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></td>
-      <td><font class="red">&nbsp;&nbsp;&nbsp;KR</font></td>
-	  <td align="right">&nbsp;</td>
-    </tr>;
-</form>
-</table>
+  <div th:switch="${addState}">
+    <span th:case="1" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add: enzyme name is empty.</span>
+    <span th:case="5" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add: Character ' | ' cannot be used in
+      name.</span>
+    <span th:case="2" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add: cleave is empty.</span>
+    <span th:case="3" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add: cleave should be a sequence of amino
+      acids.</span>
+    <span th:case="4" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add: enzyme name duplication.</span>
+  </div>
 
-<div th:switch="${addState}">
-	<span th:case="1" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add: enzyme name is empty.</span>
-	<span th:case="5" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add: Character ' | ' cannot be used in name.</span>
-	<span th:case="2" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add: cleave is empty.</span>
-	<span th:case="3" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add: cleave should be a sequence of amino acids.</span>
-	<span th:case="4" class="red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Failed to add: enzyme name duplication.</span>
-</div>
-
-<br/>
-<br/>
-<table width="95%" border="0" align="center" cellpadding="1">
- 	<tr>
-      <td align="left"><font class="blue"><em>User-defined enzyme list</em></font></td>
-	</tr>
-</table>
-<table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
-    <tr>    
-      <td class="grayTH" >Name</td>
-      <td class="grayTH"><div align="center">Nterm Cleave</div></td>
-      <td class="grayTH"><div align="center">Cterm Cleave</div></td>
-      <td class="grayTH"><div align="right">Delete</div></td>
-    </tr>
-
-		<!-- 로그인 이후 제대로 작동하는지 확인 필요 -->
-		
-		<form id="enzyme_del" th:method="post" th:action="@{/modplus/enzyme_list}">
-			<tr th:each="enzyme : ${listEnzyme}">
-					<td class="grayTD" th:text="${enzyme.name}"></td>
-					<td class="grayTD" align="center" th:text="${enzyme.nt_cleave}"></td>
-					<td class="grayTD" align="center" th:text="${enzyme.ct_cleave}"></td>
-					<td class="grayTD" align="right">
-							<input type="hidden" name="action" value="del"/>
-							<input type="hidden" name="id" th:value="${enzyme.id}"/>
-							<input type="submit" class="btnBlueSmall" value="del"/>
-					</td>
-			</tr>
-		</form>
-	</tr>
-
-</table>
-<br/>
-<table cellpadding="1" width="95%" align="center" border="0">
-  <tbody>
+  <br />
+  <br />
+  <table width="95%" border="0" align="center" cellpadding="1">
     <tr>
-      <td align="right">
-      <input name="button3322" type="button" onClick="window.close()" value=" Close " />
-	  </td>
+      <td align="left">
+        <font class="blue"><em>User-defined enzyme list</em></font>
+      </td>
     </tr>
-	<tr>
-	 <td align="left">
-			<font class="red">User-defined enzymes are * labeled in enzyme list of submit page.</font>
-	  </td>
-	</tr>
-  </tbody>
-</table>
-<footer th:replace="~{inc/pop_footer::footer}">
+  </table>
+  <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0"
+    style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
+    <tr>
+      <td class="grayTH">Name</td>
+      <td class="grayTH">
+        <div align="center">Cleavage</div>
+      </td>
+      <td class="grayTH">
+        <div align="center">Term</div>
+      </td>
+      <td class="grayTH">
+        <div align="right">Delete</div>
+      </td>
+    </tr>
+
+    <tr th:each="enzyme : ${listEnzyme}">
+      <td class="grayTD" th:text="${enzyme.name}"></td>
+      <td class="grayTD" align="center" th:text="${enzyme.ntCleave}"></td>
+      <td class="grayTD" align="center" th:text="${enzyme.ctCleave}"></td>
+      <form id="enzyme_del" th:method="post" th:action="@{/dbond/enzyme_list}">
+        <td class="grayTD" align="right">
+          <input type="hidden" name="id" th:value="${enzyme.id}" />
+          <input type="submit" name="action" class="btnBlueSmall" value="del" />
+        </td>
+      </form>
+    </tr>
+    </tr>
+
+  </table>
+  <br />
+  <table cellpadding="1" width="95%" align="center" border="0">
+    <tbody>
+      <tr>
+        <td align="right">
+          <input name="button3322" type="button" onClick="window.close()" value=" Close " />
+        </td>
+      </tr>
+      <tr>
+        <td align="left">
+          <font class="red">User-defined enzymes are * labeled in enzyme list of submit page.</font>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <footer th:replace="~{inc/pop_footer::footer}">
 </body>
+
 </html>

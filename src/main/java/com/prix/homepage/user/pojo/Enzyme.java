@@ -17,13 +17,13 @@ public class Enzyme {
   private Integer id;
 
   @NotNull
-  private Integer user_id;
+  private Integer userId;
 
   @NotNull
   private String name;
 
-  private String nt_cleave;
+  private String ntCleave;
 
-  private String ct_cleave;
+  private String ctCleave;
   
 }

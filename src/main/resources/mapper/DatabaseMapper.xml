@@ -8,12 +8,16 @@
     SELECT id, name, file FROM px_database
   </select>
 
-  <delete id="deleteById">
-    DELETE FROM px_database WHERE id = #{id}
-  </delete>
+  <select id="selectById" resultType="com.prix.homepage.user.pojo.Database">
+    SELECT data_id, file
+    FROM px_database
+    WHERE id = #{id}
+  </select>
 
-  <update id="update">
-    UPDATE px_database SET name = #{name} WHERE id = #{id}
-  </update>
+  <select id="selectIdByDataId" resultType="java.lang.Integer">
+    SELECT id 
+    FROM px_database 
+    WHERE data_id = #{dataId}
+  </select>
 
 </mapper>

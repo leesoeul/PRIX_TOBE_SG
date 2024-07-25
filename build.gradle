@@ -26,7 +26,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-security'  
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	// implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
     implementation 'com.sun.mail:javax.mail:1.6.2'
 	
@@ -39,6 +39,13 @@ dependencies {
 	implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
 	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api'
 	implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl'
+
+	//A complete, Java-based solution for accessing, manipulating, and outputting XML data
+	implementation 'org.jdom:jdom2:2.0.6.1'
+
+	// process.jsp에서 사용하던 라이브러리 인데 일단 다른 방식으로 구현해서 보류
+	// implementation 'org.apache.commons:commons-fileupload2-jakarta-servlet6:2.0.0-M2'
+	// implementation 'commons-io:commons-io:2.16.1'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

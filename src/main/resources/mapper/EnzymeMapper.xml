@@ -25,12 +25,8 @@
     AND user_id = #{userId}
   </delete>
 
-  <update id="updateEnzyme" parameterType="com.prix.homepage.user.pojo.Enzyme">
-        UPDATE px_enzyme
-        SET name = #{name},
-            nt_cleave = #{nt_cleave},
-            ct_cleave = #{ct_cleave}
-        WHERE id = #{id} AND user_id = #{user_id}
-    </update>
 
+  <select id="selectById" resultType="com.prix.homepage.user.pojo.Enzyme">
+    SELECT  name, nt_cleave, ct_cleave FROM px_enzyme WHERE id = #{id}
+  </select>
 </mapper>
