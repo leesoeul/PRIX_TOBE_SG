@@ -6,9 +6,13 @@ import com.prix.homepage.user.service.SoftwareMsgService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+
+import org.springframework.boot.autoconfigure.ssl.SslProperties.Bundles.Watch.File;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @AllArgsConstructor
@@ -59,13 +63,39 @@ public class ManageController {
                 softwareMsgService.updateSoftwareMsg("nextsearch", request.getParameter("nxtsrchMessage"));
                 softwareMsgService.updateSoftwareMsg("signature", request.getParameter("signatureMessage"));
                 
-            } else if (request.getParameter("add_db") != null){
+            } 
+        } catch (Exception e) {
+            //문제 생기면 에러 반환
+            redirectAttributes.addFlashAttribute("errorMessage", "An error occurred while processing your request.");
+            return "redirect:/admin/configuration";
+        }
+        
+        return "redirect:/admin/configuration";
+    }
+
+
+    //Manage요청 받을시 (configuration에서 edit, unlink 버튼)
+    @PostMapping("/admin/upload")
+    public String upload(@RequestParam("file") MultipartFile file, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        HttpSession session = request.getSession();
+        Integer userId = (Integer) session.getAttribute("id");
+        if (userId == null) {
+            return "redirect:/admin/adlogin";
+        }
+        if (file.isEmpty()) {
+            redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
+            return "redirect:/admin/configuration";
+        }
+
+        try {
+            if (request.getParameter("add_db") != null){
                 //DB에 파일 추가
             } else if (request.getParameter("ptm_add") != null){
                 //Modifications 부분 파일 추가
             } else if (request.getParameter("sftw_add") != null){
                 //소프트웨어 부분 파일 추가
             }
+            
         } catch (Exception e) {
             //문제 생기면 에러 반환
             redirectAttributes.addFlashAttribute("errorMessage", "An error occurred while processing your request.");

@@ -1,7 +1,7 @@
 package com.prix.homepage.user.controller;
 
-import com.prix.homepage.user.pojo.SearchLog;
-import com.prix.homepage.user.service.SearchLogService;
+import com.prix.homepage.user.pojo.SearchLogUser;
+import com.prix.homepage.user.service.SearchLogUserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -14,8 +14,8 @@ import java.util.*;
 
 @Controller
 @AllArgsConstructor
-public class SearchLogController {
-    private final SearchLogService searchLogService;
+public class SearchLogUserController {
+    private final SearchLogUserService searchLogService;
 
     @GetMapping("/admin/searchlog")
     public String gotoSearchLogPage(Model model, HttpServletRequest request,
@@ -32,23 +32,23 @@ public class SearchLogController {
             return "redirect:/admin/index";
         }
 
-        List<SearchLog> searchLogDto = searchLogService.getAllSearchLog();
+        List<SearchLogUser> searchLogDto = searchLogService.getAllSearchLog();
         
         //Map 형태로 name, msfile, db의 이름 가져오기
         Map<Integer, String> userNames = new HashMap<>();
-        for(SearchLog searchLog : searchLogDto){
+        for(SearchLogUser searchLog : searchLogDto){
             Integer id = searchLog.getUserId();
             String userName = searchLogService.findName(id);
             userNames.put(id, userName);
         }
         Map<Integer, String> msFiles = new HashMap<>();
-        for(SearchLog searchLog : searchLogDto){
+        for(SearchLogUser searchLog : searchLogDto){
             Integer id = searchLog.getMsfile();
             String fileName = searchLogService.findFile(id);
             msFiles.put(id, fileName);
         }
         Map<Integer, String> dbNames = new HashMap<>();
-        for(SearchLog searchLog : searchLogDto){
+        for(SearchLogUser searchLog : searchLogDto){
             Integer id = searchLog.getDb();
             String fileName = searchLogService.findFile(id);
             dbNames.put(id, fileName);
