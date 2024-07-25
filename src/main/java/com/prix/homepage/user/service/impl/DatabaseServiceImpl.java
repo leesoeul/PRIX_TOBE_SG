@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.prix.homepage.user.dao.DatabaseMapper;
 import com.prix.homepage.user.pojo.Database;
@@ -43,4 +44,20 @@ public class DatabaseServiceImpl implements DatabaseService{
 
     return listDatabase;
   }
+
+    @Override
+    @Transactional
+    public void deleteDatabase(Integer id) {
+        databaseMapper.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void updateDatabase(Integer id, String name) {
+        Database database = Database.builder()
+            .id(id)
+            .name(name)
+            .build();
+        databaseMapper.update(database);
+    }
 }

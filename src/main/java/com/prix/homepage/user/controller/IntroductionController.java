@@ -22,7 +22,7 @@ public class IntroductionController {
      */
   @GetMapping("/help")
   public String gotoHelpPage() {
-      return "help/help";
+      return "support/help";
   }
 
     /**
@@ -32,7 +32,7 @@ public class IntroductionController {
      */
   @GetMapping("/contact")
   public String gotoContactPage() {
-      return "contact";
+      return "support/contact";
   }
   
 }

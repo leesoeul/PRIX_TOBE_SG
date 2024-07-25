@@ -5,7 +5,7 @@
 <mapper namespace="com.prix.homepage.user.dao.EnzymeMapper">
 
   <select id="findByUserId" resultType="com.prix.homepage.user.pojo.Enzyme">
-    SELECT  name, nt_cleave, ct_cleave, id FROM px_enzyme WHERE user_id = #{userId}
+    SELECT  id, name, nt_cleave, ct_cleave FROM px_enzyme WHERE user_id = #{userId}
   </select>
 
   <select id="selectIdByUserIdAndName" resultType="Integer">
@@ -24,6 +24,7 @@
     WHERE id = #{id} 
     AND user_id = #{userId}
   </delete>
+
 
   <select id="selectById" resultType="com.prix.homepage.user.pojo.Enzyme">
     SELECT  name, nt_cleave, ct_cleave FROM px_enzyme WHERE id = #{id}

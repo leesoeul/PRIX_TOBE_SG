@@ -8,5 +8,9 @@ import com.prix.homepage.user.pojo.Database;
 public interface DatabaseService {
 
   List<Database>  getAllDatabase();
+
+  void deleteDatabase(Integer id);
+
+  void updateDatabase(Integer id, String name);
   
 }
