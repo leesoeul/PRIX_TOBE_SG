@@ -28,8 +28,8 @@ import com.prix.homepage.livesearch.pojo.UserSettingDto;
 import com.prix.homepage.livesearch.service.PatternMatchService;
 import com.prix.homepage.livesearch.service.UserModificationService;
 import com.prix.homepage.livesearch.service.UserSettingService;
-import com.prix.homepage.livesearch.service.impl.ProcessService;
-import com.prix.homepage.livesearch.service.impl.ResultService;
+import com.prix.homepage.livesearch.service.impl.DbondProcessService;
+import com.prix.homepage.livesearch.service.impl.DbondResultService;
 import com.prix.homepage.user.pojo.Account;
 import com.prix.homepage.user.pojo.Database;
 import com.prix.homepage.user.pojo.Enzyme;
@@ -44,6 +44,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+
 /**
  * prix.hanyang.ac.kr/livesearch 페이지
  */
@@ -56,9 +57,9 @@ public class LivesearchController {
   private final UserModificationService userModificationService;
   private final DatabaseService databaseService;
   private final EnzymeService enzymeService;
-  private final ProcessService processService;
+  private final DbondProcessService dbondProcessService;
   private final DataMapper dataMapper;
-  private final ResultService resultService;
+  private final DbondResultService dbondResultService;
 
   private final PrixDataWriter prixDataWriter;
   private final PatternMatchService patternMatchService;
@@ -271,7 +272,7 @@ public class LivesearchController {
     MultipartFile[] multipartFiles = { msFile, fasta };
 
     try {
-      processDto = processService.process(id, request, paramsMap, multipartFiles);
+      processDto = dbondProcessService.process(id, request, paramsMap, multipartFiles);
     } catch (IOException e) {
       logger.error("process service error : {} ", e.getMessage());
       e.printStackTrace();
@@ -305,7 +306,7 @@ public class LivesearchController {
 
     // return processDto.getReturnAddr();
 
-    return "livesearch/process";
+    return "livesearch/dbond_process";
   }
 
   /**
@@ -350,7 +351,7 @@ public class LivesearchController {
         .build();
 
     try {
-      resultDto = resultService.result(id, request, session);
+      resultDto = dbondResultService.result(id, request, session);
     } catch (Exception e) {
       logger.error("result service error: {}", e.getMessage());
       e.printStackTrace();
@@ -381,7 +382,7 @@ public class LivesearchController {
     }
 
     model.addAttribute("notauthorized", notauthorized);
-    return "livesearch/result";
+    return "livesearch/dbond_result";
   }
 
   /**
@@ -416,5 +417,13 @@ public class LivesearchController {
   public String getHelp() {
     return "livesearch/help";
   }
+
+  @PostMapping("/ACTG/process")
+  public String postACTG(Model model, HttpServletRequest request) {
+      //TODO: process POST request
+      
+      return "livesearch/actg_process";
+  }
+  
   
 }

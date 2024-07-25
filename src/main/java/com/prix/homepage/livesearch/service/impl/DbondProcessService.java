@@ -37,11 +37,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 
 /**
- * modplus에서 입력 받은 form을 바탕으로 db에 저장, file write하는 작업 수행
+ * dbond에서 입력 받은 form을 바탕으로 db에 저장, file write하는 작업 수행
  */
 @Service
 @AllArgsConstructor
-public class ProcessService {
+public class DbondProcessService {
 
 	private final PrixDataWriter prixDataWriter;
 

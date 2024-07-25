@@ -27,9 +27,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 
+/*
+ * dbond result 작업 처리
+ */
 @Service
 @AllArgsConstructor
-public class ResultService {
+public class DbondResultService {
 
 	AccountService accountService;
 	SearchLogMapper searchLogMapper;
