@@ -4,7 +4,7 @@ import com.prix.homepage.user.service.EnzymeService;
 import com.prix.homepage.user.service.ModificationLogService;
 import com.prix.homepage.user.service.PrixDataWriter;
 import com.prix.homepage.user.service.SoftwareLogService;
-import com.prix.homepage.user.service.ModificationService;
+import com.prix.homepage.user.service.ModificationUserService;
 import com.prix.homepage.user.service.ClassificationService;
 import com.prix.homepage.user.service.DatabaseService;
 import com.prix.homepage.user.service.SoftwareMsgService;
@@ -91,7 +91,7 @@ public class ManageController {
     private final SoftwareMsgService softwareMsgService;
     private final ModificationLogService modificationLogService;
     private final ClassificationService classificationService;
-    private final ModificationService modificationService;
+    private final ModificationUserService modificationService;
     private final SoftwareLogService softwareLogService;
 
     //Manage요청 받을시 (configuration에서 edit, unlink 버튼)
@@ -296,23 +296,21 @@ public class ManageController {
 
             } else if (request.getParameter("sftw_add") != null){
                 String sftw_root = "src/main/software_archive/";
+                String sftwVersion = request.getParameter("sftw_version");
+                String sftwDate = request.getParameter("sftw_date");
+                String sftwName = request.getParameter("sftw_name");
 
                 String modPath = file.getOriginalFilename();
                 if(modPath.length() > 0){
                     modPath = modPath.replace('\\', '/');
-
-                    File prevFile = null;
                     File protDir = new File(sftw_root + "release/");
-                    String sftwName = request.getParameter("sftw_name");
                     for(File fileX: protDir.listFiles()){
                         if(fileX.getName().startsWith(sftwName.toLowerCase())){
                             fileX.renameTo(new File(sftw_root + "deprecated/" + new Date().getTime() + "_" + fileX.getName()));
                             break;
                         }
                     }
-
                     try{
-                        String sftwVersion = request.getParameter("sftw_version");
                         String sftwFile = sftwName.toLowerCase() + "_v" + sftwVersion + ".zip";
 						String path = sftw_root + "release/" + sftwFile;
 						FileOutputStream fos = new FileOutputStream(path);
@@ -324,8 +322,6 @@ public class ManageController {
 						}
 						fos.close();
 						is.close();
-                        
-                        String sftwDate = request.getParameter("sftw_date");
                         softwareLogService.insertSoftLog(sftwName, sftwDate, sftwVersion, modPath.substring(modPath.lastIndexOf('/') + 1).replace("'", "\\\'"));
                     }
                     catch (Exception e)

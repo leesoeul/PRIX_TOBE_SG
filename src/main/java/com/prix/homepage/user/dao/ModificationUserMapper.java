@@ -6,11 +6,11 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-import com.prix.homepage.user.pojo.Modification;
+import com.prix.homepage.user.pojo.ModificationUser;
 
 @Mapper
 @Repository
-public interface ModificationMapper {
+public interface ModificationUserMapper {
     void insertModification(String modName, String fullName, Integer classi, String md, String amd, String residue, String position);
 
     Integer selectMin();

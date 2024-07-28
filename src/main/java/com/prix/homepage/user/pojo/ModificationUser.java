@@ -10,6 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class Modification {
+public class ModificationUser {
     
 }

@@ -8,6 +8,60 @@
 
   <!-- 페이지 개별 javascript 등 기타 script를 추가하는 예시 -->
   <script type="text/javascript">
+    function doSoftware(event) {
+        event.preventDefault();
+        var form = document.software;
+
+        var name = form.sftw_name.value.trim();
+        var version = form.sftw_version.value.trim();
+        var file = form.file.value.trim();
+        var date = form.sftw_date.value.trim();
+
+        if (!name) {
+            alert("Please select a name.");
+            event.preventDefault();
+            return false;
+        }
+        if (!version) {
+            alert("Please input a version.");
+            event.preventDefault();
+            return false;
+        }
+        if (!file) {
+            alert("Please select a file.");
+            event.preventDefault();
+            return false;
+        }
+        if (!isValidDate(date)) {
+            alert("Please check the date format. ex) YYYY-MM-DD");
+            event.preventDefault();
+            return false;
+        }
+        if (!isZipFile(file)) {
+            alert("*.zip file should be allowed.");
+            event.preventDefault();
+            return false;
+        }
+
+        return true;
+    }
+
+    function isValidDate(dateStr) {
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(dateStr)) return false;
+
+        const date = new Date(dateStr);
+        const [year, month, day] = dateStr.split('-').map(Number);
+
+        return date.getFullYear() === year &&
+            date.getMonth() + 1 === month &&
+            date.getDate() === day;
+    }
+
+    function isZipFile(fileName) {
+        return fileName.toLowerCase().endsWith(".zip");
+    }
+
 
     /* check if enzyme input is valid */
     function validateEnzymeForm(event) {
@@ -224,7 +278,7 @@
                                 </tr>
                             </tbody>
                             <tr>
-                                <form method="post" th:action="@{/admin/upload}" enctype="multipart/form-data">
+                                <form method="post" th:action="@{/admin/upload}" enctype="multipart/form-data" onsubmit="return doSoftware(event)">
                                     <td class="grayTD"><select name="sftw_name">
                                         <option value="">Select --</option>
                                         <option value="MODa">MODa</option>
