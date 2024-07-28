@@ -11,4 +11,6 @@ import com.prix.homepage.user.pojo.SoftwareLog;
 @Repository
 public interface SoftwareLogMapper {
   List<SoftwareLog> findAll();
+
+  void insertSoftLog(String sftwName, String sftwDate, String sftwVersion, String filePath);
 }

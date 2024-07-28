@@ -3,6 +3,7 @@ package com.prix.homepage.user.controller;
 import com.prix.homepage.user.service.EnzymeService;
 import com.prix.homepage.user.service.ModificationLogService;
 import com.prix.homepage.user.service.PrixDataWriter;
+import com.prix.homepage.user.service.SoftwareLogService;
 import com.prix.homepage.user.service.ModificationService;
 import com.prix.homepage.user.service.ClassificationService;
 import com.prix.homepage.user.service.DatabaseService;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -22,7 +24,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.attoparser.dom.Document;
-import org.springframework.boot.autoconfigure.ssl.SslProperties.Bundles.Watch.File;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -90,6 +92,7 @@ public class ManageController {
     private final ModificationLogService modificationLogService;
     private final ClassificationService classificationService;
     private final ModificationService modificationService;
+    private final SoftwareLogService softwareLogService;
 
     //Manage요청 받을시 (configuration에서 edit, unlink 버튼)
     @PostMapping("/admin/manage")
@@ -292,7 +295,44 @@ public class ManageController {
                 }
 
             } else if (request.getParameter("sftw_add") != null){
-                //소프트웨어 부분 파일 추가
+                String sftw_root = "src/main/software_archive/";
+
+                String modPath = file.getOriginalFilename();
+                if(modPath.length() > 0){
+                    modPath = modPath.replace('\\', '/');
+
+                    File prevFile = null;
+                    File protDir = new File(sftw_root + "release/");
+                    String sftwName = request.getParameter("sftw_name");
+                    for(File fileX: protDir.listFiles()){
+                        if(fileX.getName().startsWith(sftwName.toLowerCase())){
+                            fileX.renameTo(new File(sftw_root + "deprecated/" + new Date().getTime() + "_" + fileX.getName()));
+                            break;
+                        }
+                    }
+
+                    try{
+                        String sftwVersion = request.getParameter("sftw_version");
+                        String sftwFile = sftwName.toLowerCase() + "_v" + sftwVersion + ".zip";
+						String path = sftw_root + "release/" + sftwFile;
+						FileOutputStream fos = new FileOutputStream(path);
+						InputStream is = file.getInputStream();
+						byte[] b = new byte[4096];
+						int size = 0;
+						 while( (size = is.read(b)) > 0 ){
+							fos.write(b,0,size);
+						}
+						fos.close();
+						is.close();
+                        
+                        String sftwDate = request.getParameter("sftw_date");
+                        softwareLogService.insertSoftLog(sftwName, sftwDate, sftwVersion, modPath.substring(modPath.lastIndexOf('/') + 1).replace("'", "\\\'"));
+                    }
+                    catch (Exception e)
+					{
+						e.printStackTrace();
+					}
+                }
             }
             
         } catch (Exception e) {
