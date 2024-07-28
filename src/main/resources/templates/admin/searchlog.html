@@ -48,7 +48,7 @@
 
     <tbody th:if="${searchLogDto != null}">
         <tr th:each="searchLog, stat : ${searchLogDto}">
-            <td class="grayTD"><div align="center"><a href="/dbond/result" target="_blank" th:text="${stat.index + 1}"><%=(logIndex--)%><a/></div></td>
+            <td class="grayTD"><div align="center"><a href="/livesearch/result" target="_blank" th:text="${stat.index + 1}"><%=(logIndex--)%><a/></div></td>
                 <td class="grayTD"><div align="center" th:text="${userNames[searchLog.userId]}"></div></td>
                 <td class="grayTD"><div align="center" th:text="${searchLog.date}"></div></td>
                 <td class="grayTD"><div align="center" th:text="${searchLog.title}"></div></td>

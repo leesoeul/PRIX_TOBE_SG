@@ -83,6 +83,7 @@ public class ManageController {
             return "redirect:/admin/adlogin";
         }
         if (file.isEmpty()) {
+            //1차적인 파일 유효성 확인 작업
             redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
             return "redirect:/admin/configuration";
         }
