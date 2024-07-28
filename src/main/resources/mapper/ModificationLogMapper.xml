@@ -8,4 +8,9 @@
     SELECT date, version, file FROM px_modification_log
   </select>
 
+  <insert id="insertModLog">
+    INSERT INTO px_modification_log (date, version, file) 
+    VALUES (#{modDate}, #{modVersion}, #{modFile})
+  </insert>
+
 </mapper>

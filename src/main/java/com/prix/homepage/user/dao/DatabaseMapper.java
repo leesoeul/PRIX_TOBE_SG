@@ -13,7 +13,9 @@ import com.prix.homepage.user.pojo.Database;
 public interface DatabaseMapper {
   List<Database> findAll();
 
-void deleteById(Integer id);
+  void deleteById(Integer id);
 
-void update(Database database);
+  void update(Database database);
+
+  void insertDatabase(String dbName, String dbPath, Integer index);
 } 

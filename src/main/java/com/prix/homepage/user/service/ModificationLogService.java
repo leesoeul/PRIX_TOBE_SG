@@ -9,4 +9,6 @@ public interface ModificationLogService {
   
   List<ModificationLog> getAllModificationLog();
 
+  void insertModLog(String modDate, String modVersion, String modFile);
+
 }

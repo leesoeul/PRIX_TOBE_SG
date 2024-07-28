@@ -21,8 +21,12 @@
         var validAminoAcids = /^[ARNDCEQGHILKMFPSTWYVarnedceqghilkmfpstwyv]+$/;
 
         /* retrieve enzyme string input from document */
-        var ntCut = document.getElementsByName("enzyme_nt_cut")[0].value;
-        var ctCut = document.getElementsByName("enzyme_ct_cut")[0].value;
+        if (buttonName === "add_enzyme") {
+            var ntCut = document.getElementsByName("nenzyme_nt_cut")[0].value;
+            var ctCut = document.getElementsByName("nenzyme_ct_cut")[0].value;    
+        } else if (buttonName == "modify_enzyme"){
+            // 없앨까....
+        }
 
         /* check ntCut input */
         if (!validAminoAcids.test(ntCut) || ntCut.length < 1 || ntCut.length > 20) {
@@ -95,7 +99,7 @@
                             <tr>
                                 <form method="post" th:action="@{/admin/upload}" enctype="multipart/form-data">
                                 <td class="grayTD"><input name="db_name" type="text" size="40" /></td>
-                                <td class="grayTD"><input name="db_file" type="file" size="40" /></td>
+                                <td class="grayTD"><input name="file" type="file" size="40" /></td>
                                 <td class="grayTD"><div align="right"><input name="add_db" type="submit" class="btnSmall" value=" upload " /></td>
                                 </form>
                             </tr>
@@ -142,9 +146,9 @@
                             </tbody>                            
                             <tr>
                                 <form method="post" th:action="@{/admin/manage}" onsubmit="return validateEnzymeForm(event)">
-                                <td class="grayTD"><input name="enzyme_name" type="text" size="40"/></td>
-                                <td class="grayTD"><input name="enzyme_nt_cut" type="text" size="25"/></td>
-                                <td class="grayTD"><input name="enzyme_ct_cut" type="text" size="25"/></td>
+                                <td class="grayTD"><input name="nenzyme_name" type="text" size="40"/></td>
+                                <td class="grayTD"><input name="nenzyme_nt_cut" type="text" size="25"/></td>
+                                <td class="grayTD"><input name="nenzyme_ct_cut" type="text" size="25"/></td>
                                 <td class="grayTD"><div align="right"><input name="add_enzyme" type="submit" class="btnSmall" value=" add " /></div></td>
                                 </form>
                             </tr>
@@ -183,7 +187,7 @@
                                 <form method="post" th:action="@{/admin/upload}" enctype="multipart/form-data">
                                 <td class="grayTD"><input name="ptm_date" type="date" size="20" /></td>
                                 <td class="grayTD"><input name="ptm_version" type="text" size="20" /></td>
-                                <td class="grayTD"><input name="ptm_xml" type="file" size="50" /></td>
+                                <td class="grayTD"><input name="file" type="file" size="50" /></td>
                                 <td class="grayTD"><div align="right"><input name="ptm_add" type="submit" class="btnSmall" value=" update " /></td>
                                 </form>
                             </tr>
@@ -230,7 +234,7 @@
                                     </td>
                                     <td class="grayTD"><div align="left"><input name="sftw_date" type="date" size="15" /></div></td>
                                     <td class="grayTD"><div align="left"><input name="sftw_version" type="text" size="10" /></div></td>
-                                    <td class="grayTD"><div align="left"><input name="sftw_zip" type="file" size="50"/></div></td>
+                                    <td class="grayTD"><div align="left"><input name="file" type="file" size="50"/></div></td>
                                     <td class="grayTD"><div align="right"><input name="sftw_add" type="submit" class="btnSmall" value=" update "/></div></td>
                                 </form>
                             </tr>

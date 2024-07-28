@@ -87,4 +87,17 @@
     </if>;
   </select>
 
+  <insert id="insertModification">
+    INSERT INTO px_modification (name, fullname, class, mass_diff, avg_mass_diff, residue, position)
+    VALUES (#{modName}, #{fullName}, #{classMap}, #{md}, #{amd}, #{residue}, #{position})
+  </insert>
+
+  <select id="selectMin" resultType="Integer">
+    SELECT min(user_id) FROM px_modification
+  </select>
+
+  <update id="updateMod">
+    UPDATE px_modification SET user_id = #{minUserId} WHERE user_id = 0
+  </update>
+
 </mapper>

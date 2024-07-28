@@ -60,4 +60,10 @@ public class DatabaseServiceImpl implements DatabaseService{
             .build();
         databaseMapper.update(database);
     }
+
+    @Override
+    @Transactional
+    public void insertDatabase(String dbName, String dbPath, Integer index){
+      databaseMapper.insertDatabase(dbName, dbPath, index);
+    }
 }

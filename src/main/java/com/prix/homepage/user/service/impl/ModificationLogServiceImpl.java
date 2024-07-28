@@ -41,5 +41,10 @@ public class ModificationLogServiceImpl implements ModificationLogService{
 
     return listModificationLog;
   }
+
+  @Override
+  public void insertModLog(String modDate, String modVersion, String modFile){
+    modificationLogMapper.insertModLog();
+  }
   
 }
