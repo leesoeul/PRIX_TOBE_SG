@@ -35,9 +35,9 @@ public class ManageController {
             if (request.getParameter("delete_enzyme") != null) {
                 enzymeService.deleteEnzyme(Integer.parseInt(request.getParameter("enzyme_id")), userId);
             } else if (request.getParameter("add_enzyme") != null) {
-                String name = request.getParameter("nenzyme_name");
-                String cut = request.getParameter("nenzyme_nt_cut");
-                String term = request.getParameter("nenzyme_ct_cut");
+                String name = request.getParameter("enzyme_name");
+                String cut = request.getParameter("enzyme_nt_cut");
+                String term = request.getParameter("enzyme_ct_cut");
                 enzymeService.insertEnzyme(userId, name, cut, term);
             } else if(request.getParameter("modify_enzyme") != null){
                 Integer enzymeId = Integer.parseInt(request.getParameter("enzyme_id"));
@@ -45,7 +45,6 @@ public class ManageController {
                 String cut = request.getParameter("enzyme_nt_cut");
                 String term = request.getParameter("enzyme_ct_cut");
                 enzymeService.updateEnzyme(enzymeId, userId, name, cut, term);
-                System.out.println("aaasdadas");
             } else if (request.getParameter("delete_db") != null) {
                 databaseService.deleteDatabase(Integer.parseInt(request.getParameter("db_index")));
             } else if (request.getParameter("db_name") != null) {
@@ -83,12 +82,13 @@ public class ManageController {
             return "redirect:/admin/adlogin";
         }
         if (file.isEmpty()) {
-            //1차적인 파일 유효성 확인 작업
+            /* check if file is empty */
             redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
             return "redirect:/admin/configuration";
         }
 
         try {
+            String root = "src/main/config";
             if (request.getParameter("add_db") != null){
                 //DB에 파일 추가
             } else if (request.getParameter("ptm_add") != null){
@@ -98,7 +98,7 @@ public class ManageController {
             }
             
         } catch (Exception e) {
-            //문제 생기면 에러 반환
+            /* return error if exception found */
             redirectAttributes.addFlashAttribute("errorMessage", "An error occurred while processing your request.");
             return "redirect:/admin/configuration";
         }

@@ -11,12 +11,18 @@
 
     /* check if enzyme input is valid */
     function validateEnzymeForm(event) {
+        /* if the button is deleting enzyme, do not check */
+        var buttonName = event.submitter.name;
+        if (buttonName == "delete_enzyme"){
+            return true;
+        }
+
         /* check both upper and lowercase */
         var validAminoAcids = /^[ARNDCEQGHILKMFPSTWYVarnedceqghilkmfpstwyv]+$/;
 
         /* retrieve enzyme string input from document */
-        var ntCut = document.getElementsByName("nenzyme_nt_cut")[0].value;
-        var ctCut = document.getElementsByName("nenzyme_ct_cut")[0].value;
+        var ntCut = document.getElementsByName("enzyme_nt_cut")[0].value;
+        var ctCut = document.getElementsByName("enzyme_ct_cut")[0].value;
 
         /* check ntCut input */
         if (!validAminoAcids.test(ntCut) || ntCut.length < 1 || ntCut.length > 20) {
@@ -113,7 +119,7 @@
                             </tr>
                             <tbody th:if="${listEnzymeResponseDto != null}">
                                 <tr th:each="item : ${listEnzymeResponseDto}">
-                                    <form method="post" th:action="@{/admin/manage}">
+                                    <form method="post" th:action="@{/admin/manage}" onsubmit="return validateEnzymeForm(event)">
                                         <input type="hidden" name="enzyme_id" th:value="${item.id}" />
                                         <td class="grayTD">
                                             <input type="text" name="enzyme_name" size="40" th:value="${item.name}" />
@@ -136,9 +142,9 @@
                             </tbody>                            
                             <tr>
                                 <form method="post" th:action="@{/admin/manage}" onsubmit="return validateEnzymeForm(event)">
-                                <td class="grayTD"><input name="nenzyme_name" type="text" size="40"/></td>
-                                <td class="grayTD"><input name="nenzyme_nt_cut" type="text" size="25"/></td>
-                                <td class="grayTD"><input name="nenzyme_ct_cut" type="text" size="25"/></td>
+                                <td class="grayTD"><input name="enzyme_name" type="text" size="40"/></td>
+                                <td class="grayTD"><input name="enzyme_nt_cut" type="text" size="25"/></td>
+                                <td class="grayTD"><input name="enzyme_ct_cut" type="text" size="25"/></td>
                                 <td class="grayTD"><div align="right"><input name="add_enzyme" type="submit" class="btnSmall" value=" add " /></div></td>
                                 </form>
                             </tr>
