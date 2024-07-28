@@ -19,8 +19,8 @@ import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 
 /**
- * url = prix.hanyang.ac.kr/modplus/enzyme_list
- * prix.hanyang.ac.kr/modplus/search 페이지에서 enzyme + 버튼 클릭시 뜨는 팝업창
+ * url = prix.hanyang.ac.kr/dbond/enzyme_list
+ * prix.hanyang.ac.kr/dbond/dbond_search 페이지에서 enzyme + 버튼 클릭시 뜨는 팝업창
  */
 @Controller
 @AllArgsConstructor
@@ -30,12 +30,12 @@ public class EnzymeListController {
   private final EnzymeService enzymeService;
 
   /**
-   * /livesearch/modplus에서 enzyme rule 추가 버튼 클릭시 뜨는 팝업창
-   * url = /modplus/enzyme_list
+   * /livesearch/dbond에서 enzyme rule 추가 버튼 클릭시 뜨는 팝업창
+   * url = /dbond/enzyme_list
    * 
    * @param request session 에서 id 받는 용도
    */
-  @GetMapping("/modplus/enzyme_list")
+  @GetMapping("/dbond/enzyme_list")
   public String modplusEnzymeList(Model model, HttpServletRequest request) {
     // 세션에서 id 가져오기
     HttpSession session = request.getSession();
@@ -53,12 +53,12 @@ public class EnzymeListController {
   }
 
   /**
-   * /modplus/enzyme_list에서 add 클릭하거나 delete 클릭시
+   * /dbond/enzyme_list에서 add 클릭하거나 delete 클릭시
    * 
-   * @param paramsMap /modplus/enzyme_list?action=add 이거나 del
+   * @param paramsMap /dbond/enzyme_list?action=add 이거나 del
    * @param request   session에서 id 받는 용도
    */
-  @PostMapping("/modplus/enzyme_list")
+  @PostMapping("/dbond/enzyme_list")
   public String addEnzymeList(Model model, @RequestParam Map<String, String> paramsMap,
       HttpServletRequest request) {
     // 세션에서 id 가져오기

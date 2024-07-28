@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.prix.homepage.livesearch.dao.PatternMatchMapper">
+
+  <select id="findUpdateDayGenbank" resultType="com.prix.homepage.livesearch.pojo.PatternMatch">
+    SELECT *
+    FROM pm_update_table 
+    WHERE dbname = 'genbank'
+  </select>
+
+  <select id="findUpdateDaySwissProt" resultType="com.prix.homepage.livesearch.pojo.PatternMatch">
+    SELECT *
+    FROM pm_update_table
+    WHERE dbname = 'swiss_prot'
+  </select>
+
+</mapper>
+

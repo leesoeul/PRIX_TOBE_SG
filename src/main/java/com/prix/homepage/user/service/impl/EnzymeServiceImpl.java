@@ -35,7 +35,7 @@ public class EnzymeServiceImpl implements EnzymeService{
         Enzyme.builder()
             .id(enzyme.getId())
             .name(enzyme.getName())
-            .user_id(enzyme.getUser_id())
+            .userId(enzyme.getUserId())
             .ctCleave(enzyme.getCtCleave())
             .ntCleave(enzyme.getNtCleave())
             .build()
@@ -66,12 +66,17 @@ public class EnzymeServiceImpl implements EnzymeService{
   public void updateEnzyme(Integer id, Integer userId, String name, String ntCleave, String ctCleave) throws Exception {
     Enzyme enzyme = Enzyme.builder()
         .id(id)
-        .user_id(userId)
+        .userId(userId)
         .name(name)
         .ntCleave(ntCleave)
         .ctCleave(ctCleave)
         .build();
     enzymeMapper.updateEnzyme(enzyme);
+  }
+  @Override
+  @Transactional
+  public Enzyme selectById(Integer id) {
+    return enzymeMapper.selectById(id);
   }
 
 }

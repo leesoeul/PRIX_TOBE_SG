@@ -25,6 +25,10 @@
     AND user_id = #{userId}
   </delete>
 
+
+  <select id="selectById" resultType="com.prix.homepage.user.pojo.Enzyme">
+    SELECT  name, nt_cleave, ct_cleave FROM px_enzyme WHERE id = #{id}
+  </select>
   <update id="updateEnzyme" parameterType="com.prix.homepage.user.pojo.Enzyme">
         UPDATE px_enzyme
         SET name = #{name},

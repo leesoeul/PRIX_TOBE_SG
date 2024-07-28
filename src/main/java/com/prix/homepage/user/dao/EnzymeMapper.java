@@ -18,5 +18,5 @@ public interface EnzymeMapper {
   
   void deleteEnzyme(Integer id, Integer userId);
 
-  void updateEnzyme(Enzyme enzyme);
+  Enzyme selectById(Integer id);
 }

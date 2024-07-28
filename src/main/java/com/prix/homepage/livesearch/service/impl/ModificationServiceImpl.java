@@ -41,6 +41,21 @@ public class ModificationServiceImpl implements ModificationService {
       String sortBy) {
       return modificationMapper.selectModJoinClass(userId, variable, engine, filter, sortBy);
   }
+
+  @Override
+  public Double selectMassDiffByName(String name) {
+    return modificationMapper.selectMassDiffByName(name);
+  }
+
+  @Override
+  public List<Modification> selectFixedModInUserMod(Integer id, Integer engine) {
+    return modificationMapper.selectFixedModInUserMod(id, engine);
+  }
+
+  @Override
+  public List<Modification> selectVarModInUserMod(Integer id, Integer engine) {
+    return modificationMapper.selectVarModInUserMod(id, engine);
+  }
   
   
 }

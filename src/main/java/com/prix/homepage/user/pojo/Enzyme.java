@@ -17,7 +17,7 @@ public class Enzyme {
   private Integer id;
 
   @NotNull
-  private Integer user_id;
+  private Integer userId;
 
   @NotNull
   private String name;
