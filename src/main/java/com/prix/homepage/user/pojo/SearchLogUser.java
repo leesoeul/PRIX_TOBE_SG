@@ -13,11 +13,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SearchLog {
+public class SearchLogUser {
 
     private Integer id;
 
-    private Integer user_id;
+    private Integer userId;
 
     private String title;
 

@@ -62,6 +62,19 @@ public class EnzymeServiceImpl implements EnzymeService{
   }
 
   @Override
+  @Transactional
+  public void updateEnzyme(Integer id, Integer userId, String name, String ntCleave, String ctCleave) throws Exception {
+    Enzyme enzyme = Enzyme.builder()
+        .id(id)
+        .userId(userId)
+        .name(name)
+        .ntCleave(ntCleave)
+        .ctCleave(ctCleave)
+        .build();
+    enzymeMapper.updateEnzyme(enzyme);
+  }
+  @Override
+  @Transactional
   public Enzyme selectById(Integer id) {
     return enzymeMapper.selectById(id);
   }

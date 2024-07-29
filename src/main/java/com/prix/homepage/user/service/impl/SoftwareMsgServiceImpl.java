@@ -26,13 +26,11 @@ public class SoftwareMsgServiceImpl implements SoftwareMsgService{
    */
   @Override
   public List<SoftwareMsg> getAllSoftwareMsgById(String id) {
-    List<SoftwareMsg> listsSoftwareMsgs = softwareMsgMapper.findById(id);
-    
+    List<SoftwareMsg> listsSoftwareMsgs = softwareMsgMapper.findById(id);   
     List<SoftwareMsg> listSoftwareMsg = new ArrayList<>();
     for(SoftwareMsg softwareMsg : listsSoftwareMsgs){
       listSoftwareMsg.add(
         SoftwareMsg.builder()
-            .id(softwareMsg.getId())
             .message(softwareMsg.getMessage())
             .build()
       );
@@ -40,14 +38,17 @@ public class SoftwareMsgServiceImpl implements SoftwareMsgService{
 
     return listSoftwareMsg;
   }
+
   @Override
   @Transactional
   public void updateSoftwareMsg(String id, String message) {
-      SoftwareMsg softwareMsg = SoftwareMsg.builder()
-          .id(id)
-          .message(message)
-          .build();
-      softwareMsgMapper.update(softwareMsg);
+      softwareMsgMapper.updateSoftwareMsg(id, message);
+  }
+
+  @Override
+  @Transactional
+  public String getSoftwareMsg(String id) {
+      return softwareMsgMapper.findByName(id);
   }
   
 }

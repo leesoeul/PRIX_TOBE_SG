@@ -5,25 +5,25 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.prix.homepage.user.dao.SearchLogMapper;
-import com.prix.homepage.user.pojo.SearchLog;
-import com.prix.homepage.user.service.SearchLogService;
+import com.prix.homepage.user.dao.SearchLogUserMapper;
+import com.prix.homepage.user.pojo.SearchLogUser;
+import com.prix.homepage.user.service.SearchLogUserService;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @Service
-public class SearchLogServiceImpl implements SearchLogService {
-    private final SearchLogMapper searchLogMapper;
+public class SearchLogUserServiceImpl implements SearchLogUserService {
+    private final SearchLogUserMapper searchLogMapper;
 
     @Override
-    public List<SearchLog> getAllSearchLog() {
-        List<SearchLog> listSearchLogs = searchLogMapper.findAll();
-        List<SearchLog> listSearchLog = new ArrayList<>();
-        for(SearchLog searchLog : listSearchLogs) {
+    public List<SearchLogUser> getAllSearchLog() {
+        List<SearchLogUser> listSearchLogs = searchLogMapper.findAll();
+        List<SearchLogUser> listSearchLog = new ArrayList<>();
+        for(SearchLogUser searchLog : listSearchLogs) {
             listSearchLog.add(
-                SearchLog.builder()
+                SearchLogUser.builder()
                     .id(searchLog.getId())
-                    .user_id(searchLog.getUser_id())
+                    .userId(searchLog.getUserId())
                     .title(searchLog.getTitle())
                     .date(searchLog.getDate())
                     .msfile(searchLog.getMsfile())

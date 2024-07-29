@@ -1,11 +1,11 @@
 package com.prix.homepage.user.service;
 
 import java.util.List;
-import com.prix.homepage.user.pojo.SearchLog;
+import com.prix.homepage.user.pojo.SearchLogUser;
 
-public interface SearchLogService {
+public interface SearchLogUserService {
 
-    List<SearchLog> getAllSearchLog();
+    List<SearchLogUser> getAllSearchLog();
     
     String findFile(Integer id);
 

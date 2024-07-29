@@ -7,7 +7,97 @@
   <link href="/css/example2.css" th:href="@{/css/example2.css}" rel="stylesheet" type="text/css" />
 
   <!-- 페이지 개별 javascript 등 기타 script를 추가하는 예시 -->
-  <script>
+  <script type="text/javascript">
+    function doSoftware(event) {
+        event.preventDefault();
+        var form = document.software;
+
+        var name = form.sftw_name.value.trim();
+        var version = form.sftw_version.value.trim();
+        var file = form.file.value.trim();
+        var date = form.sftw_date.value.trim();
+
+        if (!name) {
+            alert("Please select a name.");
+            event.preventDefault();
+            return false;
+        }
+        if (!version) {
+            alert("Please input a version.");
+            event.preventDefault();
+            return false;
+        }
+        if (!file) {
+            alert("Please select a file.");
+            event.preventDefault();
+            return false;
+        }
+        if (!isValidDate(date)) {
+            alert("Please check the date format. ex) YYYY-MM-DD");
+            event.preventDefault();
+            return false;
+        }
+        if (!isZipFile(file)) {
+            alert("*.zip file should be allowed.");
+            event.preventDefault();
+            return false;
+        }
+
+        return true;
+    }
+
+    function isValidDate(dateStr) {
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(dateStr)) return false;
+
+        const date = new Date(dateStr);
+        const [year, month, day] = dateStr.split('-').map(Number);
+
+        return date.getFullYear() === year &&
+            date.getMonth() + 1 === month &&
+            date.getDate() === day;
+    }
+
+    function isZipFile(fileName) {
+        return fileName.toLowerCase().endsWith(".zip");
+    }
+
+
+    /* check if enzyme input is valid */
+    function validateEnzymeForm(event) {
+        /* if the button is deleting enzyme, do not check */
+        var buttonName = event.submitter.name;
+        if (buttonName == "delete_enzyme"){
+            return true;
+        }
+
+        /* check both upper and lowercase */
+        var validAminoAcids = /^[ARNDCEQGHILKMFPSTWYVarnedceqghilkmfpstwyv]+$/;
+
+        /* retrieve enzyme string input from document */
+        if (buttonName === "add_enzyme") {
+            var ntCut = document.getElementsByName("nenzyme_nt_cut")[0].value;
+            var ctCut = document.getElementsByName("nenzyme_ct_cut")[0].value;    
+        } else if (buttonName == "modify_enzyme"){
+            // 없앨까....
+        }
+
+        /* check ntCut input */
+        if (!validAminoAcids.test(ntCut) || ntCut.length < 1 || ntCut.length > 20) {
+            alert("Invalid N-term cut. Must be 1-20 characters long and contain only valid amino acids: A, R, N, D, C, E, Q, G, H, I, L, K, M, F, P, S, T, W, Y, V.");
+            event.preventDefault();
+            return false;
+        }
+
+        /* check ctCut input */
+        if (!validAminoAcids.test(ctCut) || ctCut.length < 1 || ctCut.length > 20) {
+            alert("Invalid C-term cut. Must be 1-20 characters long and contain only valid amino acids: A, R, N, D, C, E, Q, G, H, I, L, K, M, F, P, S, T, W, Y, V.");
+            event.preventDefault();
+            return false;
+        }
+
+        return true;
+    }
   </script>
 
 <!-- Main content -->
@@ -54,18 +144,16 @@
                                         <td class="grayTD">
                                             <div align="right">
                                                 <input type="submit" name="modify_db" class="btnSmall" value=" edit " />
+                                                <input type="submit" name="delete_db" class="btnSmall" value=" unlink " />
                                             </div>
-                                        </td>
-                                        <td class="grayTD">
-                                            <input type="submit" name="delete_db" class="btnSmall" value=" unlink " />
                                         </td>
                                     </form>
                                 </tr>
                             </tbody>                                                     
                             <tr>
-                                <form method="post" action="manage_file.jsp" enctype="multipart/form-data">
+                                <form method="post" th:action="@{/admin/upload}" enctype="multipart/form-data">
                                 <td class="grayTD"><input name="db_name" type="text" size="40" /></td>
-                                <td class="grayTD"><input name="db_file" type="file" size="40" /></td>
+                                <td class="grayTD"><input name="file" type="file" size="40" /></td>
                                 <td class="grayTD"><div align="right"><input name="add_db" type="submit" class="btnSmall" value=" upload " /></td>
                                 </form>
                             </tr>
@@ -89,16 +177,16 @@
                             </tr>
                             <tbody th:if="${listEnzymeResponseDto != null}">
                                 <tr th:each="item : ${listEnzymeResponseDto}">
-                                    <form method="post" th:action="@{/admin/manage}">
+                                    <form method="post" th:action="@{/admin/manage}" onsubmit="return validateEnzymeForm(event)">
                                         <input type="hidden" name="enzyme_id" th:value="${item.id}" />
                                         <td class="grayTD">
                                             <input type="text" name="enzyme_name" size="40" th:value="${item.name}" />
                                         </td>
                                         <td class="grayTD">
-                                            <input type="text" name="enzyme_nt_cut" size="40" th:value="${item.nt_cleave}" />
+                                            <input type="text" name="enzyme_nt_cut" size="25" th:value="${item.ntCleave}" />
                                         </td>
                                         <td class="grayTD">
-                                            <input type="text" name="enzyme_ct_cut" size="40" th:value="${item.ct_cleave}" />
+                                            <input type="text" name="enzyme_ct_cut" size="25" th:value="${item.ctCleave}" />
                                         </td>
                                         <td class="grayTD">
                                             <div align="right">
@@ -111,10 +199,10 @@
                                 </tr>
                             </tbody>                            
                             <tr>
-                                <form method="post" th:action="@{/admin/manage}">
-                                <td class="grayTD"><input name="enzyme_name" type="text"/></td>
-                                <td class="grayTD"><input name="enzyme_nt_cut" type="text"/></td>
-                                <td class="grayTD"><input name="enzyme_ct_cut" type="text"/></td>
+                                <form method="post" th:action="@{/admin/manage}" onsubmit="return validateEnzymeForm(event)">
+                                <td class="grayTD"><input name="nenzyme_name" type="text" size="40"/></td>
+                                <td class="grayTD"><input name="nenzyme_nt_cut" type="text" size="25"/></td>
+                                <td class="grayTD"><input name="nenzyme_ct_cut" type="text" size="25"/></td>
                                 <td class="grayTD"><div align="right"><input name="add_enzyme" type="submit" class="btnSmall" value=" add " /></div></td>
                                 </form>
                             </tr>
@@ -139,7 +227,6 @@
                             </tr>
                             <tbody th:if="${listModificationLogResponseDto != null}">
                                 <tr th:each="item : ${listModificationLogResponseDto}">
-                                    <form method="post" th:action="@{/admin/manage}">
                                         <td class="grayTD" th:text="${item.date}"></td>
                                         <td class="grayTD" th:text="${item.version}"></td>
                                         <td class="grayTD" th:text="${item.file}"></td>
@@ -148,14 +235,13 @@
                                                 &nbsp;
                                             </div>
                                         </td>
-                                    </form>
                                 </tr>
                             </tbody>
                             <tr>
-                                <form method="post" action="manage_file.jsp" enctype="multipart/form-data">
+                                <form method="post" th:action="@{/admin/upload}" enctype="multipart/form-data">
                                 <td class="grayTD"><input name="ptm_date" type="date" size="20" /></td>
                                 <td class="grayTD"><input name="ptm_version" type="text" size="20" /></td>
-                                <td class="grayTD"><input name="ptm_xml" type="file" size="50" /></td>
+                                <td class="grayTD"><input name="file" type="file" size="50" /></td>
                                 <td class="grayTD"><div align="right"><input name="ptm_add" type="submit" class="btnSmall" value=" update " /></td>
                                 </form>
                             </tr>
@@ -192,7 +278,7 @@
                                 </tr>
                             </tbody>
                             <tr>
-                                <form name="software" method="post" th:action="${manage_file}" enctype="multipart/form-data">
+                                <form method="post" th:action="@{/admin/upload}" enctype="multipart/form-data" onsubmit="return doSoftware(event)">
                                     <td class="grayTD"><select name="sftw_name">
                                         <option value="">Select --</option>
                                         <option value="MODa">MODa</option>
@@ -202,8 +288,8 @@
                                     </td>
                                     <td class="grayTD"><div align="left"><input name="sftw_date" type="date" size="15" /></div></td>
                                     <td class="grayTD"><div align="left"><input name="sftw_version" type="text" size="10" /></div></td>
-                                    <td class="grayTD"><div align="left"><input name="sftw_zip" type="file" size="50"/></div></td>
-                                    <td class="grayTD"><div align="right"><input name="sftw_add" type="button" class="btnSmall" value=" update " onClick="doSoftware()"/></td>
+                                    <td class="grayTD"><div align="left"><input name="file" type="file" size="50"/></div></td>
+                                    <td class="grayTD"><div align="right"><input name="sftw_add" type="submit" class="btnSmall" value=" update "/></div></td>
                                 </form>
                             </tr>
                         </table>
@@ -214,52 +300,53 @@
                 </tr>
                 <tr>
                     <td align="left">				
-                    <table width="95%" border="0" align="left" cellpadding="0" cellspacing="0" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; "><form name="swmg1234" method="post" action="manage.jsp?modify_swmsg=1">
-                    
-                            <td class="grayTH" width="70"><div align="right"><input name="sftw_msg" type="submit" class="btnOrgSmall" value="  update  "/></div></td>
-                            <td class="grayTH"><div align="left">Email message to a recipient</div></td>
-                        </tr>
-                        <tr>
-                            <td class="grayTD" valign="top" width="70"><div align="right">MODa</div></td>
-                            <td class="grayTD">
-                                <div th:if="${#lists.isNotEmpty(listSoftwareMsgMode)}">
-                                    <div th:each="msg : ${listSoftwareMsgMode}">
-                                        <textarea rows="8" style="width:100%" th:text="${msg.message}"></textarea>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="grayTD" valign="top" width="70"><div align="right">DBond</div></td>
-                            <td class="grayTD">
-                                <div th:if="${#lists.isNotEmpty(listSoftwareMsgDbond)}">
-                                    <div th:each="msg : ${listSoftwareMsgDbond}">
-                                        <textarea rows="8" style="width:100%" th:text="${msg.message}"></textarea>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="grayTD" valign="top" width="70"><div align="right">NextSearch</div></td>
-                            <td class="grayTD">
-                                <div th:if="${#lists.isNotEmpty(listSoftwareMsgNextsearch)}">
-                                    <div th:each="msg : ${listSoftwareMsgNextsearch}">
-                                        <textarea rows="8" style="width:100%" th:text="${msg.message}"></textarea>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="grayTD" valign="top" width="70"><div align="right">Signature</div></td>
-                            <td class="grayTD">
-                                <div th:if="${#lists.isNotEmpty(listSoftwareMsgSignature)}">
-                                    <div th:each="msg : ${listSoftwareMsgSignature}">
-                                        <textarea rows="8" style="width:100%" th:text="${msg.message}"></textarea>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </form></table>
+                    <table width="95%" border="0" align="left" cellpadding="0" cellspacing="0" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
+                        <form method="post" th:action="@{/admin/manage}">
+                                <td class="grayTH" width="70"><div align="right"><input name="modify_swmsg" type="submit" class="btnOrgSmall" value="  update  "/></div></td>
+                                <td class="grayTH"><div align="left">Email message to a recipient</div></td>
+                            </tr>
+                                <tr>
+                                    <td class="grayTD" valign="top" width="70"><div align="right">MODa</div></td>
+                                    <td class="grayTD">
+                                        <div th:if="${listSoftwareMsgMode != null}">
+                                            <div th:each="msg1 : ${listSoftwareMsgMode}">
+                                                <textarea name="modeMessage" rows="8" style="width:100%" th:text="${msg1.message}"></textarea>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="grayTD" valign="top" width="70"><div align="right">DBond</div></td>
+                                    <td class="grayTD">
+                                        <div th:if="${listSoftwareMsgDbond != null}">
+                                            <div th:each="msg2 : ${listSoftwareMsgDbond}">
+                                                <textarea name="dbondMessage" rows="8" style="width:100%" th:text="${msg2.message}"></textarea>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="grayTD" valign="top" width="70"><div align="right">NextSearch</div></td>
+                                    <td class="grayTD">
+                                        <div th:if="${listSoftwareMsgNextsearch != null}">
+                                            <div th:each="msg3 : ${listSoftwareMsgNextsearch}">
+                                                <textarea name="nxtsrchMessage" rows="8" style="width:100%" th:text="${msg3.message}"></textarea>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="grayTD" valign="top" width="70"><div align="right">Signature</div></td>
+                                    <td class="grayTD">
+                                        <div th:if="${listSoftwareMsgSignature != null}">
+                                            <div th:each="msg4 : ${listSoftwareMsgSignature}">
+                                                <textarea name="signatureMessage" rows="8" style="width:100%" th:text="${msg4.message}"></textarea>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                        </form>
+                </table>
                     </td>
                 </tr>
                 <tr>

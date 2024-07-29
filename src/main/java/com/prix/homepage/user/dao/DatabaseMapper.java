@@ -14,5 +14,10 @@ public interface DatabaseMapper {
   List<Database> findAll();
   Database selectById(Integer id);
 
+  void deleteById(Integer id);
+
+  void update(Database database);
+
+  void insertDatabase(String dbName, String dbPath, Integer index);
   Integer selectIdByDataId(Integer dataId);
 } 

@@ -1,7 +1,10 @@
 package com.prix.homepage.user.controller;
 
 import com.prix.homepage.user.pojo.RequestLog;
+import com.prix.homepage.user.pojo.SoftwareMsg;
 import com.prix.homepage.user.service.RequestLogService;
+import com.prix.homepage.user.service.SoftwareMsgService;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -22,6 +25,7 @@ import com.prix.homepage.download.Mailer;;
 @AllArgsConstructor
 public class RequestLogController {
     private final RequestLogService requestLogService;
+    private final SoftwareMsgService softwareMsgService;
     /**
      * prix.hanyang.ac.kr/admin/requestlog로의 get request 매핑
      */
@@ -57,9 +61,11 @@ public class RequestLogController {
                 String username = request.getParameter("username");
                 String useremail = request.getParameter("useremail");
                 String software = request.getParameter("software");
-                String message = null;
                 //원본에서는 px_software_msg에서 가져오는데 예시가 없어서 구현 일시중지
-                String signature = null;
+                String message = softwareMsgService.getSoftwareMsg(software);
+                String signature = softwareMsgService.getSoftwareMsg("signature");
+                System.out.println(message);
+                System.out.println(signature);
                 mt.sendEmailToUser(username, useremail, software, message, signature, null);
                 requestLogService.updateState(Integer.parseInt(request.getParameter("request_id")), 1);
             }

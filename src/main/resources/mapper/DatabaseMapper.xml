@@ -20,4 +20,9 @@
     WHERE data_id = #{dataId}
   </select>
 
+  <insert id="insertDatabase">
+    INSERT INTO px_database (name, file, data_id) 
+    VALUES (#{dbName}, #{dbPath}, #{index})
+  </insert>
+
 </mapper>

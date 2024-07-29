@@ -12,5 +12,7 @@ public interface DatabaseService {
   void deleteDatabase(Integer id);
 
   void updateDatabase(Integer id, String name);
+
+  void insertDatabase(String dbName, String dbPath, Integer index);
   
 }

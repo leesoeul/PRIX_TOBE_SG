@@ -10,8 +10,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class SoftwareMsg {
-
-  private String message;
+public class Classification {
+    private Integer id;
+    private String _class;
+  
 }

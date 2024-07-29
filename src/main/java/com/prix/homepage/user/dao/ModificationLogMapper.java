@@ -11,4 +11,6 @@ import com.prix.homepage.user.pojo.ModificationLog;
 @Repository
 public interface ModificationLogMapper {
   List<ModificationLog> findAll();
+
+  void insertModLog();
 }

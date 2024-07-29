@@ -44,4 +44,10 @@ public class SoftwareLogServiceImpl implements SoftwareLogService{
     return listSoftwareLog;
   }
 
+
+  @Override
+  public void insertSoftLog(String sftwName, String sftwDate, String sftwVersion, String filePath){
+    softwareLogMapper.insertSoftLog(sftwName, sftwDate, sftwVersion, filePath);
+  }
+
 }
