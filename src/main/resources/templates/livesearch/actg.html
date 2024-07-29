@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!-- layout? content? table ?, links?? link??, scripts?? script?? ???. ?? ?? ?? ~{} empty fragment-->
 <html th:replace="~{inc/layout::layout(~{::table}, ~{}, ~{::script})}" xmlns:th="http://www.thymeleaf.org">
-<!-- header ³¡-->
+<!-- header ï¿½ï¿½-->
 <script th:inline="javascript">
 
 function adjustIFrameSize(iframeWindow) {
@@ -141,7 +141,7 @@ function hideID(ID){
         <td align="right" valign="bottom" style="padding-right:5px;"><table border="0" cellspacing="0" cellpadding="0">
           
 					<tr th:if="${session.id != null and session.id != 4}">
-            <td><img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="history" class="menu">History</a> &nbsp; &nbsp;</td>
+            <td><img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="/history" class="menu">History</a> &nbsp; &nbsp;</td>
             <td><img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="/login?action=logout" class="menu">Logout</a> &nbsp; &nbsp;</td>
           </tr>
 					

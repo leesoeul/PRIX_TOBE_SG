@@ -20,4 +20,11 @@
     DELETE FROM px_job_queue 
     WHERE job_code = #{jobCode}
   </delete>
+
+  <select id="selectJCandTitle" resultType="com.prix.homepage.livesearch.pojo.JobQueue">
+    SELECT job_code, title
+    FROM px_job_queue
+    WHERE user_id = #{userId}
+  </select>
+
 </mapper>

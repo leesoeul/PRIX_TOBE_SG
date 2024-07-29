@@ -13,4 +13,6 @@ public interface SearchLogUserMapper {
     String findFile(Integer id);
 
     String findName(Integer id);
+
+    List<SearchLogUser> findByUserId(@Param("userId") Integer userId);
 }

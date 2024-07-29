@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +27,9 @@ import com.prix.homepage.livesearch.pojo.ACTGResultDto;
 import com.prix.homepage.livesearch.pojo.Data;
 import com.prix.homepage.livesearch.pojo.DbondProcessDto;
 import com.prix.homepage.livesearch.pojo.DbondResultDto;
+import com.prix.homepage.livesearch.pojo.JobQueue;
 import com.prix.homepage.livesearch.pojo.UserSettingDto;
+import com.prix.homepage.livesearch.service.JobQueueService;
 import com.prix.homepage.livesearch.service.PatternMatchService;
 import com.prix.homepage.livesearch.service.UserModificationService;
 import com.prix.homepage.livesearch.service.UserSettingService;
@@ -37,9 +40,11 @@ import com.prix.homepage.livesearch.service.impl.DbondResultService;
 import com.prix.homepage.user.pojo.Account;
 import com.prix.homepage.user.pojo.Database;
 import com.prix.homepage.user.pojo.Enzyme;
+import com.prix.homepage.user.pojo.SearchLogUser;
 import com.prix.homepage.user.service.AccountService;
 import com.prix.homepage.user.service.DatabaseService;
 import com.prix.homepage.user.service.EnzymeService;
+import com.prix.homepage.user.service.SearchLogUserService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -65,6 +70,8 @@ public class LivesearchController {
   private final DbondResultService dbondResultService;
   private final ACTGProcessService actgProcessService;
   private final ACTGResultService actgResultService;
+  private final JobQueueService jobQueueService;
+  private final SearchLogUserService searchLogUserService;
 
   private final PrixDataWriter prixDataWriter;
   private final PatternMatchService patternMatchService;
@@ -508,5 +515,69 @@ public class LivesearchController {
 
     model.addAttribute("resultDto", actgResultDto);
     return "livesearch/actg_result";
+  }
+
+  @GetMapping("/history")
+  public String history(Model model, HttpServletRequest request){
+    HttpSession session = request.getSession();
+    Integer userId = (Integer) session.getAttribute("id");
+    Object idObject = session.getAttribute("id");
+    if(idObject == null){
+      return "redirect:/login";
+    }
+
+    List<JobQueue> jobQueueDto = jobQueueService.selectJCandTitle(userId);
+    List<SearchLogUser> searchLogUsersDto = searchLogUserService.findByUserId(userId);
+    //Map 형태로 name, msfile, db의 이름 가져오기
+    Map<Integer, String> msFiles = new HashMap<>();
+    for(SearchLogUser searchLog : searchLogUsersDto){
+        Integer id = searchLog.getMsfile();
+        String fileName = searchLogUserService.findFile(id);
+        msFiles.put(id, fileName);
+    }
+    Map<Integer, String> dbNames = new HashMap<>();
+    for(SearchLogUser searchLog : searchLogUsersDto){
+        Integer id = searchLog.getDb();
+        String fileName = searchLogUserService.findFile(id);
+        dbNames.put(id, fileName);
+    }
+
+    model.addAttribute("jobQueueDto", jobQueueDto);
+    model.addAttribute("searchLogUsersDto", searchLogUsersDto);
+    model.addAttribute("msFiles", msFiles);
+    model.addAttribute("dbNames", dbNames);
+
+    return "livesearch/history";
+  }
+
+  @GetMapping("/historyModi")
+  public String historyModi(Model model, HttpServletRequest request){
+    HttpSession session = request.getSession();
+    Integer userId = (Integer) session.getAttribute("id");
+    Object idObject = session.getAttribute("id");
+    if(idObject == null){
+      return "redirect:/login";
+    }
+
+    List<SearchLogUser> searchLogUsersDto = searchLogUserService.findByUserId(userId);
+    //Map 형태로 name, msfile, db의 이름 가져오기
+    Map<Integer, String> msFiles = new HashMap<>();
+    for(SearchLogUser searchLog : searchLogUsersDto){
+        Integer id = searchLog.getMsfile();
+        String fileName = searchLogUserService.findFile(id);
+        msFiles.put(id, fileName);
+    }
+    Map<Integer, String> dbNames = new HashMap<>();
+    for(SearchLogUser searchLog : searchLogUsersDto){
+        Integer id = searchLog.getDb();
+        String fileName = searchLogUserService.findFile(id);
+        dbNames.put(id, fileName);
+    }
+
+    model.addAttribute("searchLogUsersDto", searchLogUsersDto);
+    model.addAttribute("msFiles", msFiles);
+    model.addAttribute("dbNames", dbNames);
+
+    return "livesearch/historyModi";
   }
 }

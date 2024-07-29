@@ -15,10 +15,10 @@ public class JobQueue {
   private Integer id;
 
   @NotNull
-  private Integer user_id;
+  private Integer userId;
 
   @NotNull
-  private String job_code;
+  private String jobCode;
 
   private String title;
 

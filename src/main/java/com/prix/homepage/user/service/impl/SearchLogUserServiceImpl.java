@@ -47,4 +47,10 @@ public class SearchLogUserServiceImpl implements SearchLogUserService {
     public String findName(Integer id) {
         return searchLogMapper.findName(id);
     }
+
+    @Override
+    @Transactional
+    public List<SearchLogUser> findByUserId(Integer userId){
+        return searchLogMapper.findByUserId(userId);
+    }
 }

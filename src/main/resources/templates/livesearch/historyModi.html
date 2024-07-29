@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!-- layout의 content로 table 을, links에는 link들을, scripts에는 script들을 넘긴다. 필요 없을 경우 ~{} empty fragment-->
+<html th:replace="~{inc/layout::layout(~{::table}, ~{::link}, ~{::script})}" xmlns:th="http://www.thymeleaf.org">
+
+  <!-- 페이지 개별 css를 어떻게 추가하는지 예시 -->
+  <link href="/css/example.css" th:href="@{/css/example.css}" rel="stylesheet" type="text/css" />
+  <link href="/css/example2.css" th:href="@{/css/example2.css}" rel="stylesheet" type="text/css" />
+
+  <!-- 페이지 개별 javascript 등 기타 script를 추가하는 예시 -->
+  <script>
+  </script>
+
+<!-- Main content -->
+
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td width="190" height="100%" rowspan="2" align="right" valign="top" style="padding-right:15px">
+      <!-- left menu -->
+      <div th:insert="~{livesearch/livesearch_menu :: livesearch_menu}" />
+      </td>
+      <td height="10" valign="top"><table border="0" cellspacing="0" cellpadding="0" id="TitTable">
+        <tr>
+          <td style="padding-left:15px;" valign="top"><font color="#0033FF" size="3"><b>History<sup>&nbsp;</sup></b>&nbsp;&nbsp;&nbsp;</font>ms/ms search</td>
+          <td align="right" valign="bottom" style="padding-right:5px;"><table border="0" cellspacing="0" cellpadding="0">
+            <tr>
+              <!--td><img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="history.jsp" class="top_menu">HISTORY</a> &nbsp; &nbsp;</td-->
+              <td><img src="/images/top_icon_01.gif" width="2" height="9"> &nbsp;<a href="/login.jsp" class="menu">Logout</a></td>
+              <td width="30">&nbsp;&nbsp;</td>
+            </tr>
+          </table></td>
+        </tr>
+      </table>
+        </td>
+    </tr>
+    <tr>
+      <td>
+      <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
+      <tr>    
+        <td class="grayTH"><div align="center">Index</div></td>
+        <td class="grayTH"><div align="center">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div></td>
+        <td class="grayTH"><div align="center">Title</div></td>
+        <td class="grayTH"><div align="center">MS/MS data</div></td>
+        <td class="grayTH"><div align="center">Database</div></td>
+        <td class="grayTH"><div align="center">Engine</div></td>
+      </tr>
+
+      <tr th:each="searchLog, stat : ${searchLogUsersDto}">
+        <td class="grayTD"><div align="center"><a href="/livesearch/result" th:text="${stat.index + 1}"><a/></div></td>
+        <td class="grayTD"><div align="center" th:text="${searchLog.date}"></div></td>
+        <td class="grayTD"><div align="center" th:text="${searchLog.title}"></div></td>
+        <td class="grayTD"><div align="center" th:text="${msFiles[searchLog.msfile]}"></div></td>
+        <td class="grayTD"><div align="center" th:text="${dbNames[searchLog.db]}"></div></td>
+        <td class="grayTD"><div align="center" th:text="${searchLog.engine}"></div></td>
+      </tr> 
+  </table></td>
+    </tr>
+  </table>
+
+
+
+
+</html>

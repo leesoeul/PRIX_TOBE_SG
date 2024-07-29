@@ -10,4 +10,6 @@ public interface SearchLogUserService {
     String findFile(Integer id);
 
     String findName(Integer id);
+
+    List<SearchLogUser> findByUserId(Integer userId);
 }
