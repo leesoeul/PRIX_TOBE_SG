@@ -1,0 +1,91 @@
+<!-- layout? content? table ?, links?? link??, scripts?? script?? ???. ?? ?? ?? ~{} empty fragment-->
+<html
+  th:replace="~{inc/layout::layout(~{::table}, ~{}, ~{})}"
+  xmlns:th="http://www.thymeleaf.org"
+>
+
+<table border="0" width="100%">
+<tr>
+<td width="5">&nbsp;</td>
+<td></td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>
+<p><h2><font size="5">PRIX Search Results</font></h2></p>
+
+
+<br>
+<table border="0">
+	<tr>
+		<td><b>Search Engine</b></td>
+		<td>: ACTG ( version 1.00 )</td>
+	</tr>
+	<tr>
+		<td><b>Date</b></td>
+		<td>: <span th:text="${#dates.format(resultDto.date, 'yyyy-MM-dd')}"></span></td>
+	</tr>
+	<tr>
+			<td><b>User</b></td>
+			<td>: <span th:text="${resultDto.userName}"></span></td>
+	</tr>
+	<tr>
+			<td><b>Search title</b></td>
+			<td>: <span th:text="${resultDto.title}"></span></td>
+	</tr>
+</table>
+<br>
+<br>
+
+<div><font size="3"><b>Environment (for all mapping phases)</b></font></div>
+<table border="0">
+	<tr>
+		<td><b>Mapping method</b></td>
+		<td>: <span th:text="${resultDto?.method}"></span></td>
+	</tr>
+	<tr th:if="${resultDto?.IL != null and !resultDto?.IL?.isEmpty()}">
+			<td><b>Mapping options</b></td>
+			<td>: <span th:text="${resultDto?.IL}"></span></td>
+	</tr>
+	</table>
+	<div th:if="${resultDto?.method?.contains('P')}">
+		<br>
+		<div><font size="3"><b>Protein database mapping</b></font></div>
+		<table border="0">
+				<tr>
+						<td><b>Protein database</b></td>
+						<td>: <span th:text="${resultDto?.proteinDB}"></span></td>
+				</tr>
+				<tr th:if="${resultDto?.proteinOption != null and !resultDto.proteinOption?.isEmpty()}">
+						<td><b>Mapping options</b></td>
+						<td>: <span th:text="${resultDto?.proteinOption}"></span></td>
+				</tr>
+		</table>
+	</div>
+	<div th:if="${resultDto?.method?.contains('V')}">
+		<br>
+		<div><font size="3"><b>Variant splice graph mapping</b></font></div>
+		<table border="0">
+				<tr>
+						<td><b>Graph database</b></td>
+						<td>: <span th:text="${resultDto?.variantSpliceGraphDB}"></span></td>
+				</tr>
+				<tr th:if="${resultDto?.VSGOption != null and !resultDto.VSGOption?.isEmpty()}">
+						<td><b>Mapping options</b></td>
+						<td>: <span th:text="${resultDto?.VSGOption}"></span></td>
+				</tr>
+		</table>
+	</div>
+
+<br>
+<br>
+ 
+<hr>
+
+<br>
+<p><font size="4"><b>Search Summary</b></font></p>
+	<a th:href="@{/download(index=${index})}" target="_blank">Download the result (zip file)</a>
+<p><font size="4"><b>Notice</b></font></p>
+Please open the results using an Excel because basic text application cannot decord well.
+</table>
+</html>

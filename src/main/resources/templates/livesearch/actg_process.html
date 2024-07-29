@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!-- layout의 content로 table 을, links에는 link들을, scripts에는 script들을 넘긴다. 필요 없을 경우 ~{} empty fragment-->
+<html
+  th:replace="~{inc/layout::layout(~{::table}, ~{}, ~{::script})}"
+  xmlns:th="http://www.thymeleaf.org"
+>
+  <table width="95%" border="0" align="center" cellpadding="1">
+    <tr>
+      <td th:if="${processDto?.rate != null}">
+        <font size="3"
+          >Processing...
+          <font class="blue"><em th:text="${processDto.rate} + '%'"></em></font
+        ></font>
+      </td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+    </tr>
+    <tr></tr>
+    <tr>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td th:if="${processDto.output != null and processDto.output != ''}">
+        <font class="drak">
+          <pre id="content-" th:text="${processDto.output}"></pre>
+        </font>
+      </td>
+    </tr>
+  </table>
+
+	<script th:inline="javascript">
+		let timerID = null;
+	
+		function initTimer() {
+			timerID = self.setTimeout(timeOut, 3000);
+		}
+	
+		function timeOut() {
+			let fail = /*[[${processDto.failed}]]*/ false;
+			let finish = /*[[${processDto.finished}]]*/ false;
+	
+			if (fail || finish) {
+				return;
+			}
+			clearTimeout(timerID);
+			let processName = /*[[${processDto.processName}]]*/ '';
+			let title = /*[[${processDto.title}]]*/ '';
+			window.location = /*[[@{/ACTG/process(execute='no', process=${processDto.processName}, title=${processDto.title})}]]*/'';
+		}
+	
+		initTimer();
+	</script>
+</html>
