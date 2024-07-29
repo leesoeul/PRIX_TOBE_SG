@@ -105,21 +105,24 @@ public class ManageController {
 
         try {
             if (request.getParameter("delete_enzyme") != null) {
+                System.out.println("DELETE ENYZME");
                 enzymeService.deleteEnzyme(Integer.parseInt(request.getParameter("enzyme_id")), userId);
             } else if (request.getParameter("add_enzyme") != null) {
+                System.out.println("ADD ENYZME");
                 String name = request.getParameter("nenzyme_name");
                 String cut = request.getParameter("nenzyme_nt_cut");
                 String term = request.getParameter("nenzyme_ct_cut");
                 enzymeService.insertEnzyme(userId, name, cut, term);
             } else if(request.getParameter("modify_enzyme") != null){
                 Integer enzymeId = Integer.parseInt(request.getParameter("enzyme_id"));
+                System.out.println("MODIFY ENYZME");
                 String name = request.getParameter("enzyme_name");
                 String cut = request.getParameter("enzyme_nt_cut");
                 String term = request.getParameter("enzyme_ct_cut");
                 enzymeService.updateEnzyme(enzymeId, userId, name, cut, term);
             } else if (request.getParameter("delete_db") != null) {
                 databaseService.deleteDatabase(Integer.parseInt(request.getParameter("db_index")));
-            } else if (request.getParameter("db_name") != null) {
+            } else if (request.getParameter("modify_db") != null) {
                 String name = request.getParameter("db_name");
                 String dbId = request.getParameter("db_index");
 
@@ -167,7 +170,7 @@ public class ManageController {
                     dbFile.replace('\\', '/');
                     
                     String dbPath = dbFile.substring(dbFile.lastIndexOf('/') + 1, dbFile.length());
-                    int index = PrixDataWriter.write("faste", dbFile, file.getInputStream());
+                    int index = PrixDataWriter.write("fasta", dbFile, file.getInputStream());
 
                     String dbName = request.getParameter("db_name");
                     if (dbName == null || dbName.length() == 0){

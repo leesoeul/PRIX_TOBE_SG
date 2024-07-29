@@ -3,6 +3,7 @@ package com.prix.homepage.user.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.prix.homepage.user.pojo.Enzyme;
@@ -14,9 +15,9 @@ public interface EnzymeMapper {
 
   Integer selectIdByUserIdAndName(Integer userId, String name);
 
-  void insertEnzyme(Integer userId, String name, String ntCleave, String ctCleave);
+  void insertEnzyme(@Param("userId") Integer userId, @Param("name") String name, @Param("ntCleave") String ntCleave, @Param("ctCleave") String ctCleave);
   
-  void deleteEnzyme(Integer id, Integer userId);
+  void deleteEnzyme(@Param("id") Integer id, @Param("userId") Integer userId);
 
   Enzyme selectById(Integer id);
 

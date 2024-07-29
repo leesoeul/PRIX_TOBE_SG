@@ -9,16 +9,19 @@
   <!-- 페이지 개별 javascript 등 기타 script를 추가하는 예시 -->
   <script type="text/javascript">
     function doSoftware(event) {
-        event.preventDefault();
-        var form = document.software;
 
-        var name = form.sftw_name.value.trim();
-        var version = form.sftw_version.value.trim();
-        var file = form.file.value.trim();
-        var date = form.sftw_date.value.trim();
+        var name = document.getElementsByName("sftw_name")[0].value;
+        var version = document.getElementsByName("sftw_version")[0].value;
+        var file = document.getElementsByName("file")[2].value;
+        var date = document.getElementsByName("sftw_date")[0].value
 
         if (!name) {
             alert("Please select a name.");
+            event.preventDefault();
+            return false;
+        }
+        if (!isValidDate(date)) {
+            alert("Please check the date format. ex) YYYY-MM-DD");
             event.preventDefault();
             return false;
         }
@@ -29,11 +32,6 @@
         }
         if (!file) {
             alert("Please select a file.");
-            event.preventDefault();
-            return false;
-        }
-        if (!isValidDate(date)) {
-            alert("Please check the date format. ex) YYYY-MM-DD");
             event.preventDefault();
             return false;
         }
@@ -78,22 +76,42 @@
         if (buttonName === "add_enzyme") {
             var ntCut = document.getElementsByName("nenzyme_nt_cut")[0].value;
             var ctCut = document.getElementsByName("nenzyme_ct_cut")[0].value;    
+
+            // check ntCut input
+            if (!validAminoAcids.test(ntCut) || ntCut.length < 1 || ntCut.length > 20) {
+                alert("Invalid N-term cut. Must be 1-20 characters long and contain only valid amino acids: A, R, N, D, C, E, Q, G, H, I, L, K, M, F, P, S, T, W, Y, V.");
+                event.preventDefault();
+                return false;
+            }
+
+            // check ctCut input
+            if (!validAminoAcids.test(ctCut) || ctCut.length < 1 || ctCut.length > 20) {
+                alert("Invalid C-term cut. Must be 1-20 characters long and contain only valid amino acids: A, R, N, D, C, E, Q, G, H, I, L, K, M, F, P, S, T, W, Y, V.");
+                event.preventDefault();
+                return false;
+            }
         } else if (buttonName == "modify_enzyme"){
-            // 없앨까....
-        }
+            var ntCuts = document.getElementsByName("enzyme_nt_cut");
+            var ctCuts = document.getElementsByName("enzyme_ct_cut");
 
-        /* check ntCut input */
-        if (!validAminoAcids.test(ntCut) || ntCut.length < 1 || ntCut.length > 20) {
-            alert("Invalid N-term cut. Must be 1-20 characters long and contain only valid amino acids: A, R, N, D, C, E, Q, G, H, I, L, K, M, F, P, S, T, W, Y, V.");
-            event.preventDefault();
-            return false;
-        }
+            for (var i = 0; i < ntCuts.length; i++) {
+                var ntCut = ntCuts[i].value;
+                var ctCut = ctCuts[i].value;
 
-        /* check ctCut input */
-        if (!validAminoAcids.test(ctCut) || ctCut.length < 1 || ctCut.length > 20) {
-            alert("Invalid C-term cut. Must be 1-20 characters long and contain only valid amino acids: A, R, N, D, C, E, Q, G, H, I, L, K, M, F, P, S, T, W, Y, V.");
-            event.preventDefault();
-            return false;
+                // check ntCut input
+                if (!validAminoAcids.test(ntCut) || ntCut.length < 1 || ntCut.length > 20) {
+                    alert("Invalid N-term cut at index " + (i+1) + ". Must be 1-20 characters long and contain only valid amino acids: A, R, N, D, C, E, Q, G, H, I, L, K, M, F, P, S, T, W, Y, V.");
+                    event.preventDefault();
+                    return false;
+                }
+
+                // check ctCut input
+                if (!validAminoAcids.test(ctCut) || ctCut.length < 1 || ctCut.length > 20) {
+                    alert("Invalid C-term cut at index " + (i+1) + ". Must be 1-20 characters long and contain only valid amino acids: A, R, N, D, C, E, Q, G, H, I, L, K, M, F, P, S, T, W, Y, V.");
+                    event.preventDefault();
+                    return false;
+                }
+            }
         }
 
         return true;

@@ -29,12 +29,13 @@
   <select id="selectById" resultType="com.prix.homepage.user.pojo.Enzyme">
     SELECT  name, nt_cleave, ct_cleave FROM px_enzyme WHERE id = #{id}
   </select>
+
   <update id="updateEnzyme" parameterType="com.prix.homepage.user.pojo.Enzyme">
         UPDATE px_enzyme
         SET name = #{name},
             nt_cleave = #{ntCleave},
             ct_cleave = #{ctCleave}
-        WHERE id = #{id} AND user_id = #{user_id}
+        WHERE id = #{id} AND user_id = #{userId}
     </update>
 
 </mapper>

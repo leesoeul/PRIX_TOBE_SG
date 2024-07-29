@@ -18,9 +18,7 @@ public class SearchLogUserController {
     private final SearchLogUserService searchLogService;
 
     @GetMapping("/admin/searchlog")
-    public String gotoSearchLogPage(Model model, HttpServletRequest request,
-                                    @RequestParam(defaultValue = "0") int page,
-                                    @RequestParam(defaultValue = "10") int size) {
+    public String gotoSearchLogPage(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
         Object idObject = session.getAttribute("id");
         Integer level = (Integer) session.getAttribute("level");

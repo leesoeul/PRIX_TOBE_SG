@@ -3,6 +3,7 @@ package com.prix.homepage.user.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.prix.homepage.user.pojo.SoftwareMsg;
 
@@ -12,5 +13,5 @@ public interface SoftwareMsgMapper {
 
     String findByName(String id);
 
-    void updateSoftwareMsg(String id, String message);
+    void updateSoftwareMsg(@Param("id") String id, @Param("message") String message);
 }
