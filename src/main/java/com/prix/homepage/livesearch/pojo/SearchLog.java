@@ -17,7 +17,7 @@ public class SearchLog {
   private Integer id;
 
   @NotNull
-  private Integer user_id;
+  private Integer userId;
 
   private String title;
 
