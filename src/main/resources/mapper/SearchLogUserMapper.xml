@@ -36,4 +36,8 @@
     FROM px_account
     WHERE id = #{userId}
   </select>
+
+  <select id="findName" resultType="String">
+        SELECT name FROM px_account WHERE id = #{id}
+    </select>
 </mapper>
