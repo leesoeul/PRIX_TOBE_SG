@@ -20,21 +20,7 @@ public class UseController {
     }
 
     @GetMapping("/useContent")
-    public String useContent(@RequestParam(name = "usi", required = false) String usi,
-                            @RequestParam(name = "fragment_tol", required = false) Integer fragmentTol,
-                            @RequestParam(name = "fragment_tol_unit", required = false) String fragmentTolUnit,
-                            @RequestParam(name = "matching_tol", required = false) Integer matchingTol,
-                            @RequestParam(name = "matching_tol_unit", required = false) String matchingTolUnit,
-                            @RequestParam(name = "ce_bottom", required = false) Integer ceBottom) {
-
-
-        System.out.println("USI: " + usi);
-        System.out.println("Fragment Tolerance: " + fragmentTol);
-        System.out.println("Fragment Tolerance Unit: " + fragmentTolUnit);
-        System.out.println("Matching Tolerance: " + matchingTol);
-        System.out.println("Matching Tolerance Unit: " + matchingTolUnit);
-        System.out.println("CE Bottom: " + ceBottom);
-
+    public String useContent() {
         return "livesearch/USE";
     }
 
