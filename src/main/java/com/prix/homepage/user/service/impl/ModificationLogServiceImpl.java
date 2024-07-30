@@ -1,5 +1,6 @@
 package com.prix.homepage.user.service.impl;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,8 +44,8 @@ public class ModificationLogServiceImpl implements ModificationLogService{
   }
 
   @Override
-  public void insertModLog(String modDate, String modVersion, String modFile){
-    modificationLogMapper.insertModLog();
+  public void insertModLog(Date modDate, String modVersion, String modFile){
+    modificationLogMapper.insertModLog(modDate, modVersion, modFile);
   }
   
 }

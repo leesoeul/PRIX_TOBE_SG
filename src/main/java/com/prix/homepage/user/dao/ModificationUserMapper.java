@@ -4,6 +4,7 @@ package com.prix.homepage.user.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.prix.homepage.user.pojo.ModificationUser;
@@ -11,7 +12,7 @@ import com.prix.homepage.user.pojo.ModificationUser;
 @Mapper
 @Repository
 public interface ModificationUserMapper {
-    void insertModification(String modName, String fullName, Integer classi, String md, String amd, String residue, String position);
+    void insertModification(@Param("modName") String modName, @Param("fullName") String fullName, @Param("classMap") Integer classi, @Param("md") String md, @Param("amd") String amd, @Param("residue") String residue, @Param("position") String position);
 
     Integer selectMin();
 
