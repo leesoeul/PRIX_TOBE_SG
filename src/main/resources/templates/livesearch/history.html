@@ -36,14 +36,13 @@
         <td>
         <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
         
-        <tbody th:if="${jobQueueDto != null}">
+        <tbody th:if="${jobQueueDto != null and jobQueueDto.size()> 0}">
             <tr>    
                 <td class="grayTH" colspan="6"><div align="left">You have <font color="red"><b>RUNNING or recently FINISHED </b></font> jobs. Click the job links to see the progress or results.</div></td>     
             </tr>
             <tr th:each="item : ${jobQueueDto}">  
                 <td class="grayTD" colspan="6"><div align="left">
-                <a href="/livesearch/result" target="_blank" th:text="${item.jobCode}"></a>&nbsp;&nbsp;Job titled '<span th:text="${item.title}"></span>'</div></td>
-                <!-- "/modplus/result.jsp?file=<%=jobRS.getString(1)%>" -->
+                <a th:href="@{/livesearch/result(file=${item.jobCode})}" target="_blank" th:text="${item.jobCode}"></a>&nbsp;&nbsp;Job titled '<span th:text="${item.title}"></span>'</div></td>
             </tr>
             <tr><td class="grayTD" colspan="6">&nbsp;</td></tr>
             <tr><td class="grayTH" colspan="6"><font color="red"><b>CONFIRMED</b></font> search results</td></tr>
@@ -57,7 +56,7 @@
             <td class="grayTH"><div align="center">Engine</div></td>
         </tr>
         <tr th:each="searchLog, stat : ${searchLogUsersDto}">
-            <td class="grayTD"><div align="center"><a href="/livesearch/result" th:text="${stat.index + 1}" ><a/></div></td>
+            <td class="grayTD"><div align="center"><a th:href="@{/livesearch/result(file=${searchLog.result})}" th:text="${stat.index + 1}" ><a/></div></td>
             <td class="grayTD"><div align="center" th:text="${searchLog.date}"></div></td>
             <td class="grayTD"><div align="center" th:text="${searchLog.title}"></div></td>
             <td class="grayTD"><div align="center" th:text="${msFiles[searchLog.msfile]}"></div></td>

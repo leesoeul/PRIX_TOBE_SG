@@ -19,6 +19,8 @@ import java.io.OutputStreamWriter;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -267,6 +269,8 @@ public class ManageController {
                         }
                         if (sqls.length > 0){
                             String modDate = request.getParameter("ptm_date");
+                            LocalDate localDate = LocalDate.parse(modDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                            java.sql.Date sqlDate = java.sql.Date.valueOf(localDate);
                             String modVersion = request.getParameter("ptm_version");
                             if (modDate == null || modDate.length() == 0)
 								modDate = "now()";
@@ -274,7 +278,7 @@ public class ManageController {
 								modDate = "'" + modDate + "'";
 							if (modVersion == null || modVersion.length() == 0)
 								modVersion = "0.0";
-                            modificationLogService.insertModLog(modDate, modVersion, modFile.replace("'", "\\\'"));
+                            modificationLogService.insertModLog(sqlDate, modVersion, modFile.replace("'", "\\\'"));
 							
 							int min = -1;
                             Integer rs = modificationService.selectMin();
