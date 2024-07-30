@@ -251,8 +251,14 @@ public class LivesearchController {
 
   @GetMapping("/livesearch/USE")
   public String USEPage() {
-    return "livesearch/USE";
+    return "livesearch/use_experiment";
   }
+
+  @GetMapping("/useContent")
+  public String useContent() {
+      return "livesearch/USE";
+  }
+  
 
   /**
    * dbond 페이지에서 submit할 경우, process 페이지로 이동한다.

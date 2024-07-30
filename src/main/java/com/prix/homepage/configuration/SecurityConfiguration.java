@@ -16,9 +16,13 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
 
 	// 기본 설정
+	@SuppressWarnings("removal")
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
+				// Configure X-Frame-Options
+				.headers(headers -> headers
+                .frameOptions().sameOrigin()) // Allows framing from the same origin
 				.authorizeHttpRequests((requests) -> requests
 						.anyRequest().permitAll())
 				.formLogin((form) -> form
