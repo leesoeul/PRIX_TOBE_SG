@@ -233,7 +233,8 @@
                         <!-- login || help || contact || admin || confirm_personalInfo || registration page -->
                         <tr
                           th:if="${#strings.startsWith(currentUri, '/login') or 
-                                                    #strings.startsWith(currentUri, '/help') or 
+                                                    #strings.startsWith(currentUri, '/help') or
+                                                    #strings.startsWith(currentUri, '/contact') or 
                                                     #strings.startsWith(currentUri, '/admin') or 
                                                     #strings.startsWith(currentUri, '/confirm_personalInfo') or 
                                                     #strings.startsWith(currentUri, '/registration')}"
