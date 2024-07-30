@@ -251,7 +251,7 @@ public class LivesearchController {
 
   @GetMapping("/livesearch/USE")
   public String USEPage() {
-    return "livesearch/use_experiment";
+    return "livesearch/use_enclosure";
   }
 
   @GetMapping("/useContent")
