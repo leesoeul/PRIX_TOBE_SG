@@ -249,17 +249,6 @@ public class LivesearchController {
     return "livesearch/patternMatchFrm";
   }
 
-  @GetMapping("/livesearch/USE")
-  public String USEPage() {
-    return "livesearch/use_enclosure";
-  }
-
-  @GetMapping("/useContent")
-  public String useContent() {
-      return "livesearch/USE";
-  }
-  
-
   /**
    * dbond 페이지에서 submit할 경우, process 페이지로 이동한다.
    * 
