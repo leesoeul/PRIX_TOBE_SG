@@ -184,7 +184,7 @@ public class LivesearchController {
 
     model.addAttribute("userSetting", userSettingDto);
     // 이후 modplus search에서 사용했던 코드 - 수정 필요한지 확인
-    Boolean engine = false;
+    Boolean engine = true;
     Boolean variable = true;
     Integer varModCount = userModificationService.countModifications(id, variable, engine);
     if (varModCount == null)
@@ -210,9 +210,7 @@ public class LivesearchController {
     model.addAttribute("listDatabase", listDatabaseResponseDto);
 
     // px_enzyme : id, name where user_id = 0
-    List<Enzyme>
-
-    listEnzymeZeroResponseDto = enzymeService.getAllEnzymeByUserId(0);
+    List<Enzyme> listEnzymeZeroResponseDto = enzymeService.getAllEnzymeByUserId(0);
     model.addAttribute("listEnzymeId0", listEnzymeZeroResponseDto);
 
     // px_enzyme : id, name where user_id = id
@@ -257,10 +255,72 @@ public class LivesearchController {
   /**
    * dbond 페이지에서 submit할 경우, process 페이지로 이동한다.
    * 
+   * @param request processService로 전달해서 rvice에서 request를 통해 param과
+   *                session에 접근한다
+   */
+  @GetMapping("/dbond/process")
+  public String getModplusSearchPage(Model model, HttpServletRequest request,
+      @RequestParam Map<String, String> paramsMap) {
+    // 세션에서 id 확인
+    HttpSession session = request.getSession();
+    String id = String.valueOf(session.getAttribute("id"));
+    if (id == null)
+      return "redirect:/login?url=modi/search";
+
+    // 더미 processDto
+    DbondProcessDto processDto = DbondProcessDto.builder()
+        .finished(false).failed(true)
+        .logPath("").xmlPath("").msPath("").dbPath("").decoyPath("")
+        .title("").msIndex(0).dbIndex(0).multiPath("").engine("")
+        .output("")
+        .rate(0)
+        .returnAddr("").build();
+
+    try {
+      processDto = dbondProcessService.process(id, request, paramsMap, null);
+    } catch (IOException e) {
+      logger.error("process service error : {} ", e.getMessage());
+      e.printStackTrace();
+    }
+
+    if (processDto.getReturnAddr().startsWith("redirect:/")) {
+      return processDto.getReturnAddr();
+    }
+
+    logger.info("ProcessDto Information:");
+    logger.info("Finished: " + processDto.getFinished());
+    logger.info("Failed: " + processDto.getFailed());
+    logger.info("Log Path: " + processDto.getLogPath());
+    logger.info("XML Path: " + processDto.getXmlPath());
+    logger.info("MS Path: " + processDto.getMsPath());
+    logger.info("DB Path: " + processDto.getDbPath());
+    logger.info("Decoy Path: " + processDto.getDecoyPath());
+    logger.info("Title: " + processDto.getTitle());
+    logger.info("MS Index: " + processDto.getMsIndex());
+    logger.info("DB Index: " + processDto.getDbIndex());
+    logger.info("Multi Path: " + processDto.getMultiPath());
+    logger.info("Engine: " + processDto.getEngine());
+    logger.info("Job Code: " + processDto.getJobCode());
+    logger.info("Refresh Count: " + processDto.getRefreshCount());
+    logger.info("File Message: " + processDto.getFileMsg());
+    logger.info("Output: " + processDto.getOutput());
+    logger.info("Rate: " + processDto.getRate());
+    logger.info("Return Address: " + processDto.getReturnAddr());
+
+    model.addAttribute("processDto", processDto);
+
+    // return processDto.getReturnAddr();
+
+    return "livesearch/dbond_process";
+  }
+
+  /**
+   * dbond 페이지에서 submit할 경우, process 페이지로 이동한다.
+   * 
    * @param request processService로 전달해서 processService에서 request를 통해 param과
    *                session에 접근한다
    */
-  @PostMapping("/dbond/search")
+  @PostMapping("/dbond/process")
   public String postModplusSearchPage(Model model, HttpServletRequest request,
       @RequestParam Map<String, String> paramsMap,
       @RequestParam("ms_file") MultipartFile msFile, @RequestParam("fasta") MultipartFile fasta) {
@@ -293,25 +353,25 @@ public class LivesearchController {
       return processDto.getReturnAddr();
     }
 
-    // logger.info("ProcessDto Information:");
-    // logger.info("Finished: " + processDto.getFinished());
-    // logger.info("Failed: " + processDto.getFailed());
-    // logger.info("Log Path: " + processDto.getLogPath());
-    // logger.info("XML Path: " + processDto.getXmlPath());
-    // logger.info("MS Path: " + processDto.getMsPath());
-    // logger.info("DB Path: " + processDto.getDbPath());
-    // logger.info("Decoy Path: " + processDto.getDecoyPath());
-    // logger.info("Title: " + processDto.getTitle());
-    // logger.info("MS Index: " + processDto.getMsIndex());
-    // logger.info("DB Index: " + processDto.getDbIndex());
-    // logger.info("Multi Path: " + processDto.getMultiPath());
-    // logger.info("Engine: " + processDto.getEngine());
-    // logger.info("Job Code: " + processDto.getJobCode());
-    // logger.info("Refresh Count: " + processDto.getRefreshCount());
-    // logger.info("File Message: " + processDto.getFileMsg());
-    // logger.info("Output: " + processDto.getOutput());
-    // logger.info("Rate: " + processDto.getRate());
-    // logger.info("Return Address: " + processDto.getReturnAddr());
+    logger.info("ProcessDto Information:");
+    logger.info("Finished: " + processDto.getFinished());
+    logger.info("Failed: " + processDto.getFailed());
+    logger.info("Log Path: " + processDto.getLogPath());
+    logger.info("XML Path: " + processDto.getXmlPath());
+    logger.info("MS Path: " + processDto.getMsPath());
+    logger.info("DB Path: " + processDto.getDbPath());
+    logger.info("Decoy Path: " + processDto.getDecoyPath());
+    logger.info("Title: " + processDto.getTitle());
+    logger.info("MS Index: " + processDto.getMsIndex());
+    logger.info("DB Index: " + processDto.getDbIndex());
+    logger.info("Multi Path: " + processDto.getMultiPath());
+    logger.info("Engine: " + processDto.getEngine());
+    logger.info("Job Code: " + processDto.getJobCode());
+    logger.info("Refresh Count: " + processDto.getRefreshCount());
+    logger.info("File Message: " + processDto.getFileMsg());
+    logger.info("Output: " + processDto.getOutput());
+    logger.info("Rate: " + processDto.getRate());
+    logger.info("Return Address: " + processDto.getReturnAddr());
 
     model.addAttribute("processDto", processDto);
 
@@ -518,28 +578,28 @@ public class LivesearchController {
   }
 
   @GetMapping("/history")
-  public String history(Model model, HttpServletRequest request){
+  public String history(Model model, HttpServletRequest request) {
     HttpSession session = request.getSession();
     Integer userId = (Integer) session.getAttribute("id");
     Object idObject = session.getAttribute("id");
-    if(idObject == null){
+    if (idObject == null) {
       return "redirect:/login";
     }
 
     List<JobQueue> jobQueueDto = jobQueueService.selectJCandTitle(userId);
     List<SearchLogUser> searchLogUsersDto = searchLogUserService.findByUserId(userId);
-    //Map 형태로 name, msfile, db의 이름 가져오기
+    // Map 형태로 name, msfile, db의 이름 가져오기
     Map<Integer, String> msFiles = new HashMap<>();
-    for(SearchLogUser searchLog : searchLogUsersDto){
-        Integer id = searchLog.getMsfile();
-        String fileName = searchLogUserService.findFile(id);
-        msFiles.put(id, fileName);
+    for (SearchLogUser searchLog : searchLogUsersDto) {
+      Integer id = searchLog.getMsfile();
+      String fileName = searchLogUserService.findFile(id);
+      msFiles.put(id, fileName);
     }
     Map<Integer, String> dbNames = new HashMap<>();
-    for(SearchLogUser searchLog : searchLogUsersDto){
-        Integer id = searchLog.getDb();
-        String fileName = searchLogUserService.findFile(id);
-        dbNames.put(id, fileName);
+    for (SearchLogUser searchLog : searchLogUsersDto) {
+      Integer id = searchLog.getDb();
+      String fileName = searchLogUserService.findFile(id);
+      dbNames.put(id, fileName);
     }
 
     model.addAttribute("jobQueueDto", jobQueueDto);
@@ -551,27 +611,27 @@ public class LivesearchController {
   }
 
   @GetMapping("/historyModi")
-  public String historyModi(Model model, HttpServletRequest request){
+  public String historyModi(Model model, HttpServletRequest request) {
     HttpSession session = request.getSession();
     Integer userId = (Integer) session.getAttribute("id");
     Object idObject = session.getAttribute("id");
-    if(idObject == null){
+    if (idObject == null) {
       return "redirect:/login";
     }
 
     List<SearchLogUser> searchLogUsersDto = searchLogUserService.findByUserId(userId);
-    //Map 형태로 name, msfile, db의 이름 가져오기
+    // Map 형태로 name, msfile, db의 이름 가져오기
     Map<Integer, String> msFiles = new HashMap<>();
-    for(SearchLogUser searchLog : searchLogUsersDto){
-        Integer id = searchLog.getMsfile();
-        String fileName = searchLogUserService.findFile(id);
-        msFiles.put(id, fileName);
+    for (SearchLogUser searchLog : searchLogUsersDto) {
+      Integer id = searchLog.getMsfile();
+      String fileName = searchLogUserService.findFile(id);
+      msFiles.put(id, fileName);
     }
     Map<Integer, String> dbNames = new HashMap<>();
-    for(SearchLogUser searchLog : searchLogUsersDto){
-        Integer id = searchLog.getDb();
-        String fileName = searchLogUserService.findFile(id);
-        dbNames.put(id, fileName);
+    for (SearchLogUser searchLog : searchLogUsersDto) {
+      Integer id = searchLog.getDb();
+      String fileName = searchLogUserService.findFile(id);
+      dbNames.put(id, fileName);
     }
 
     model.addAttribute("searchLogUsersDto", searchLogUsersDto);

@@ -16,7 +16,7 @@ import com.prix.homepage.livesearch.dao.DataMapper;
 @Service
 public class PrixDataWriter {
 	// static String logdir = "E:\\PRIX\\logs\\db_error_"; 이게 원래 진짜임 2024.05.27
-	String logdir = "C:/Users/KYH/Desktop/";
+	String logdir = "C:/Users/KYH/Desktop/dbond/log";
 
 	@Autowired
 	private DataMapper dataMapper;
@@ -68,7 +68,9 @@ public class PrixDataWriter {
 			date += "0";
 		date += cal.get(Calendar.MONTH);
 		date += cal.get(Calendar.DAY_OF_MONTH);
-		PrintStream ps = new PrintStream(new FileOutputStream("E:\\PRIX\\logs\\db_error_" + date + ".log", true), false,
+		// PrintStream ps = new PrintStream(new FileOutputStream("E:\\PRIX\\logs\\db_error_" + date + ".log", true), false,
+		// 		"UTF-8");
+				PrintStream ps = new PrintStream(new FileOutputStream(logdir + date + ".log", true), false,
 				"UTF-8");
 		String sql = "UPDATE px_data set content=? where id=" + id;
 

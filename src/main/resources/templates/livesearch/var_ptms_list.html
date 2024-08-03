@@ -77,14 +77,14 @@ function openUserList(button) {
 </head>
 
 <body onload="handlePageLoad()">
-<form name="mod_list" method="post" th:action="@{/modplus/var_ptms_list}">
+<form name="mod_list" method="post" th:action="@{/dbond/var_ptms_list}">
 	<input type="hidden" name="sort" th:value="${sortBy}"/>
 	<input type="hidden" name="var" th:value="${var}"/>
 	<input type="hidden" name="engine" th:value="${engine}"/>
 <table border="0" cellspacing="0" cellpadding="0" id="TitTable">
 	<tr>
     <td style="padding-left:15px;">
-        <span class="blueB" th:text="${engine == '1' ? 'dbond' : 'modplus'}"></span>
+        <span class="blueB" th:text="dbond"></span>
         <font size="3">ms/ms search</font> _
         <span th:text="${var == '1' ? 'Variable' : 'Fixed'}"></span>
         modification list
