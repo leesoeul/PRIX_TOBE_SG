@@ -377,7 +377,7 @@ public class LivesearchController {
 
     // return processDto.getReturnAddr();
 
-    return "livesearch/dbond_process";
+    return processDto.getReturnAddr();
   }
 
   /**

@@ -19,6 +19,7 @@ import com.prix.homepage.constants.ProteinInfo;
 import com.prix.homepage.constants.ProteinSummary;
 import com.prix.homepage.livesearch.dao.DataMapper;
 import com.prix.homepage.livesearch.dao.SearchLogMapper;
+import com.prix.homepage.livesearch.pojo.Data;
 import com.prix.homepage.livesearch.pojo.DbondResultDto;
 import com.prix.homepage.user.pojo.Account;
 import com.prix.homepage.user.service.AccountService;
@@ -69,7 +70,8 @@ public class DbondResultService {
 
 		//이후 result.html에서 사용할 것들
 		// read prix result file
-		byte[] pwd = dataMapper.findContentById(idInt);
+		Integer fileNameInt = Integer.parseInt(fileName);
+		byte[] pwd = dataMapper.findContentById(fileNameInt);
 		logger.info("pwd:{}", pwd);
 		String pwdStr = new String(pwd, StandardCharsets.UTF_8);
 		if (pwd != null && pwd.length > 0) {
@@ -78,19 +80,17 @@ public class DbondResultService {
 			InputStreamReader reader = new InputStreamReader(is);
 			summary.read(reader);
 		}
-
-		// read search database file
-		if (summary != null && summary.getDatabasePath() != null) {
-			Integer summaryId = Integer.parseInt(summary.getDatabasePath());
-			pwd = dataMapper.findContentById(summaryId);
-			pwdStr = new String(pwd, StandardCharsets.UTF_8);
-			if (pwd != null && pwd.length > 0) {
-				File file = new File(pwdStr);
-				InputStream is = new FileInputStream(file);
-				summary.readProtein(is);
-				databasePath = pwdStr;
-			}
+		Integer dbPath = Integer.parseInt(summary.getDatabasePath());
+		Data datatmp = dataMapper.getNameContentById(dbPath);
+		String contentStr = new String(datatmp.getContent(), StandardCharsets.UTF_8);
+		if (datatmp != null) {
+			File file = new File(contentStr);
+			InputStream is = new FileInputStream(file);
+			InputStreamReader reader = new InputStreamReader(is);
+			summary.read(reader);
+			databasePath = datatmp.getName();
 		}
+
 
 		boolean isDBond = false;
 		if (summary.getEngineName() != null && summary.getEngineName().compareToIgnoreCase("DBOND") == 0)

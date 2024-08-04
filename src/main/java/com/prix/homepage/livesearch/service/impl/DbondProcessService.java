@@ -549,7 +549,7 @@ public class DbondProcessService {
 				File file = new File(prixPath);
 				try {
 					fis = new FileInputStream(file);
-					prixDataWriter.write("prix", prixPath, fis);
+					prixIndex = prixDataWriter.write("prix", prixPath, fis);
 				} catch (Exception e) {
 					logger.error(e.getMessage());
 				}
@@ -587,7 +587,7 @@ public class DbondProcessService {
 						.title(title).msIndex(msIndex).dbIndex(dbIndex).multiPath(multiPath).engine(engine)
 						.output(output)
 						.rate(rate)
-						.returnAddr("livsearch/dbond_result")
+						.returnAddr("redirect:/dbond/result?file=" + prixIndex)
 						.build();
 				return processDto;
 			}
