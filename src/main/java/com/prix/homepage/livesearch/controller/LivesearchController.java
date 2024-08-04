@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
 import com.prix.homepage.constants.PrixDataWriter;
 import com.prix.homepage.constants.ProteinInfo;
 import com.prix.homepage.livesearch.dao.DataMapper;
@@ -230,23 +231,6 @@ public class LivesearchController {
     model.addAttribute("dbNewIndex", dbNewIndex);
 
     return "livesearch/dbond_search";
-  }
-
-  @GetMapping("/livesearch/patternMatchFrm")
-  public String patternMatchPage(Model model) {
-
-    // genbank update date
-    String gd = "";
-    // swiss_prot update date
-    String sd = "";
-
-    gd = patternMatchService.getUpdateDay("genbank");
-    sd = patternMatchService.getUpdateDay("swiss_prot");
-
-    model.addAttribute("gd", gd);
-    model.addAttribute("sd", sd);
-
-    return "livesearch/patternMatchFrm";
   }
 
   /**
@@ -513,28 +497,28 @@ public class LivesearchController {
   }
 
   @GetMapping("/history")
-  public String history(Model model, HttpServletRequest request){
+  public String history(Model model, HttpServletRequest request) {
     HttpSession session = request.getSession();
     Integer userId = (Integer) session.getAttribute("id");
     Object idObject = session.getAttribute("id");
-    if(idObject == null){
+    if (idObject == null) {
       return "redirect:/login";
     }
 
     List<JobQueue> jobQueueDto = jobQueueService.selectJCandTitle(userId);
     List<SearchLogUser> searchLogUsersDto = searchLogUserService.findByUserId(userId);
-    //Map 형태로 name, msfile, db의 이름 가져오기
+    // Map 형태로 name, msfile, db의 이름 가져오기
     Map<Integer, String> msFiles = new HashMap<>();
-    for(SearchLogUser searchLog : searchLogUsersDto){
-        Integer id = searchLog.getMsfile();
-        String fileName = searchLogUserService.findFile(id);
-        msFiles.put(id, fileName);
+    for (SearchLogUser searchLog : searchLogUsersDto) {
+      Integer id = searchLog.getMsfile();
+      String fileName = searchLogUserService.findFile(id);
+      msFiles.put(id, fileName);
     }
     Map<Integer, String> dbNames = new HashMap<>();
-    for(SearchLogUser searchLog : searchLogUsersDto){
-        Integer id = searchLog.getDb();
-        String fileName = searchLogUserService.findFile(id);
-        dbNames.put(id, fileName);
+    for (SearchLogUser searchLog : searchLogUsersDto) {
+      Integer id = searchLog.getDb();
+      String fileName = searchLogUserService.findFile(id);
+      dbNames.put(id, fileName);
     }
 
     model.addAttribute("jobQueueDto", jobQueueDto);
@@ -546,27 +530,27 @@ public class LivesearchController {
   }
 
   @GetMapping("/historyModi")
-  public String historyModi(Model model, HttpServletRequest request){
+  public String historyModi(Model model, HttpServletRequest request) {
     HttpSession session = request.getSession();
     Integer userId = (Integer) session.getAttribute("id");
     Object idObject = session.getAttribute("id");
-    if(idObject == null){
+    if (idObject == null) {
       return "redirect:/login";
     }
 
     List<SearchLogUser> searchLogUsersDto = searchLogUserService.findByUserId(userId);
-    //Map 형태로 name, msfile, db의 이름 가져오기
+    // Map 형태로 name, msfile, db의 이름 가져오기
     Map<Integer, String> msFiles = new HashMap<>();
-    for(SearchLogUser searchLog : searchLogUsersDto){
-        Integer id = searchLog.getMsfile();
-        String fileName = searchLogUserService.findFile(id);
-        msFiles.put(id, fileName);
+    for (SearchLogUser searchLog : searchLogUsersDto) {
+      Integer id = searchLog.getMsfile();
+      String fileName = searchLogUserService.findFile(id);
+      msFiles.put(id, fileName);
     }
     Map<Integer, String> dbNames = new HashMap<>();
-    for(SearchLogUser searchLog : searchLogUsersDto){
-        Integer id = searchLog.getDb();
-        String fileName = searchLogUserService.findFile(id);
-        dbNames.put(id, fileName);
+    for (SearchLogUser searchLog : searchLogUsersDto) {
+      Integer id = searchLog.getDb();
+      String fileName = searchLogUserService.findFile(id);
+      dbNames.put(id, fileName);
     }
 
     model.addAttribute("searchLogUsersDto", searchLogUsersDto);
