@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<!-- layout의 content로 table 을, links에는 link들을, scripts에는 script들을 넘긴다. 필요 없을 경우 ~{} empty fragment-->
 <html
   th:replace="~{inc/layout::layout(~{::table}, ~{::link}, ~{::script})}"
   xmlns:th="http://www.thymeleaf.org"
 >
-  <!-- 페이지 개별 css를 어떻게 추가하는지 예시 -->
   <link
     href="/css/example.css"
     th:href="@{/css/example.css}"
@@ -18,12 +16,18 @@
     type="text/css"
   />
 
-  <!-- 페이지 개별 javascript 등 기타 script를 추가하는 예시 -->
   <script>
-    let a = 12;
-  </script>
-  <script>
-    let b = "hi";
+    function submitFrm() {
+      const form = document.forms["patternMatchFrm"];
+      const pattern1 = form.elements["pattern1"].value;
+
+      if (pattern1 === "") {
+        alert("Pattern1 cannot be empty.");
+        return false;
+      }
+
+      return true;
+    }
   </script>
 
   <table width="1090" border="0" cellpadding="0" cellspacing="0">
@@ -54,166 +58,170 @@
     </tr>
   </table>
 
-  <form
-    action="PatternMatch.jsp"
-    method="post"
-    name="swissprot"
-    target="_blank"
-  >
-    <table width="300" align="left">
-      <tr></tr>
-      <tr>
-        <td>
-          <!--
-try catch 처리 해줘야함
-        <%
-    
-    Connection conn = null;                                        // null�� �ʱ�ȭ �Ѵ�.
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
-    try{
-    String url = "jdbc:mysql://localhost:3306/update_day";        // ����Ϸ��� �����ͺ��̽����� ������ URL ���
-    String idd = "root";                                                    // ����� ����
-    String pw = "isa4986";                                                // ����� ������ �н�����
-    
-    Class.forName("com.mysql.jdbc.Driver");                       // �����ͺ��̽��� �����ϱ� ���� DriverManager�� ����Ѵ�.
-    conn=DriverManager.getConnection(url,idd,pw);              // DriverManager ��ü�κ��� Connection ��ü�� ���´�.
-    
-    String sql = "select * from update_table where dbname='swiss_prot';";                        // sql ����
-    pstmt = conn.prepareStatement(sql);                          // prepareStatement���� �ش� sql�� �̸� �������Ѵ�.
-    
-    
-    rs = pstmt.executeQuery();                                        // ������ �����ϰ� ����� ResultSet ��ü�� ��´�.
-    String sd="";
-    String sv="";
-    while(rs.next()){                                                        // ����� �� �྿ ���ư��鼭 �����´�.
-    
-    sd = rs.getString("date");
-    sv = rs.getString("version");
-    }
-    sql = "select * from update_table where dbname='genbank';";                        // sql ����
-    pstmt = conn.prepareStatement(sql);                          // prepareStatement���� �ش� sql�� �̸� �������Ѵ�.
-    
-    
-    rs = pstmt.executeQuery();                                        // ������ �����ϰ� ����� ResultSet ��ü�� ��´�.
-    String gd="";
-    String gv="";
-    while(rs.next()){                                                        // ����� �� �྿ ���ư��鼭 �����´�.
-    
-    gd = rs.getString("date");
-    gv = rs.getString("version");
-    }
-    
-    %>
-                    <font style="font-size:11pt;"><li>Select DATABASE</li></font><br>
-                    &nbsp;&nbsp;<input type="radio" name="db_type" value="1" checked="on"> SWISS-PROT <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Release <%=sv%> (<%=sd%>)<br>
-                    &nbsp;&nbsp;<input type="radio" name="db_type" value="0"> GENBANK <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Release <%=gv%> (<%=gd%>)<p>
-    
-    <%
-    
-    
-    }catch(Exception e){                                                    // ���ܰ� �߻��ϸ� ���� ��Ȳ�� ó���Ѵ�.
-    e.printStackTrace();
-    out.println("member ���̺� ȣ�⿡ �����߽��ϴ�.");
-    }finally{                                                            // ������ ���� �Ǵ� ���п� ������� ����� �ڿ��� ���� �Ѵ�.  (�����߿�)
-    if(rs != null) try{rs.close();}catch(SQLException sqle){}            // Resultset ��ü ����
-    if(pstmt != null) try{pstmt.close();}catch(SQLException sqle){}   // PreparedStatement ��ü ����
-    if(conn != null) try{conn.close();}catch(SQLException sqle){}   // Connection ����
-    }
-    %>
-  -->
-          <font style="font-size: 11pt"><li>Select DATABASE</li></font><br />
-          &nbsp;&nbsp;<input
-            type="radio"
-            name="db_type"
-            value="1"
-            checked="on"
-          />
-          SWISS-PROT
-          <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Release
-          <span th:text="${gd}"></span><br />
-          &nbsp;&nbsp;<input type="radio" name="db_type" value="0" /> GENBANK
-          <br />
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Release
-          <span th:text="${sd}"></span>
-          <p>
-            <font style="font-size: 11pt"><li>Pattern Syntax</li></font><br />
-            &nbsp;&nbsp;<input
-              type="radio"
-              name="format_type"
-              value="1"
-              checked="on"
-            />
-            PROSITE regular expression<br />
-            &nbsp;&nbsp;<input type="radio" name="format_type" value="0" />
-            PYTHON regular expression
-          </p>
+  <!-- Main content -->
+  <table align="left">
+    <tr>
+      <td>
+        <form
+          name="patternMatchFrm"
+          method="post"
+          th:action="@{/patternMatch/patternMatchResult}"
+          th:object="${patternMatchDto}"
+          target="_blank"
+          onsubmit="return submitFrm()"
+        >
+          <table width="300" align="left" style="margin-bottom: 15px">
+            <tr></tr>
+            <tr>
+              <td>
+                <font style="font-size: 11pt"><li>Select DATABASE</li></font
+                ><br />
+                &nbsp;&nbsp;<input
+                  type="radio"
+                  name="db_type"
+                  th:field="*{db_type}"
+                  value="0"
+                  checked="on"
+                />
+                SWISS-PROT
+                <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Release
+                <span th:text="${gd}"></span>
+                <br />
+                &nbsp;&nbsp;<input
+                  type="radio"
+                  name="db_type"
+                  th:field="*{db_type}"
+                  value="1"
+                />
+                GENBANK
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Release
+                <span th:text="${sd}"></span>
+                <p>
+                  <font style="font-size: 11pt"><li>Pattern Syntax</li></font
+                  ><br />
+                  &nbsp;&nbsp;<input
+                    type="radio"
+                    name="format_type"
+                    th:field="*{format_type}"
+                    value="0"
+                    checked="on"
+                  />
+                  PROSITE regular expression<br />
+                  &nbsp;&nbsp;<input
+                    type="radio"
+                    name="format_type"
+                    th:field="*{format_type}"
+                    value="1"
+                  />
+                  PYTHON regular expression
+                </p>
 
-          <p>
-            <font style="font-size: 11pt"><li>Input Pattern</li></font><br />
-            &nbsp;&nbsp;<input
-              type="text"
-              name="pattern1"
-              size="20"
-            />&nbsp;AND<br />
-            &nbsp;&nbsp;<input
-              type="text"
-              name="pattern2"
-              size="20"
-            />&nbsp;AND<br />
-            &nbsp;&nbsp;<input
-              type="text"
-              name="pattern3"
-              size="20"
-            />&nbsp;AND<br />
-            &nbsp;&nbsp;<input
-              type="text"
-              name="pattern4"
-              size="20"
-            />&nbsp;AND<br />
-            &nbsp;&nbsp;<input type="text" name="pattern5" size="20" /><br />
+                <p>
+                  <font style="font-size: 11pt"><li>Input Pattern</li></font
+                  ><br />
+                  &nbsp;&nbsp;<input
+                    type="text"
+                    name="pattern1"
+                    th:field="*{pattern1}"
+                    size="20"
+                  />&nbsp;AND<br />
+                  &nbsp;&nbsp;<input
+                    type="text"
+                    name="pattern2"
+                    th:field="*{pattern2}"
+                    size="20"
+                  />&nbsp;AND<br />
+                  &nbsp;&nbsp;<input
+                    type="text"
+                    name="pattern3"
+                    th:field="*{pattern3}"
+                    size="20"
+                  />&nbsp;AND<br />
+                  &nbsp;&nbsp;<input
+                    type="text"
+                    name="pattern4"
+                    th:field="*{pattern4}"
+                    size="20"
+                  />&nbsp;AND<br />
+                  &nbsp;&nbsp;<input
+                    type="text"
+                    name="pattern5"
+                    th:field="*{pattern5}"
+                    size="20"
+                  /><br />
+                  <!--
+                    &nbsp;&nbsp;<input type="hidden" name="db_id" th:value="${id}" />
+                    -->
+                </p>
 
-            &nbsp;&nbsp;<input type="hidden" name="db_id" th:value="${id}" />
-          </p>
+                <p>
+                  <font style="font-size: 11pt"><li>Search Option</li></font
+                  ><br />
+                  &nbsp;&nbsp;<input
+                    type="checkbox"
+                    name="check_species"
+                    th:field="*{check_species}"
+                    value="1"
+                  />
+                  Match To Species
+                  <br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <select name="species" th:field="*{species}">
+                    <option value="Homo sapiens">Homo sapiens</option>
+                    <option value="Mus musculus">Mus musculus</option>
+                    <option value="Rattus norvegicus">Rattus norvegicus</option>
+                    <option value="Caenorhabditis elegans">
+                      Caenorhabditis elegans
+                    </option>
+                    <option value="Drosophila melanogaster">
+                      Drosophila melanogaster
+                    </option>
+                    <option value="Saccharomyces cerevisiae">
+                      Saccharomyces cerevisiae
+                    </option>
+                    <option value="Escherichia coli">Escherichia coli</option>
+                    <option value="Xenopus laevis">Xenopus laevis</option>
+                  </select>
+                  <br />
 
-          <p>
-            <font style="font-size: 11pt"><li>Search Option</li></font><br />
-            &nbsp;&nbsp;<input type="checkbox" name="check_species" value="1" />
-            Match To Species<br />
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <select name="species">
-              <option>Homo sapiens</option>
-              <option>Mus musculus</option>
-              <option>Rattus norvegicus</option>
-              <option>Caenorhabditis elegans</option>
-              <option>Drosophila melanogaster</option>
-              <option>Saccharomyces cerevisiae</option>
-              <option>Escherichia coli</option>
-              <option>Xenopus laevis</option></select
-            ><br />
+                  &nbsp;&nbsp;
+                  <input
+                    type="checkbox"
+                    name="check_except"
+                    th:field="*{check_except}"
+                    value="1"
+                  />
+                  Without Sequence Data
+                  <br />
+                  &nbsp;&nbsp;
+                  <input
+                    type="checkbox"
+                    name="check_order"
+                    th:field="*{check_order}"
+                    value="1"
+                  />
+                  Keep Pattern Order
+                </p>
 
-            &nbsp;&nbsp;<input type="checkbox" name="check_except" value="1" />
-            Without Sequence Data<br />
-            &nbsp;&nbsp;<input type="checkbox" name="check_order" value="1" />
-            Keep Pattern Order
-          </p>
-
-          <p></p>
-        </td>
-      </tr>
-
-      <tr align="center">
-        <td>
-          <input
-            type="submit"
-            value="&nbsp;&nbsp;RUN&nbsp;&nbsp;"
-            class="btn"
-          />&nbsp;
-          <input type="reset" value="CANCEL" class="btn" />
-        </td>
-      </tr>
-    </table>
-  </form>
+                <p></p>
+              </td>
+            </tr>
+            <tr align="center">
+              <td>
+                <input
+                  type="submit"
+                  value="&nbsp;&nbsp;RUN&nbsp;&nbsp;"
+                  class="btn"
+                />&nbsp;
+                <input type="reset" value="CANCEL" class="btn" />
+              </td>
+            </tr>
+          </table>
+        </form>
+      </td>
+    </tr>
+  </table>
 
   <table align="left">
     <tr>

@@ -123,7 +123,6 @@
                         <!-- livesearch page 일때 -->
                         <tr
                           th:if="${#strings.startsWith(currentUri, '/livesearch') or 
-                                  #strings.startsWith(currentUri, '/modplus/search') or
                                   #strings.startsWith(currentUri, '/ACTG') or
                                   #strings.startsWith(currentUri, '/dbond')}"
                         >
@@ -164,8 +163,10 @@
                         >
                           <td>
                             <a th:href="@{/}">
-                              <img src="/images/menu03_01.gif"
-                              class="header-introduction"
+                              <img
+                                src="/images/menu03_01.gif"
+                                class="header-introduction"
+                              />
                             </a>
                           </td>
                           <td>

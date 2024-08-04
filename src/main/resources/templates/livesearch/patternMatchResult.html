@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>PatternMatch Result</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=euc-kr" />
+  </head>
+
+  <body>
+    <div style="margin: 15px">
+      <li th:text="${dbType} + ' Release : ' + ' (' + ${date} + ')'"></li>
+      <div th:utext="${result}"></div>
+    </div>
+  </body>
+</html>

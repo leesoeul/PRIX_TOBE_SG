@@ -49,7 +49,7 @@ public class SoftwareRequestController {
    * @return download/software_request.html 렌더링
    *         software request 메일 발송 성공 여부를 반환한다.
    **/
-  @PostMapping("/software_request")
+  @PostMapping("/download/software_request")
   public String submitRequest(
       Model model,
       @RequestParam String name,
