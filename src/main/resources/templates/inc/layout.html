@@ -1,29 +1,33 @@
 <!DOCTYPE html>
 <!-- 공통의 head, header와 footer를 포함하는 layout, 개별 페이지의 내용을 content와 links로 전달받는다. -->
 <!-- links는 css stylesheet용 link이며 layout 사용 예시는 index.html, links는 download/modplus.html을 참고 -->
-<html th:fragment="layout(content, links, scripts)" xmlns:th="http://www.thymeleaf.org">
+<html
+  th:fragment="layout(content, links, scripts)"
+  xmlns:th="http://www.thymeleaf.org"
+>
+  <head th:replace="~{inc/head::head(links=${links})}">
+    <!-- layout head -->
+  </head>
 
-<head th:replace="~{inc/head::head(links=${links})}">
-  <!-- layout head -->
-</head>
-
-<body>
-  <header th:replace="~{inc/header::header}">
-    <!-- layout header: logo, (login,help,contact,admin), (introduction, livesearch, download, publications) -->
-  </header>
-  <div th:replace="${content}">
-    <!-- layout content -->
-  </div>
-  <footer th:replace="~{inc/footer::footer}">
-    <!-- layout footer -->
-  </footer>
-</body>
-<!-- Bootstrap3: Latest compiled and minified JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
-  integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<!-- 사용자 설정 script -->
-<th:block th:replace="${scripts}" />
-
+  <body>
+    <header th:replace="~{inc/header::header}">
+      <!-- layout header: logo, (login,help,contact,admin), (introduction, livesearch, download, publications) -->
+    </header>
+    <div th:replace="${content}">
+      <!-- layout content -->
+    </div>
+    <footer th:replace="~{inc/footer::footer}">
+      <!-- layout footer -->
+    </footer>
+  </body>
+  <!-- Bootstrap3: Latest compiled and minified JavaScript -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"
+  ></script>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <!-- 사용자 설정 script -->
+  <th:block th:replace="${scripts}" />
 </html>
