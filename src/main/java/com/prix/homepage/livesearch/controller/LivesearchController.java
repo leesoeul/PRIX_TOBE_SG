@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import com.prix.homepage.constants.PeptideLine;
 import com.prix.homepage.constants.PrixDataWriter;
 import com.prix.homepage.constants.ProteinInfo;
 import com.prix.homepage.livesearch.dao.DataMapper;
@@ -113,7 +115,7 @@ public class LivesearchController {
       try {
         // delete modification data for the anonymous user
         userModificationService.deleteByUserId(anony);
-        logger.info("delete done in modplus search by anony");
+        logger.info("delete done in dbond search by anony");
       } catch (Exception e) {
         logger.error("Error deleting UserModification for ID {}: {}", anony, e.getMessage());
       }
@@ -183,7 +185,6 @@ public class LivesearchController {
     }
 
     model.addAttribute("userSetting", userSettingDto);
-    // 이후 modplus search에서 사용했던 코드 - 수정 필요한지 확인
     Boolean engine = true;
     Boolean variable = true;
     Integer varModCount = userModificationService.countModifications(id, variable, engine);
@@ -259,7 +260,7 @@ public class LivesearchController {
    *                session에 접근한다
    */
   @GetMapping("/dbond/process")
-  public String getModplusSearchPage(Model model, HttpServletRequest request,
+  public String getDbondSearchPage(Model model, HttpServletRequest request,
       @RequestParam Map<String, String> paramsMap) {
     // 세션에서 id 확인
     HttpSession session = request.getSession();
@@ -321,7 +322,7 @@ public class LivesearchController {
    *                session에 접근한다
    */
   @PostMapping("/dbond/process")
-  public String postModplusSearchPage(Model model, HttpServletRequest request,
+  public String postDbondSearchPage(Model model, HttpServletRequest request,
       @RequestParam Map<String, String> paramsMap,
       @RequestParam("ms_file") MultipartFile msFile, @RequestParam("fasta") MultipartFile fasta) {
     // 세션에서 id 확인
@@ -402,7 +403,7 @@ public class LivesearchController {
     String id = String.valueOf(session.getAttribute("id"));
     if (id == null) {
       session.setAttribute("id", anony);
-      id = (String) session.getAttribute("id");
+      id = String.valueOf(session.getAttribute("id"));
     }
     DbondResultDto resultDto = DbondResultDto.builder()
         .summary(null)
@@ -416,7 +417,7 @@ public class LivesearchController {
         .sort("")
         .userId(null)
         .max(0)
-        .proteins(new ProteinInfo[0])
+        .proteins(null)
         .maxProteins(0)
         .level(1)
         .build();
@@ -444,6 +445,43 @@ public class LivesearchController {
     logger.info("Max Proteins: " + resultDto.getMaxProteins());
 
     model.addAttribute("resultDto", resultDto);
+
+    int num = 0;
+    int maxProteins=resultDto.getMaxProteins();
+    ProteinInfo[] proteins = resultDto.getProteins();
+    boolean[][] coverageCodes = new boolean[proteins.length][];
+    List<Double> coveragePercentages = new ArrayList<>();
+    if (proteins != null)
+    {
+      for (int i = 0; i < proteins.length; i++)
+      {
+        if (maxProteins > 0 && num >= maxProteins)
+          break;
+
+        ProteinInfo info = proteins[i];
+        if (info == null)
+          continue;
+
+        PeptideLine[] peptides = info.getPeptideLines();
+        if (peptides == null || peptides.length == 0)
+          continue;
+        num++;
+
+        boolean[] code = info.getCoverageCode();
+        coverageCodes[i] = code; // boolean 2차원 배열에 저장
+        int coverageCounts = 0;
+        for (boolean c : code) {
+          if (c) {
+              coverageCounts++;
+          }
+        }
+        double coveragePercentage = code.length == 0 ? 0 : (double) coverageCounts * 100 / code.length;
+        coveragePercentages.add(coveragePercentage);
+      }
+    }
+    model.addAttribute("coverageCodes", coverageCodes);
+    model.addAttribute("coveragePercentages", coveragePercentages);
+
 
     boolean notauthorized = true;
     if (resultDto.getUserId() != null) {

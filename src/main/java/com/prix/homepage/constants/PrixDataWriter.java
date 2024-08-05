@@ -32,9 +32,6 @@ public class PrixDataWriter {
 		String result = "OK";
 		byte[] content = null;
 		try {
-			logger.info("name", name);
-			logger.info("name.replace:",name.replace("'", "\\\'") );
-
 			content = is.readAllBytes();
 			dataMapper.insert(type, name.replace("'", "\\\'"), content);
 
