@@ -243,28 +243,6 @@ public class LivesearchController {
     return "livesearch/dbond_search";
   }
 
-  @GetMapping("/livesearch/patternMatchFrm")
-  public String patternMatchPage(Model model) {
-
-    // genbank update date
-    String gd = "";
-    // swiss_prot update date
-    String sd = "";
-
-    gd = patternMatchService.getUpdateDay("genbank");
-    sd = patternMatchService.getUpdateDay("swiss_prot");
-
-    model.addAttribute("gd", gd);
-    model.addAttribute("sd", sd);
-
-    return "livesearch/patternMatchFrm";
-  }
-
-  @GetMapping("/livesearch/USE")
-  public String USEPage() {
-    return "livesearch/USE";
-  }
-
   /**
    * dbond 페이지에서 submit할 경우, process 페이지로 이동한다.
    * 
