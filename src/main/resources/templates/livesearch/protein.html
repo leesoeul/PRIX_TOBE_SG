@@ -1,0 +1,136 @@
+<html>
+
+<head>
+  <title>Protein</title>
+  <link href="/css/home.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <table border="0" width="100%">
+    <tr>
+      <td>&nbsp;</td>
+      <td>
+        <br />
+        <span th:class="'blueB'" th:text="${protein.name}"></span><br /><br />
+        <span style="font-size: 0.8em;" th:text="${protein.description}"></span><br />
+
+        <div th:if="${protein.name.startsWith('sp|')}">
+          Go to Swiss-Prot:
+          <a th:href="@{http://www.uniprot.org/uniprot/${protein.name.substring(3, 9)}}" target="_blank"
+            th:text="${protein.name.substring(3, 9)}"></a>
+        </div>
+        <br /><br />
+        <table border="0" width="600">
+          <tr>
+            <td>
+              <font color="black"><b>Peptides matched:</b></font>
+              <span th:text="${protein.getNumberOfMatchedPeptides()}"></span> &nbsp;&nbsp;&nbsp;&nbsp;
+
+              <font color="black"><b>PSMs matched:</b></font>
+              <span th:text="${peptides.length}"></span> &nbsp;&nbsp;&nbsp;&nbsp;
+              <font color="black"><b>Sequence coverage:</b></font>
+              <span th:text="${code.length == 0 ? 0 : coveragePercentage}"></span><br />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <font color="blue" size="2"><b>Matched sequence</b></font>
+
+              <font size="2" face="Courier New">
+                <span th:each="i : ${#numbers.sequence(0, protein.sequence.length() - 1)}">
+                  <span th:if="${i % COLSPERLINE == 0}">
+                    <br th:text="${i + 1}">0</br>
+                  </span>
+                  <span th:if="${i % 10 == 0}">
+                    &nbsp;
+                  </span>
+
+                  <span th:if="${code[i]}">
+                    <b>
+                      <font color="red" th:text="${protein.sequence.charAt(i)}"></font>
+                    </b>
+                  </span>
+                  <span th:if="${!code[i]}" th:text="${protein.sequence.charAt(i)}"></span>
+                </span>
+              </font>
+            </td>
+          </tr>
+        </table>
+        <br>
+        <table width="600" border="0" cellpadding="1" cellspacing="0">
+          <tr>
+            <td colspan="3">
+              <font color="blue" size="2"><b>Discovered modifications</b>
+            </td>
+          </tr>
+          <tr th:each="i, index : ${modIndexArray}">
+            <td th:if="${index % 3 == 0}" colspan="3"></td>
+            <td th:text="${mods[modIndexArray[index]].type} + ' (' + ${mods[modIndexArray[index]].position} + ')'"></td>
+            <td th:if="${index % 3 == 2}"></td>
+          </tr>
+        </table>
+        <br />
+        <br />
+        <font color="blue" size="2"><b>All the peptide-spectrum matches to this protein</b></font><br />
+        <table border="0">
+          <tr>
+            <th align="center">
+              <font size="2">&nbsp;Index&nbsp;</font>
+            </th>
+            <th align="center">
+              <font size="2">&nbsp;Observed&nbsp;</font>
+            </th>
+            <th align="center">
+              <font size="2">&nbsp;Calc MW&nbsp;</font>
+            </th>
+            <th align="center">
+              <font size="2">&nbsp;DeltaM&nbsp;</font>
+            </th>
+            <th align="center">
+              <font size="2">&nbsp;
+                <span th:text="${isDbond ? 'Score' : 'Probability'}"></span>
+              </font>
+            </th>
+            <th align="center">
+              <font size="2">&nbsp;Start-End&nbsp;</font>
+            </th>
+            <th align="left">
+              <font size="2">Peptide&nbsp;</font>
+            </th>
+            <th align="left">
+              <font size="2">Modified</font>
+            </th>
+          </tr>
+          <tr th:each="peptide : ${peptides}">
+            <td align="center" th:text="${summary.getSpectrum(peptide.index).id}"></td>
+            <td align="right">
+              &nbsp;<span th:text="${peptide.mass}"></span>
+              (<span th:text="${peptide.charge}">0</span>+)&nbsp;
+            </td>
+            <td align="center" th:text="${peptide.getMWCalc()}">&nbsp;</td>
+            <td align="center" th:text="${peptide.getMWDelta()}">&nbsp;</td>
+            <td align="center" th:text="${peptide.score}">&nbsp;</td>
+            <td align="center" th:text="${peptide.start} + '-' + ${peptide.end}">&nbsp;</td>
+            <td align="left" th:utext="${peptide.peptide}">&nbsp;</td>
+            <td th:text="${peptide.modification}">&nbsp;</td>
+          <tr th:if="${isDbond and peptide != null and peptide.getSecond() != null}"
+            th:with="secondPeptide=${peptide.second}">
+            <td align="center">&nbsp;&nbsp;</td>
+            <td align="center">&nbsp;&nbsp;</td>
+            <td align="center">&nbsp;&nbsp;</td>
+            <td align="center">&nbsp;&nbsp;</td>
+            <td align="center">&nbsp;&nbsp;</td>
+            <td align="center" th:text="${secondPeptide.getStart()} + '-' + ${secondPeptide.getEnd()}">&nbsp;</td>
+            <td align="left" th:text="${secondPeptide.getPeptide()}">&nbsp;</td>
+            <td th:text="${secondPeptide.getModification()}">&nbsp;</td>
+          </tr>
+    </tr>
+
+  </table>
+  </td>
+  </tr>
+  </table>
+
+</body>
+
+</html>

@@ -44,7 +44,8 @@ public class DbondResultService {
 	public DbondResultDto result(String id,
 			HttpServletRequest request, HttpSession session) throws FileNotFoundException {
 
-		if (id == null) id = "4";
+		if (id == null)
+			id = "4";
 		Integer idInt = Integer.parseInt(id);
 
 		String fileName = request.getParameter("file");

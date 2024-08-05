@@ -310,7 +310,7 @@ function doSearch() {
 <tr th:if="${resultDto != null and resultDto.summary != null and resultDto.summary.targetDecoyed}">
   <td>&nbsp;</td>
   <td>: 
-    <font color="red">&nbsp;No. of identifications at FDR estimated by Target-Decoy</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( <a href="/help.jsp#TARDEC" class="under">about FDR</a> )</font>
+    <font color="red">&nbsp;No. of identifications at FDR estimated by Target-Decoy</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( <a href="/help#TARDEC" class="under">about FDR</a> )</font>
     <table border="0" align="left" cellpadding="0" cellspacing="0" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid;">
       <tr>
         <td class="grayTD" align="right" bgcolor="#f3f3f3">FDR (%)</td>
@@ -449,7 +449,7 @@ function doSearch() {
 </table>
 <!--form name="peptide_hits"-->
 <table border="0">
-  <th:block th:each="info, iterStat : ${resultDto.proteins}">
+  <th:block th:each="info, iterStat : ${resultDto.proteins}" th:if="${infoNames.size() > 0}">
   	<th:block th:if="${maxProteins > 0 && iterStat.index >= maxProteins}">
       <th:block th:break="true"></th:block>
       	</th:block>
@@ -457,7 +457,11 @@ function doSearch() {
             <tr>
                 <td><a th:name="'protein' + ${iterStat.index}"><input type="checkbox" class="CHECK" name="peptide_list" th:value="${info.name}" onclick="checkMutual('peptide', this);"/></a>&nbsp;</td>
                 <td><span th:text="${iterStat.index + 1}">1</span>.&nbsp;&nbsp;</td>
-                <td colspan="3"><a th:href="'protein.jsp?file=' + ${resultDto.fileName} + '&name=' + ${info.name} + '&ms=' + ${resultDto.minScore} + '&db=' + ${resultDto.isDBond}" target="_blank" th:text="${info.name}">Protein Name</a></td>
+                <td colspan="3">
+									<a th:href="@{'/protein?file=' + ${resultDto.fileName} + '&name=' + ${infoNames[iterStat.index]} + '&ms=' + ${resultDto.minScore} + '&db=' + ${resultDto.isDBond}}"
+									target="_blank" 
+									th:text="${info.name}">Protein Name</a>
+								</td>
             </tr>
             <tr>
                 <td></td>
@@ -524,7 +528,7 @@ function doSearch() {
     </th:block>
 </table>
 <!--/form-->
-<th:block th:if="${resultDto != null and resultDto.summary != null and resultDto.summary.MODMapRun}">
+<th:block th:if="${resultDto != null and resultDto.summary != null and resultDto.summary.isMODMapRun()}">
 	<table border="0" width="100%">
 		<tr>
 				<td>
@@ -533,7 +537,7 @@ function doSearch() {
 		</tr>
 		<tr>
 				<td>
-						<a th:href="'modmap.jsp?path=' + ${resultDto.fileName} + '&name=' + ${resultDto.summary.MODMapPath}">Download results</a>
+					<a th:href="@{/modmap(path=${resultDto.fileName}, name=${resultDto.summary.MODMapPath})}">Download results</a>
 				</td>
 		</tr>
 	</table>
@@ -564,7 +568,7 @@ function doSearch() {
 		</tr>
 		<tr th:if="${resultDto != null and resultDto.summary != null}" th:each="i : ${#numbers.sequence(0, resultDto.summary.modMapCount - 1)}">
 				<td th:each="j : ${resultDto.summary.getModMap(i)}" align="center">
-						<span th:text="${j == 0 ? 'b(' + j + ')' : (j > 1 ? '<font color=red><b>' + j + '</b></font>' : j)}"></span>
+						<span th:utext="${j == 0 ? 'b(' + j + ')' : (j > 1 ? '<font color=red><b>' + j + '</b></font>' : j)}"></span>
 				</td>
 		</tr>
 	</table>

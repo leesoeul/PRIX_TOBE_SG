@@ -9,20 +9,31 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import java.lang.String;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import com.prix.homepage.constants.Modification;
+import com.prix.homepage.constants.PeptideInfo;
 import com.prix.homepage.constants.PeptideLine;
 import com.prix.homepage.constants.PrixDataWriter;
 import com.prix.homepage.constants.ProteinInfo;
+import com.prix.homepage.constants.ProteinSummary;
+import com.prix.homepage.constants.SpectrumInfo;
 import com.prix.homepage.livesearch.dao.DataMapper;
 import com.prix.homepage.livesearch.pojo.ACTGProcessDto;
 import com.prix.homepage.livesearch.pojo.ACTGResultDto;
@@ -447,14 +458,15 @@ public class LivesearchController {
     model.addAttribute("resultDto", resultDto);
 
     int num = 0;
-    int maxProteins=resultDto.getMaxProteins();
+    int maxProteins = resultDto.getMaxProteins();
     ProteinInfo[] proteins = resultDto.getProteins();
-    boolean[][] coverageCodes = new boolean[proteins.length][];
+    boolean[][] coverageCodes = new boolean[maxProteins][];
+    if(proteins != null){   
+      coverageCodes = new boolean[proteins.length][];
+    } 
     List<Double> coveragePercentages = new ArrayList<>();
-    if (proteins != null)
-    {
-      for (int i = 0; i < proteins.length; i++)
-      {
+    if (proteins != null) {
+      for (int i = 0; i < proteins.length; i++) {
         if (maxProteins > 0 && num >= maxProteins)
           break;
 
@@ -472,16 +484,15 @@ public class LivesearchController {
         int coverageCounts = 0;
         for (boolean c : code) {
           if (c) {
-              coverageCounts++;
+            coverageCounts++;
           }
         }
-        double coveragePercentage = code.length == 0 ? 0 : (double) coverageCounts * 100 / code.length;
+        double coveragePercentage = code.length == 0 ? 0 : (double)coverageCounts * 100 / code.length;
         coveragePercentages.add(coveragePercentage);
       }
     }
     model.addAttribute("coverageCodes", coverageCodes);
     model.addAttribute("coveragePercentages", coveragePercentages);
-
 
     boolean notauthorized = true;
     if (resultDto.getUserId() != null) {
@@ -491,6 +502,22 @@ public class LivesearchController {
     }
 
     model.addAttribute("notauthorized", notauthorized);
+
+    //proteininfo의 name이 url로 전달시 인코딩이 필요해서 추가
+    ProteinInfo[] pis = resultDto.getProteins();
+    List<String> urlInfoNames = new ArrayList<>();
+    if(pis != null){
+      for (ProteinInfo pi : pis) {
+        if(pi != null){
+          String name = pi.getName();
+          name = URLEncoder.encode(name, StandardCharsets.UTF_8);
+          urlInfoNames.add(name);
+        }
+      }
+    }
+
+    model.addAttribute("infoNames", urlInfoNames);
+
     return "livesearch/dbond_result";
   }
 
@@ -678,4 +705,122 @@ public class LivesearchController {
 
     return "livesearch/historyModi";
   }
+
+  /**
+   * /protein
+   * dbond result 홈페이지에서 peptide 클릭시 보이는 페이지
+   * @param paramsMap file : fileName(숫자), name : peptide.getName(), ms : minScore, db : isDbond
+   */
+  @GetMapping("/protein")
+  public String getProteinPage(Model model, HttpServletRequest request, @RequestParam Map<String, String> paramsMap) {
+
+    final int COLSPERLINE = 50;
+
+    String fileName = request.getParameter("file");
+    ProteinSummary summary = new ProteinSummary();
+
+    Data rs = dataMapper.getNameContentById(Integer.valueOf(fileName));
+    if (rs != null) {
+      InputStream is = new ByteArrayInputStream(rs.getContent());
+      InputStreamReader reader = new InputStreamReader(is);
+      summary.read(reader);
+    }
+    String databasePath = "";
+    Data rsDbPath = dataMapper.getNameContentById(Integer.valueOf(summary.getDatabasePath()));
+    if (rsDbPath != null) {
+      InputStream is = new ByteArrayInputStream(rsDbPath.getContent());
+      summary.readProtein(is);
+      databasePath = rsDbPath.getName();
+    }
+
+    Modification[] mods = summary.getModifications();
+
+    boolean isDBond = (request.getParameter("db") != null && request.getParameter("db").compareTo("true") == 0);
+    double minPeptideScore = Double.parseDouble(request.getParameter("ms"));
+
+    ProteinInfo[] proteins = summary.getProteins();
+    ProteinInfo protein = null;
+    String name = request.getParameter("name");
+    for (int i = 0; i < proteins.length; i++) {
+      if (proteins[i] != null) {
+        proteins[i].makePeptideLines(summary, mods, minPeptideScore, isDBond, i, true);
+        if (name.compareTo(proteins[i].getName()) == 0)
+          protein = proteins[i];
+      }
+    }
+
+    boolean[] code = protein.getCoverageCode();
+    int coverageCounts = 0;
+    for (boolean c : code){
+      if (c){
+        coverageCounts++;
+      }
+    }
+    double coveragePercentage = code.length == 0 ? 0 : (double)coverageCounts * 100 / code.length;
+
+
+    PeptideLine[] peptides = protein.getPeptideLines();
+
+    int[] indices = protein.getIndices();
+    int[] offsets = protein.getOffsets();
+
+    ArrayList<Integer> modIndexArray = new ArrayList<Integer>();
+    ArrayList<Integer> spectrumIndexArray = new ArrayList<Integer>();
+    for (int j = 0; j < indices.length; j++) {
+      int index = indices[j];
+      if (spectrumIndexArray.indexOf(Integer.valueOf(index)) >= 0)
+        continue;
+
+      SpectrumInfo spectrum = summary.getSpectrum(index);
+      PeptideInfo peptide = spectrum.getPeptide(offsets[j]);
+
+      boolean found = false;
+      for (int k = 0; k < peptides.length; k++)
+        if (index == peptides[k].getIndex() && peptide.getScore() == peptides[k].getScore()) {
+          spectrumIndexArray.add(Integer.valueOf(index));
+          found = true;
+          break;
+        }
+      if (!found)
+        continue;
+
+      int[] modIndices = peptide.getModIndices();
+      int[] modOffsets = peptide.getModOffsets();
+      if (modIndices.length > 0) {
+        for (int k = 0; k < modIndices.length; k++) {
+          int offset = modOffsets[k];
+          if (modIndexArray.indexOf(Integer.valueOf(offset)) == -1)
+            modIndexArray.add(Integer.valueOf(offset));
+        }
+      }
+    }
+    spectrumIndexArray.clear();
+
+    class PeptideComparator implements Comparator<PeptideLine> {
+      public int compare(PeptideLine l, PeptideLine r) {
+        int diff = l.getStart() - r.getStart();
+        if (diff == 0)
+        {
+          diff = l.getEnd() - r.getEnd();
+          if (diff == 0)
+            diff = l.getIndex() - r.getIndex();
+        }
+        return diff;
+      }
+    }
+
+    Comparator<PeptideLine> byPL = new PeptideComparator();
+    Arrays.sort(peptides, byPL);
+
+    model.addAttribute("protein", protein);
+    model.addAttribute("peptides", peptides);
+    model.addAttribute("code", code);
+    model.addAttribute("coveragePercentage", coveragePercentage);
+    model.addAttribute("COLSPERLINE", COLSPERLINE);
+    model.addAttribute("modeIndexArray", modIndexArray);
+    model.addAttribute("isDbond", isDBond);
+    model.addAttribute("summary", summary);
+    return "livesearch/protein";
+  }
+
 }

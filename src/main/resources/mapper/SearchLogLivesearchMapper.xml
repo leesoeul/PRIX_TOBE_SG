@@ -30,4 +30,8 @@
     FROM px_account
     WHERE id = #{userId}
   </select>
+
+  <select id="getMsFileByResult">
+    SELECT msfile FROM px_search_log WHERE result = #{result}
+  </select>
 </mapper>
