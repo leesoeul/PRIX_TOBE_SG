@@ -18,6 +18,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import java.lang.String;
 
@@ -455,15 +456,13 @@ public class LivesearchController {
     logger.info("Proteins: " + resultDto.getProteins());
     logger.info("Max Proteins: " + resultDto.getMaxProteins());
 
-    model.addAttribute("resultDto", resultDto);
-
     int num = 0;
     int maxProteins = resultDto.getMaxProteins();
     ProteinInfo[] proteins = resultDto.getProteins();
     boolean[][] coverageCodes = new boolean[maxProteins][];
-    if(proteins != null){   
+    if (proteins != null) {
       coverageCodes = new boolean[proteins.length][];
-    } 
+    }
     List<Double> coveragePercentages = new ArrayList<>();
     if (proteins != null) {
       for (int i = 0; i < proteins.length; i++) {
@@ -487,7 +486,7 @@ public class LivesearchController {
             coverageCounts++;
           }
         }
-        double coveragePercentage = code.length == 0 ? 0 : (double)coverageCounts * 100 / code.length;
+        double coveragePercentage = code.length == 0 ? 0 : (double) coverageCounts * 100 / code.length;
         coveragePercentages.add(coveragePercentage);
       }
     }
@@ -503,20 +502,29 @@ public class LivesearchController {
 
     model.addAttribute("notauthorized", notauthorized);
 
-    //proteininfo의 name이 url로 전달시 인코딩이 필요해서 추가
+    // proteininfo의 name이 url로 전달시 인코딩이 필요해서 추가
     ProteinInfo[] pis = resultDto.getProteins();
     List<String> urlInfoNames = new ArrayList<>();
-    if(pis != null){
-      for (ProteinInfo pi : pis) {
-        if(pi != null){
+    if (pis != null) {
+      List<ProteinInfo> nonNullProteins = Arrays.stream(pis)
+          .filter(pi -> pi != null)
+          .collect(Collectors.toList());
+      for (ProteinInfo pi : nonNullProteins) {
+        // null이 아닌 요소만 리스트에 추가
+
+        if (pi != null) {
           String name = pi.getName();
           name = URLEncoder.encode(name, StandardCharsets.UTF_8);
           urlInfoNames.add(name);
         }
       }
+      // nonNullProteins를 다시 배열로 변환하여 resultDto에 설정
+      resultDto.setProteins(nonNullProteins.toArray(new ProteinInfo[0]));
     }
 
     model.addAttribute("infoNames", urlInfoNames);
+    
+    model.addAttribute("resultDto", resultDto);
 
     return "livesearch/dbond_result";
   }
@@ -709,7 +717,9 @@ public class LivesearchController {
   /**
    * /protein
    * dbond result 홈페이지에서 peptide 클릭시 보이는 페이지
-   * @param paramsMap file : fileName(숫자), name : peptide.getName(), ms : minScore, db : isDbond
+   * 
+   * @param paramsMap file : fileName(숫자), name : peptide.getName(), ms :
+   *                  minScore, db : isDbond
    */
   @GetMapping("/protein")
   public String getProteinPage(Model model, HttpServletRequest request, @RequestParam Map<String, String> paramsMap) {
@@ -751,13 +761,12 @@ public class LivesearchController {
 
     boolean[] code = protein.getCoverageCode();
     int coverageCounts = 0;
-    for (boolean c : code){
-      if (c){
+    for (boolean c : code) {
+      if (c) {
         coverageCounts++;
       }
     }
-    double coveragePercentage = code.length == 0 ? 0 : (double)coverageCounts * 100 / code.length;
-
+    double coveragePercentage = code.length == 0 ? 0 : (double) coverageCounts * 100 / code.length;
 
     PeptideLine[] peptides = protein.getPeptideLines();
 
@@ -799,8 +808,7 @@ public class LivesearchController {
     class PeptideComparator implements Comparator<PeptideLine> {
       public int compare(PeptideLine l, PeptideLine r) {
         int diff = l.getStart() - r.getStart();
-        if (diff == 0)
-        {
+        if (diff == 0) {
           diff = l.getEnd() - r.getEnd();
           if (diff == 0)
             diff = l.getIndex() - r.getIndex();
