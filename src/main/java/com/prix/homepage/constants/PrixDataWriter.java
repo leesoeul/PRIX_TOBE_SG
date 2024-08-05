@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.prix.homepage.configuration.GlobalProperties;
 import com.prix.homepage.livesearch.dao.DataMapper;
 
 /**
@@ -18,10 +19,17 @@ import com.prix.homepage.livesearch.dao.DataMapper;
 @Service
 public class PrixDataWriter {
 	// static String logdir = "E:\\PRIX\\logs\\db_error_"; 이게 원래 진짜임 2024.05.27
-	String logdir = "C:/Users/KYH/Desktop/dbond/log/db_error_/";
+	// String logdir = "C:/Users/KYH/Desktop/dbond/log/db_error_/";
 
+	private final GlobalProperties globalProperties;
+	private String logdir;
 
-		private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	public PrixDataWriter(GlobalProperties globalProperties) {
+		this.globalProperties = globalProperties;
+		this.logdir = globalProperties.getPathErr();
+	}
 
 	@Autowired
 	private DataMapper dataMapper;
@@ -45,7 +53,7 @@ public class PrixDataWriter {
 		String date = "" + (cal.get(Calendar.YEAR));
 		if (cal.get(Calendar.MONTH) < 10)
 			date += "0";
-		date += cal.get(Calendar.MONTH)+1;
+		date += cal.get(Calendar.MONTH) + 1;
 		date += cal.get(Calendar.DAY_OF_MONTH);
 		PrintStream ps = new PrintStream(new FileOutputStream(logdir + date + ".log", true), false, "UTF-8");
 		String sql = "INSERT INTO px_data (type, name, content) values ('" + type + "', '" + name.replace("'", "\\\'")
@@ -72,11 +80,9 @@ public class PrixDataWriter {
 		String date = "" + (cal.get(Calendar.YEAR));
 		if (cal.get(Calendar.MONTH) < 10)
 			date += "0";
-		date += cal.get(Calendar.MONTH)+1;
+		date += cal.get(Calendar.MONTH) + 1;
 		date += cal.get(Calendar.DAY_OF_MONTH);
-		// PrintStream ps = new PrintStream(new FileOutputStream("E:\\PRIX\\logs\\db_error_" + date + ".log", true), false,
-		// 		"UTF-8");
-				PrintStream ps = new PrintStream(new FileOutputStream(logdir + date + ".log", true), false,
+		PrintStream ps = new PrintStream(new FileOutputStream(logdir + date + ".log", true), false,
 				"UTF-8");
 		String sql = "UPDATE px_data set content=? where id=" + id;
 

@@ -9,7 +9,6 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.StringWriter;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.prix.homepage.configuration.GlobalProperties;
 import com.prix.homepage.constants.PrixDataWriter;
 import com.prix.homepage.livesearch.dao.DataMapper;
 import com.prix.homepage.livesearch.dao.SearchLogMapper;
@@ -53,6 +53,8 @@ public class DbondProcessService {
 	private final SearchLogMapper searchLogMapper;
 	private final DatabaseMapper databaseMapper;
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	private final GlobalProperties globalProperties;
 
 	public DbondProcessDto process(String id,
 			HttpServletRequest request, Map<String, String> paramsMap, MultipartFile[] multipartFiles) throws IOException {
@@ -110,15 +112,14 @@ public class DbondProcessService {
 		if (request.getParameter("execute") == null) // 진행률 rate 갱신하기 위해 리로드 될때 else로 이동
 		{
 			// final String dir = "/home/PRIX/data/";원래 이거임
-			final String dir = "C:/Users/KYH/Desktop/dbond/log/";// 임시
 			// final String dbDir =
 			// "/usr/local/server/apache-tomcat-8.0.14/webapps/ROOT/config/";
-			final String dbDir = "C:/Users/KYH/Desktop/dbond/config";
 
-			// LocalDate date = LocalDate.now();
-			// String tempdate = String.valueOf(date);
-			// logger.info(tempdate);
-					
+			// 원래 이거로 해야할 것 같은데 너무 복잡하고 변경될 수도 있을 것 같아서 임시로 간단하게
+			// final String dbDir = PATH + "/usr/local/server/apache-tomcat-8.0.14/webapps/ROOT/config/";
+			final String dir = globalProperties.getPath() + "/home/PRIX/data/";
+			final String dbDir = globalProperties.getPath() + "/config/";
+
 			Date date = new Date();
 			String tempdate = String.valueOf(date.getTime());
 			logPath = dir + "modi_output_" + id + "_" + tempdate + ".log";
@@ -499,10 +500,16 @@ public class DbondProcessService {
 						// /usr/local/server/apache-tomcat-8.0.14/webapps/ROOT/WEB-INF/lib/engine.jar:/usr/local/server/apache-tomcat-8.0.14/webapps/ROOT/WEB-INF/lib/jdom.jar:/usr/local/server/apache-tomcat-8.0.14/webapps/ROOT/WEB-INF/lib/jrap_StAX_v5.2.jar:/usr/local/server/apache-tomcat-8.0.14/webapps/ROOT/WEB-INF/lib/xercesImpl.jar
 						// prix.Prix_", engine, xmlPath, logPath) };
 						// 윈도우용 클래스 경로 수정
+
+						// 원래 이 경로인데 복잡해서 밑에 임시 경로 사용
+						// String libPath = dir + "/usr/local/server/apache-tomcat-8.0.14/webapps/ROOT/WEB-INF/lib/";
+						String libPath = globalProperties.getPath() + "/lib/";
+
+						// JAR 파일 경로를 libPath를 이용해 동적으로 생성
 						String[] command = {
 							"cmd.exe", "/c", String.format(
-									"java -Xmx2000M -cp C:\\Users\\KYH\\Desktop\\dbond\\lib\\engine.jar;C:\\Users\\KYH\\Desktop\\dbond\\lib\\jdom.jar;C:\\Users\\KYH\\Desktop\\dbond\\lib\\jrap_StAX_v5.2.jar;C:\\Users\\KYH\\Desktop\\dbond\\lib\\xercesImpl.jar prix.Prix_%s %s > %s",
-									engine, xmlPath, logPath
+									"java -Xmx2000M -cp %sengine.jar;%sjdom.jar;%sjrap_StAX_v5.2.jar;%sxercesImpl.jar prix.Prix_%s %s > %s",
+									libPath, libPath, libPath, libPath, engine, xmlPath, logPath
 							)
 						};
 					
