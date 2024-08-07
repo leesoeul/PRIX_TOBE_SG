@@ -23,4 +23,6 @@ public interface SearchLogMapper {
   SearchLog getSearchLog(String index);
 
   String getUserNameById(String userId);
+
+  Integer getMsFileByResult(Integer result);
 }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.prix.homepage.livesearch.dao.SearchLogMapper">
+
+  <insert id="insert">
+    INSERT INTO px_search_log 
+    (user_id, title, date, msfile, db, result, engine) 
+    VALUES 
+    (#{userId}, #{title}, NOW(), #{msFile}, #{db}, #{result}, #{engine})
+  </insert>
+
+  <select id="findUserId">
+    SELECT user_id 
+    FROM px_search_log 
+    WHERE user_id = #{userId} 
+      AND result = #{result}
+  </select>
+
+  <select id="getSearchLog" resultType="com.prix.homepage.livesearch.pojo.SearchLog">
+    SELECT title, user_id, date
+    FROM px_search_log
+    WHERE actg = #{index}
+  </select>
+
+  <select id="getUserNameById" resultType="String">
+    SELECT name
+    FROM px_account
+    WHERE id = #{userId}
+  </select>
+
+  <select id="getMsFileByResult">
+    SELECT msfile FROM px_search_log WHERE result = #{result}
+  </select>
+</mapper>

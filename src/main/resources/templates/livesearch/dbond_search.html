@@ -149,138 +149,68 @@
           </tr>
         </table></td>
       </tr>
-      <tr>
-        <form
-          name="search"
-          method="post"
-          th:action="@{/dbond/search}"
-          enctype="multipart/form-data"
-        >
-          <input type="hidden" name="engine" value="dbond" />
-          <td valign="top" style="padding: 10px">
-            <table
-              width="100%"
-              border="0"
-              cellpadding="0"
-              cellspacing="0"
-              id="gray"
-              style="
-                border-bottom: #d9dddc 1px solid;
-                border-top: #d9dddc 2px solid;
-              "
-            >
-              <tr>
-                <th>
-                  <div align="right">
-                    <a href="/help#NAME" class="thmenu">User Name</a>
-                  </div>
-                </th>
-                <td colspan="3">
-                  <input
-                    name="user"
-                    type="text"
-                    size="60"
-                    th:value="${username}"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <th align="right">
-                  <div align="right" />
-                  <a href="/help#TIT" class="thmenu" />Search Title
-                </th>
-                <td colspan="3">
-                  <input name="title" type="text" size="60" />
-                </td>
-              </tr>
-              <tr>
-                <th>
-                  <div align="right">
-                    <a href="/help#DATA_FORMAT" class="thmenu">Data Format</a>
-                  </div>
-                </th>
-                <td>
-                  <select name="ms_format">
-                    <option value="">Select -------------</option>
-                    <option
-                      value="mgf"
-                      th:selected="${userSetting.dataFormat == 'mgf'}"
-                    >
-                      Mascot (*.mgf)
-                    </option>
-                    <option
-                      value="dta"
-                      th:selected="${userSetting.dataFormat == 'dta'}"
-                    >
-                      Sequest (*.dta)
-                    </option>
-                    <option
-                      value="pkl"
-                      th:selected="${userSetting.dataFormat == 'pkl'}"
-                    >
-                      Micromass (*.pkl)
-                    </option>
-                  </select>
-                </td>
-                <th>
-                  <div align="right">
-                    <a href="/help#INST" class="thmenu">Instrument</a>
-                  </div>
-                </th>
-                <td>
-                  <select name="ms_instrument">
-                    <option
-                      value=""
-                      th:selected="${userSetting.instrument == ''}"
-                    >
-                      Select ---
-                    </option>
-                    <option
-                      value="ESI-ION-TRAP"
-                      th:selected="${userSetting.instrument == 'ESI-ION-TRAP'}"
-                    >
-                      ESI-TRAP
-                    </option>
-                    <option
-                      value="QTOF"
-                      th:selected="${userSetting.instrument == 'QTOF'}"
-                    >
-                      HCD/QTOF
-                    </option>
-                  </select>
-                </td>
-              </tr>
-              <tr>
-                <th>
-                  <div align="right">
-                    <a href="/help#MSMS" class="thmenu">MS/MS Data</a>
-                  </div>
-                </th>
-                <td colspan="3">
-                  <div th:if="${msIndex == null}">
-                    <input name="ms_file" type="file" size="45" /> &nbsp; File
-                    size limit : 500MB
-                  </div>
-                </td>
-              </tr>
+    </table>
+    </td>
+  </tr>
+  <tr>
+		<form name="search" method="post"  th:action="@{/dbond/process}"  enctype="multipart/form-data">
+		<input type="hidden" name="engine" value="dbond"/>
+				<td valign="top" style="padding:10px;"><table width="100%" border="0" cellpadding="0" cellspacing="0" id="gray" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid; ">
+				<tr>
+						<th><div align="right"><a href="/help#NAME" class="thmenu">User Name</a> </div></th>
+						<td colspan="3"><input name="user" type="text"  size="60" th:value="${username}" /></td>
+					</tr>
+					<tr>
+						<th align="right"><div align="right"><a href="/help#TIT" class="thmenu">Search  Title </th>
+						<td colspan="3"><input name="title" type="text" size="60" /></td>
+					</tr>
+					<tr>
+					<th><div align="right"><a href="/help#DATA_FORMAT" class="thmenu">Data Format</a> </div></th>
+					<td>
 
-              <tr th:if="${msIndex == null}">
-                <th>
-                  <div align="right">
-                    <a href="/help#DB" class="thmenu">Database</a>
-                  </div>
-                </th>
-                <td colspan="3">
-                  <select name="database">
-                    <option value="">Select ------------------------</option>
-                    <option
-                      th:each="database : ${listDatabase}"
-                      th:value="${database.id}"
-                      th:text="${database.name}"
-                    /></select
-                  >&nbsp;&nbsp;
-                </td>
-              </tr>
+						<select name="ms_format">
+							<option value="">Select -------------</option>
+							<option value="mgf" th:selected="${userSetting.dataFormat == 'mgf'}">Mascot (*.mgf)</option>
+							<option value="dta" th:selected="${userSetting.dataFormat == 'dta'}">Sequest (*.dta)</option>
+							<option value="pkl" th:selected="${userSetting.dataFormat == 'pkl'}">Micromass (*.pkl)</option>
+						</select>
+
+					</td>
+						<th><div align="right"><a href="/help#INST" class="thmenu">Instrument</a> </div></th>
+						<td>
+
+						<select name="ms_instrument">
+							<option value="" th:selected="${userSetting.instrument == ''}">Select ---</option>
+							<option value="ESI-ION-TRAP" th:selected="${userSetting.instrument == 'ESI-ION-TRAP'}">ESI-TRAP</option>
+							<option value="QTOF" th:selected="${userSetting.instrument == 'QTOF'}">HCD/QTOF</option>
+						</select>
+
+						</td>
+					</tr>
+					<tr>
+						<th><div align="right"><a href="/help#MSMS" class="thmenu">MS/MS Data</a> </div></th>
+						<td colspan="3">
+							<div th:if="${msIndex == null}">
+								<input name="ms_file" type="file" size="45" /> &nbsp; File size limit : 500MB
+							</div>
+						</td>
+					</tr>
+
+					<tr th:if="${msIndex == null}">
+						<th>
+								<div align="right">
+										<a href="/help#DB" class="thmenu">Database</a>
+								</div>
+						</th>
+						<td colspan="3">
+								<select name="database">
+										<option value="">Select ------------------------</option>
+										<option th:each="database : ${listDatabase}"
+										th:value="${database.id}" 
+										th:text="${database.name}" />
+								</select>&nbsp;&nbsp;
+						</td>
+					</tr>
 
               <tr>
                 <th rowspan="1">

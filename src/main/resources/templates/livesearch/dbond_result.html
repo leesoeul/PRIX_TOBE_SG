@@ -207,22 +207,22 @@ function doSearch() {
 			<td>: <span th:text="${resultDto.summary.minTerminiNumber}"></span></td>
 		</tr>
 	
-	<tr th:if="${resultDto != null and resultDto.mods != null}">
-    <td><b>Variable Modifications</b></td>
-    <td>
-        <span th:if="${resultDto.mods.length >= 10}">
-            <a th:href="@{/modification(file=${resultDto.fileName}, type=0)}" target="_blank">
-                <span th:text="${resultDto.mods.length}"></span>
-            </a>
-        </span>
-        <span th:if="${resultDto.mods.length < 10}">
-            <span th:each="mod, iterStat : ${resultDto.mods}">
-                <span th:if="${iterStat.index > 0}">, </span>
-                <span th:text="${mod.type}"></span> (<span th:text="${mod.position}"></span>)
-            </span>
-        </span>
-    </td>
-	</tr>
+		<tr>
+			<td><b>Variable Modifications</b></td>
+			<td th:if="${resultDto != null and resultDto.mods != null and resultDto.mods.length > 0} ">
+					<span th:if="${resultDto.mods.length ge 10}">
+							<a th:href="@{/modification(file=${resultDto.fileName}, type=0)}" target="_blank">
+									<span th:text="${resultDto.mods.length}"></span>
+							</a>
+					</span>
+					<span th:if="${resultDto.mods.length lt 10}">
+            <span th:each="modification : ${resultDto.mods}">
+							<span th:text="${modification.type}"></span> (<span th:text="${modification.position}"></span>)
+						</span>
+					</span>
+			</td>
+`		</tr>
+
 	<!-- Conditional block for isDBond -->
 	<tr th:if="${resultDto.isDBond}">
 		<td>&nbsp;</td>
@@ -239,9 +239,8 @@ function doSearch() {
 			</span>
 		
 			<span th:if="${resultDto?.summary?.getFixedModifications() != null and #lists.size(resultDto.summary.getFixedModifications()) < 10}">
-					<span th:each="mod, iterStat : ${resultDto.summary.fixedModifications}">
-							<span th:if="${iterStat.index > 0}">, </span>
-							<span th:text="${mod.type}"></span> (<span th:text="${mod.position}"></span>)
+					<span th:each="modification : ${resultDto.summary.fixedModifications}">
+							<span th:text="${modification.type}"></span> (<span th:text="${modification.position}"></span>)
 					</span>
 			</span>
 	</td>
@@ -311,7 +310,7 @@ function doSearch() {
 <tr th:if="${resultDto != null and resultDto.summary != null and resultDto.summary.targetDecoyed}">
   <td>&nbsp;</td>
   <td>: 
-    <font color="red">&nbsp;No. of identifications at FDR estimated by Target-Decoy</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( <a href="/help.jsp#TARDEC" class="under">about FDR</a> )</font>
+    <font color="red">&nbsp;No. of identifications at FDR estimated by Target-Decoy</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( <a href="/help#TARDEC" class="under">about FDR</a> )</font>
     <table border="0" align="left" cellpadding="0" cellspacing="0" style="BORDER-BOTTOM: #d9dddc 1px solid; BORDER-TOP: #d9dddc 2px solid;">
       <tr>
         <td class="grayTD" align="right" bgcolor="#f3f3f3">FDR (%)</td>
@@ -409,20 +408,22 @@ function doSearch() {
 		<th align="left"><font size="2">Protein ID</font></th>
 		<!--th align="left"><font size="2">Description</font></th-->
 	</tr>
-<!-- 원래 코드 780줄부터 813줄까지 -->
-<tr th:each="info, iterStat : ${resultDto.proteins}" th:if="${maxProteins <= 0 || iterStat.index < maxProteins}">
-<td>
-		<input type="checkbox" class="CHECK" name="protein_list"
-					 th:value="${info.name}" th:onclick="'checkMutual('protein', this);'"/>
-</td>
-<td>
-		<a th:href="'#protein' + ${iterStat.index}"><span th:text="${info.name}"></span></a>
-</td>
-</tr>
-<tr th:if="${info != null && info.peptideLines != null && info.peptideLines.length > 0}">
-<td></td>
-<td><span th:text="${info.description}"></span></td>
-</tr>
+	<th:block th:if="${resultDto != null and resultDto.proteins != null}">
+		<tr th:each="info, iterStat : ${resultDto.proteins}" th:if="${info != null && (resultDto.maxProteins le 0 || iterStat.index lt resultDto.maxProteins)}">
+			<td>
+					<input type="checkbox" class="CHECK" name="protein_list"
+								th:value="${info?.getName()}" onclick="checkMutual('protein', this);"/>
+			</td>
+			<td>
+					<a th:href="'#protein' + ${iterStat.index}"><span th:text="${info?.name}"></span></a>
+			</td>
+			<tr th:if="${info != null && info.peptideLines != null && info.peptideLines.length > 0}">
+				<td></td>
+				<td><span th:text="${info.description}"></span></td>
+			</tr>
+		</tr>
+	</th:block>
+
 
 </table>
 <!--/form-->
@@ -448,93 +449,95 @@ function doSearch() {
 </table>
 <!--form name="peptide_hits"-->
 <table border="0">
-<!-- 원래코드 839줄부터 960줄까지 -->
-<th:block th:each="info, iterStat : ${resultDto.proteins}"
-th:if="${maxProteins <= 0 || iterStat.index < maxProteins}"
-th:unless="${info == null || info.peptideLines == null || info.peptideLines.length == 0}">
-	<tr>
-	<td><a th:href="'#protein' + ${iterStat.index}"><input type="checkbox" class="CHECK" name="peptide_list" th:value="${info.name}" onclick="checkMutual('peptide', this);"/></a>&nbsp;</td>
-	<td th:text="${iterStat.index + 1} + '.'">&nbsp;&nbsp;</td>
-	<td colspan="3"><a th:href="'protein.jsp?file=' + ${resultDto.fileName} + '&name=' + ${info.name} + '&ms=' + ${resultDto.minScore} + '&db=' + ${resultDto.isDBond}" target="_blank" th:text="${info.name}"></a></td>
-	</tr>
-	<tr>
-	<td></td>
-	<td></td>
-	<td th:text="${info.description}"></td>
-	<td></td>
-	<td></td>
-	</tr>
-	<tr>
-	<td></td>
-	<td></td>
-	<td>
-			&nbsp;&nbsp;<font color="red">Peptides matched:</font> <span th:text="${info.numberOfMatchedPeptides}"></span>&nbsp;&nbsp;
-			&nbsp;&nbsp;<font color="red">PSMs matched:</font> <span th:text="${info.peptideLines.length}"></span>&nbsp;&nbsp;
-			&nbsp;&nbsp;<font color="red">Sequence coverage:</font>
-			<span th:text="${info.coverageCode.length == 0 ? 0 : String.format('%.1f', (double) info.coverage * 100 / info.coverageCode.length)}"></span>
-	</td>
-	<td></td>
-	<td></td>
-	</tr>
-	<tr>
-	<td></td>
-	<td></td>
-	<td colspan="3">
-			&nbsp;
-			<table border="0">
-					<tr>
-							<th><font size="2">&nbsp;Index&nbsp;</font></th>
-							<th><font size="2">&nbsp;Observed&nbsp;</font></th>
-							<th><font size="2">&nbsp;Calc MW&nbsp;</font></th>
-							<th><font size="2">&nbsp;DeltaM (Dalton)&nbsp;</font></th>
-							<th><font size="2">&nbsp;<span th:text="${resultDto.isDBond ? 'Score' : 'Probability'}"></span>&nbsp;</font></th>
-							<th><font size="2">&nbsp;Start-End&nbsp;</font></th>
-							<th align="left"><font size="2">Peptide&nbsp;</font></th>
-							<th align="left"><font size="2">Modified</font></th>
-					</tr>
-					<th:block th:each="peptide, iterPeptide : ${info.peptideLines}">
-						<tr>
-							<td align="center">&nbsp;<span th:if="${resultDto != null and resultDto.summary != null}" th:text="${summary.getSpectrum(peptide.index).id}"></span>&nbsp;</td>
-							<td align="right">&nbsp;<span th:text="${peptide.mass}"></span>(<span th:text="${peptide.charge}">+</span>)&nbsp;</td>
-							<td align="center">&nbsp;<span th:text="${peptide.mWCalc}"></span>&nbsp;</td>
-							<td align="center">&nbsp;<span th:text="${peptide.mWDelta}"></span>&nbsp;</td>
-							<td align="center">&nbsp;<span th:text="${peptide.score}"></span>&nbsp;</td>
-							<td align="center">&nbsp;<span th:text="${peptide.start}"></span>-<span th:text="${peptide.end}"></span>&nbsp;</td>
-							<td align="left">&nbsp;<span th:text="${peptide.peptide}"></span>&nbsp;</td>
-							<td>&nbsp;<span th:text="${peptide.modification}"></span>&nbsp;</td>
-						</tr>
-						<tr th:if="${resultDto.isDBond && peptide.second != null}">
-								<td align="center">&nbsp;&nbsp;</td>
-								<td align="center">&nbsp;&nbsp;</td>
-								<td align="center">&nbsp;&nbsp;</td>
-								<td align="center">&nbsp;&nbsp;</td>
-								<td align="center">&nbsp;&nbsp;</td>
-								<td align="center">&nbsp;<span th:text="${peptide.second.start}"></span>-<span th:text="${peptide.second.end}"></span>&nbsp;</td>
-								<td align="left">&nbsp;<span th:text="${peptide.second.peptide}"></span>&nbsp;</td>
-								<td>&nbsp;<span th:text="${peptide.second.modification}"></span>&nbsp;</td>
-						</tr>
-					</th:block>
-
-			</table>
-			<br>
-	</td>
-	</tr>
-</th:block>
-
-
+  <th:block th:each="info, iterStat : ${resultDto.proteins}" th:if="${infoNames.size() > 0}">
+  	<th:block th:if="${maxProteins > 0 && iterStat.index >= maxProteins}">
+      <th:block th:break="true"></th:block>
+      	</th:block>
+        	<th:block th:if="${info != null && info.getPeptideLines() != null && info.getPeptideLines().length > 0}">
+            <tr>
+                <td><a th:name="'protein' + ${iterStat.index}"><input type="checkbox" class="CHECK" name="peptide_list" th:value="${info.name}" onclick="checkMutual('peptide', this);"/></a>&nbsp;</td>
+                <td><span th:text="${iterStat.index + 1}">1</span>.&nbsp;&nbsp;</td>
+                <td colspan="3">
+									<a th:href="@{'/protein?file=' + ${resultDto.fileName} + '&name=' + ${infoNames[iterStat.index]} + '&ms=' + ${resultDto.minScore} + '&db=' + ${resultDto.isDBond}}"
+									target="_blank" 
+									th:text="${info.name}">Protein Name</a>
+								</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td th:text="${info.description}">Protein Description</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>&nbsp;&nbsp;<font color="red">Peptides matched:</font> <span th:text="${info.numberOfMatchedPeptides}">0</span>&nbsp;&nbsp;
+                    &nbsp;&nbsp;<font color="red">PSMs matched:</font> <span th:text="${info.peptideLines.length}">0</span>&nbsp;&nbsp;
+										&nbsp;&nbsp;<font color="red">Sequence coverage:</font> <span th:text="${coveragePercentages[iterStat.index]}">0</span>%</td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td colspan="3">&nbsp;
+                    <table border="0">
+                        <tr>
+                            <th><font size="2">&nbsp;Index&nbsp;</font></th>
+                            <th><font size="2">&nbsp;Observed&nbsp;</font></th>
+                            <th><font size="2">&nbsp;Calc MW&nbsp;</font></th>
+                            <th><font size="2">&nbsp;DeltaM&nbsp;</font></th>
+                            <th><font size="2">&nbsp;
+                                <th:block th:if="${resultDto.isDBond}">Score</th:block>
+                                <th:block th:if="${!resultDto.isDBond}">Probability</th:block>
+                                &nbsp;</font></th>
+                            <th><font size="2">&nbsp;Start-End&nbsp;</font></th>
+                            <th align="left"><font size="2">Peptide&nbsp;</font></th>
+                            <th align="left"><font size="2">Modified</font></th>
+                        </tr>
+                        <th:block th:each="peptide : ${info.peptideLines}">
+                            <tr>
+                                <td align="center">&nbsp;<span th:text="${resultDto.summary.getSpectrum(peptide.getIndex())}">0</span>&nbsp;</td>
+                                <td align="right">&nbsp;<span th:text="${peptide.mass}">0</span>(<span th:text="${peptide.charge}">0</span>+)&nbsp;</td>
+                                <td align="center">&nbsp;<span th:text="${peptide.getMWCalc()}">0</span>&nbsp;</td>
+                                <td align="center">&nbsp;<span th:text="${peptide.getMWDelta()}">0</span>&nbsp;</td>
+                                <td align="center">&nbsp;<span th:text="${peptide.score}">0</span>&nbsp;</td>
+                                <td align="center">&nbsp;<span th:text="${peptide.start}">0</span>-<span th:text="${peptide.end}">0</span>&nbsp;</td>
+                                <td align="left"><span th:utext="${peptide.peptide}">Peptide</span>&nbsp;</td>
+                                <td><span th:text="${peptide.modification}">Modified</span></td>
+                            </tr>
+                            <th:block th:if="${resultDto.isDBond && peptide.second != null}">
+                                <tr>
+                                    <td align="center">&nbsp;&nbsp;</td>
+                                    <td align="center">&nbsp;&nbsp;</td>
+                                    <td align="center">&nbsp;&nbsp;</td>
+                                    <td align="center">&nbsp;&nbsp;</td>
+                                    <td align="center">&nbsp;&nbsp;</td>
+                                    <td align="center">&nbsp;<span th:text="${peptide.second.start}">0</span>-<span th:text="${peptide.second.end}">0</span>&nbsp;</td>
+                                    <td align="left"><span th:utext="${peptide.second.peptide}">Peptide</span>&nbsp;</td>
+                                    <td><span th:text="${peptide.second.modification}">Modified</span></td>
+                                </tr>
+                            </th:block>
+                        </th:block>
+                    </table><br>
+                </td>
+            </tr>
+        </th:block>
+    </th:block>
 </table>
 <!--/form-->
-<!-- 원래코드 964줄부터 1054줄까지 -->
-<th:block th:if="${resultDto != null and resultDto.summary != null and resultDto.summary.MODMapRun}">
+<th:block th:if="${resultDto != null and resultDto.summary != null and resultDto.summary.isMODMapRun()}">
 	<table border="0" width="100%">
 		<tr>
 				<td>
-						<font size="3"><b><a name="PTMAP">MODmap</a></b></font><font color="red">&nbsp;&nbsp;&nbsp;&nbsp;PTM Frequency Matrix</font>&nbsp;&nbsp;&nbsp;&nbsp;( <a href="/help.jsp#MODMAP" class="under">about matrix</a> )
+						<font size="3"><b><a name="PTMAP">MODmap</a></b></font><font color="red">&nbsp;&nbsp;&nbsp;&nbsp;PTM Frequency Matrix</font>&nbsp;&nbsp;&nbsp;&nbsp;( <a href="/help#MODMAP" class="under">about matrix</a> )
 				</td>
 		</tr>
 		<tr>
 				<td>
-						<a th:href="'modmap.jsp?path=' + ${#urls.urlEncode(resultDto.fileName)} + '&name=' + ${resultDto.summary.MODMapPath}">Download results</a>
+					<a th:href="@{/modmap(path=${resultDto.fileName}, name=${resultDto.summary.MODMapPath})}">Download results</a>
 				</td>
 		</tr>
 	</table>
@@ -565,14 +568,13 @@ th:unless="${info == null || info.peptideLines == null || info.peptideLines.leng
 		</tr>
 		<tr th:if="${resultDto != null and resultDto.summary != null}" th:each="i : ${#numbers.sequence(0, resultDto.summary.modMapCount - 1)}">
 				<td th:each="j : ${resultDto.summary.getModMap(i)}" align="center">
-						<span th:text="${j == 0 ? 'b(' + j + ')' : (j > 1 ? '<font color=red><b>' + j + '</b></font>' : j)}"></span>
+						<span th:utext="${j == 0 ? 'b(' + j + ')' : (j > 1 ? '<font color=red><b>' + j + '</b></font>' : j)}"></span>
 				</td>
 		</tr>
 	</table>
 </th:block>
 
 <br>
-<!-- 1055줄부터 1093줄까지 -->
 <div th:if="${!resultDto.isDBond}">
 	<br>
 	<a name="in_depth">&nbsp;</a>

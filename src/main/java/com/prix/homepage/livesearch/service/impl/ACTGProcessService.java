@@ -209,10 +209,10 @@ public class ACTGProcessService {
                       writer.write(is.read());
                     }
                   }
-                  logger.info("peptideFile in actg process service done");
+                  logger.info("mutationFile in actg process service done");
 
                 } catch (Exception e) {
-                  logger.warn("error in writing peptideFile:{}", e.getMessage());
+                  logger.warn("error in writing mutationFile:{}", e.getMessage());
                 }
               }
               break;
@@ -336,6 +336,7 @@ public class ACTGProcessService {
         String prixIndex = processPath.replace("process_" + id + "_", "");
         prixIndex = prixIndex.replace(logDir, "");
         prixIndex = prixIndex.replace(".proc", "");
+        Integer prixIndexInt = Integer.parseInt(prixIndex);
 
         // "insert into px_search_log (user_id, title, date, msfile, db, result, actg,
         // engine) values
@@ -343,7 +344,7 @@ public class ACTGProcessService {
         // 0,'"+prixIndex+"' ,'ACTG')");
         // date는 mybatis mapper xml에서 처리
         searchLogMapper.insert(
-            Integer.parseInt(id), title.replace("'", "\\'"), 0, 0, 0, "ACTG");
+            Integer.parseInt(id), title.replace("'", "\\'"), 0, 0, prixIndexInt, "ACTG");
 
         ACTGProcessDto processDto = ACTGProcessDto.builder().failed(failed).finished(finished).output(output)
             .processName(processName).prixIndex(prixIndex).rate(Integer.parseInt(rate)).title(title).build();

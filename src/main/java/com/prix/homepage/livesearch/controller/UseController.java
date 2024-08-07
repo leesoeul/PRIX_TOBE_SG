@@ -26,31 +26,31 @@ public class UseController {
 
 
 
-    @GetMapping("helpOverlay")
+    @GetMapping("support/html/helpOverlay")
     public String helpOverlay() {
         return "livesearch/use/helpOverlay";
     }
-    @GetMapping("HotTableTemplate")
+    @GetMapping("support/html/HotTableTemplate")
     public String HotTableTemplate() {
         return "livesearch/use/HotTableTemplate";
     }
-    @GetMapping("HotTableTemplateBottom")
+    @GetMapping("support/html/HotTableTemplateBottom")
     public String HotTableTemplateBottom() {
         return "livesearch/use/HotTableTemplateBottom";
     }
-    @GetMapping("ModalTemplate")
+    @GetMapping("support/html/ModalTemplate")
     public String ModalTemplate() {
         return "livesearch/use/ModalTemplate";
     }
-    @GetMapping("ModalTemplateConfirmation")
+    @GetMapping("support/html/ModalTemplateConfirmation")
     public String ModalTemplateConfirmation() {
         return "livesearch/use/ModalTemplateConfirmation";
     }
-    @GetMapping("ModalTemplateLoading")
+    @GetMapping("support/html/ModalTemplateLoading")
     public String ModalTemplateLoading() {
-        return "livesearch/use/ModalTemplateLoading";
+        return "support/html/livesearch/use/ModalTemplateLoading";
     }
-    @GetMapping("ModalTemplateNew")
+    @GetMapping("support/html/ModalTemplateNew")
     public String ModalTemplateNew() {
         return "livesearch/use/ModalTemplateNew";
     }

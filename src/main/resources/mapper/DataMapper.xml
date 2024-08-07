@@ -8,9 +8,9 @@
     SELECT name FROM px_data WHERE id = #{id}
   </select>
 
-  <insert id="insert" useGeneratedKeys="true" keyProperty="id">
-    INSERT INTO px_data (type, name, content)
-    VALUES (#{type}, #{name}, #{content})
+  <insert id="insert">
+    INSERT INTO px_data (type, name, content) 
+    VALUES (#{type}, #{name}, #{content, jdbcType=BLOB})
   </insert>
   
   <select id="getMaxId">
