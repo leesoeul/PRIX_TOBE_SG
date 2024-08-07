@@ -613,7 +613,7 @@ myApp.controller(
     $scope.openModalLoading = function () {
       $uibModal
         .open({
-          templateUrl: "ModalTemplateLoading",
+          templateUrl: "support/html/ModalTemplateLoading",
           scope: $scope,
           controller: function ($scope, $uibModalInstance, $localStorage) {
             $scope.closeModalLoading = function () {
@@ -633,7 +633,7 @@ myApp.controller(
     $scope.openModalConfirmation = function (message, topSpectrum = true) {
       $uibModal
         .open({
-          templateUrl: "ModalTemplateConfirmation",
+          templateUrl: "support/html/ModalTemplateConfirmation",
           scope: $scope,
           controller: function ($scope, $uibModalInstance, $localStorage) {
             $scope.confMessage = message;
@@ -661,7 +661,7 @@ myApp.controller(
     $scope.openHelp = function () {
       $uibModal
         .open({
-          templateUrl: "helpOverlay",
+          templateUrl: "support/html/helpOverlay",
           scope: $scope,
           controller: function ($scope, $uibModalInstance, $localStorage) {
             $scope.cancel = function () {
@@ -679,7 +679,7 @@ myApp.controller(
     $scope.openModal = function () {
       $uibModal
         .open({
-          templateUrl: "ModalTemplateNew",
+          templateUrl: "support/html/ModalTemplateNew",
           scope: $scope,
           controller: function ($scope, $uibModalInstance, $localStorage) {
             // add the mod to potential mods
@@ -1109,7 +1109,7 @@ myApp.controller("HotCtrlBottom", function ($scope) {
 //controller for generating data paste dropdown and handsonTable
 myApp.directive("handsontabletest", function () {
   return {
-    templateUrl: "HotTableTemplate" /*,
+    templateUrl: "support/html/HotTableTemplate" /*,
     controller: function($scope, $element, $attrs, $transclude, $log) {
 
       $scope.afterInit = function() {
