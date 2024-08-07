@@ -9,21 +9,20 @@
     }
     function timeOut() {
         clearTimeout(timerID);
-        let logPath = /*[[ ${#URLEncoder.encode(processDto.logPath, 'UTF-8')} ?: '']*/ '';
-        let xmlPath = /*[[ ${#URLEncoder.encode(processDto.xmlPath, 'UTF-8')} ?: '']*/ '';
-        let msPath = /*[[ ${#URLEncoder.encode(processDto.msPath, 'UTF-8')} ?: '']*/ '';
-        let dbPath = /*[[ ${#URLEncoder.encode(processDto.dbPath, 'UTF-8')} ?: '']*/ '';
-        let decoyPath = /*[[ ${#URLEncoder.encode(processDto.decoyPath, 'UTF-8')} ?: '']*/ '';
-        let multiPath = /*[[ ${#URLEncoder.encode(processDto.multiPath, 'UTF-8')} ?: '']*/ '';
-        let engine = /*[[ ${processDto.engine} ?: '']*/ '';
-        let url = /*[[ @{/process(execute='no', log=${logPath}, xml=${xmlPath}, ms=${msPath}, db=${dbPath}, dec=${decoyPath}, title=${processDto.title}, mi=${processDto.msIndex}, di=${processDto.dbIndex}, mul=${multiPath}, engine=${engine})} ]]*/ '';
+        let logPath = /*[[${processDto.logPath} ?: '']*/ '';
+        let xmlPath = /*[[${processDto.xmlPath} ?: '']*/ '';
+        let msPath = /*[[${processDto.msPath} ?: '']*/ '';
+        let dbPath = /*[[${processDto.dbPath} ?: '']*/ '';
+        let decoyPath = /*[[${processDto.decoyPath} ?: '']*/ '';
+        let multiPath = /*[[${processDto.multiPath} ?: '']*/ '';
+        let engine = /*[[${processDto.engine} ?: '']*/ '';
+        let url = /*[[@{/dbond/process(execute='no', log=${processDto.logPath}, xml=${processDto.xmlPath}, ms=${processDto.msPath}, db=${dbPath}, dec=${decoyPath}, title=${processDto.title}, mi=${processDto.msIndex}, di=${processDto.dbIndex}, mul=${processDto.multiPath}, engine=${processDto.engine})}]]*/ '';
         window.location = url;
     }
     /*]]>*/
 </script>
-<!-- 이게 진짠데 일단 processservice 부분이 오류가 있어서 임시로 아래 <body>만 사용
-	<body th:onload="${processDto.finished or processDto.failed} ? '' : 'initTimer();'"> -->
-<body>
+
+<body th:onload="${processDto.finished or processDto.failed} ? '' : 'initTimer();'"> 
 <table width="95%" border="0" align="center" cellpadding="1">
     <tr>
         <td>
@@ -37,7 +36,7 @@
     <tr>
         <td th:if="${processDto.output != null and processDto.output != ''}">
             <font class="dark">
-                <pre th:text="${processDto.output}"></pre>
+                <pre th:utext="${processDto.output}"></pre>
             </font>
         </td>
     </tr>

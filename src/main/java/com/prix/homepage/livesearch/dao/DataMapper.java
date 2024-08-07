@@ -18,7 +18,7 @@ public interface DataMapper {
 
   void updateContent(Integer id, byte[] content);
 
-  byte[] findContentById(Integer id);
+  Byte[] findContentById(Integer id);
 
   Data getNameContentById(Integer id);
 }

@@ -1,11 +1,9 @@
 package com.prix.homepage.livesearch.service.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -19,6 +17,7 @@ import com.prix.homepage.constants.ProteinInfo;
 import com.prix.homepage.constants.ProteinSummary;
 import com.prix.homepage.livesearch.dao.DataMapper;
 import com.prix.homepage.livesearch.dao.SearchLogMapper;
+import com.prix.homepage.livesearch.pojo.Data;
 import com.prix.homepage.livesearch.pojo.DbondResultDto;
 import com.prix.homepage.user.pojo.Account;
 import com.prix.homepage.user.service.AccountService;
@@ -42,13 +41,15 @@ public class DbondResultService {
 	public DbondResultDto result(String id,
 			HttpServletRequest request, HttpSession session) throws FileNotFoundException {
 
-		if(id == null) id = "4";
+		if (id == null)
+			id = "4";
 		Integer idInt = Integer.parseInt(id);
 
 		String fileName = request.getParameter("file");
-		if (fileName == null)
-		//fileName = "D:\\Work\\PRIX\\test.prix";
-		fileName = "45";
+		if (fileName == null) {
+			// fileName = "D:\\Work\\PRIX\\test.prix";
+			fileName = "45";
+		}
 
 		ProteinSummary summary = new ProteinSummary();
 
@@ -67,29 +68,22 @@ public class DbondResultService {
 			level = 0;
 		Integer userId = searchLogMapper.findUserId(idInt, fileName);
 
-		//이후 result.html에서 사용할 것들
+		// 이후 result.html에서 사용할 것들
 		// read prix result file
-		byte[] pwd = dataMapper.findContentById(idInt);
-		logger.info("pwd:{}", pwd);
-		String pwdStr = new String(pwd, StandardCharsets.UTF_8);
-		if (pwd != null && pwd.length > 0) {
-			File file = new File(pwdStr);
-			InputStream is = new FileInputStream(file);
+		Integer fileNameInt = Integer.parseInt(fileName);
+		Data dataFile = dataMapper.getNameContentById(fileNameInt);
+		if (dataFile != null) {
+			InputStream is = new ByteArrayInputStream(dataFile.getContent());
 			InputStreamReader reader = new InputStreamReader(is);
 			summary.read(reader);
 		}
 
-		// read search database file
-		if (summary != null && summary.getDatabasePath() != null) {
-			Integer summaryId = Integer.parseInt(summary.getDatabasePath());
-			pwd = dataMapper.findContentById(summaryId);
-			pwdStr = new String(pwd, StandardCharsets.UTF_8);
-			if (pwd != null && pwd.length > 0) {
-				File file = new File(pwdStr);
-				InputStream is = new FileInputStream(file);
-				summary.readProtein(is);
-				databasePath = pwdStr;
-			}
+		Integer dbPath = Integer.parseInt(summary.getDatabasePath());
+		Data datatmp = dataMapper.getNameContentById(dbPath);
+		if (datatmp != null) {
+			InputStream is = new ByteArrayInputStream(datatmp.getContent());
+			summary.readProtein(is);
+			databasePath = datatmp.getName();
 		}
 
 		boolean isDBond = false;
@@ -176,55 +170,61 @@ public class DbondResultService {
 class PepMatchComparator implements Comparator<ProteinInfo> {
 	public int compare(ProteinInfo l, ProteinInfo r) {
 		int diff;
-		if(l == null && r == null) return 0;
+		if (l == null && r == null)
+			return 0;
 		else if (l == null)
 			return 1;
 		else if (r == null)
 			return -1;
-		else
-		{
+		else {
 			diff = r.getNumberOfMatchedPeptides() - l.getNumberOfMatchedPeptides();
 			if (diff == 0)
 				diff = r.getPeptideLines().length - l.getPeptideLines().length;
-			//return diff;
+			// return diff;
 		}
-		if(diff > 0) return 1;
-		else if(diff < 0) return -1;
-		else return 0;
+		if (diff > 0)
+			return 1;
+		else if (diff < 0)
+			return -1;
+		else
+			return 0;
 	}
 }
 
 class PSMMatchComparator implements Comparator<ProteinInfo> {
 	public int compare(ProteinInfo l, ProteinInfo r) {
 		int diff;
-		if(l == null && r == null) return 0;
+		if (l == null && r == null)
+			return 0;
 		else if (l == null)
 			return 1;
 		else if (r == null)
 			return -1;
-		else
-		{
+		else {
 			diff = r.getPeptideLines().length - l.getPeptideLines().length;
 			if (diff == 0)
 				diff = r.getNumberOfMatchedPeptides() - l.getNumberOfMatchedPeptides();
-			//return diff;
+			// return diff;
 		}
-		if(diff > 0) return 1;
-		else if(diff < 0) return -1;
-		else return 0;
+		if (diff > 0)
+			return 1;
+		else if (diff < 0)
+			return -1;
+		else
+			return 0;
 	}
 }
 
 class SeqCovComparator implements Comparator<ProteinInfo> {
 	public int compare(ProteinInfo l, ProteinInfo r) {
 		int diff;
-		if(l == null && r == null) return 0;
+		if (l == null && r == null)
+			return 0;
 		else if (l == null)
 			return 1;
 		else if (r == null)
 			return -1;
-		else
-		{
+		else {
 			boolean[] hits = l.getCoverageCode();
 			int lc = 0, rc = 0;
 			for (int i = 0; i < hits.length; i++)
@@ -239,59 +239,70 @@ class SeqCovComparator implements Comparator<ProteinInfo> {
 			diff = rc * ll - lc * rl;
 			if (diff == 0)
 				diff = r.getNumberOfMatchedPeptides() - l.getNumberOfMatchedPeptides();
-			//return diff;
+			// return diff;
 		}
-		if(diff > 0) return 1;
-		else if(diff < 0) return -1;
-		else return 0;
+		if (diff > 0)
+			return 1;
+		else if (diff < 0)
+			return -1;
+		else
+			return 0;
 	}
 }
 
 class IDComparator implements Comparator<ProteinInfo> {
 	public int compare(ProteinInfo l, ProteinInfo r) {
 		int diff;
-		if(l == null && r == null) return 0;
+		if (l == null && r == null)
+			return 0;
 		else if (r == null)
 			return 1;
 		else if (l == null)
 			return -1;
-		else
-		{
+		else {
 			diff = l.getName().compareTo(r.getName());
 			if (diff == 0)
 				diff = r.getNumberOfMatchedPeptides() - l.getNumberOfMatchedPeptides();
-			//return diff;
+			// return diff;
 		}
-		if(diff > 0) return 1;
-		else if(diff < 0) return -1;
-		else return 0;
+		if (diff > 0)
+			return 1;
+		else if (diff < 0)
+			return -1;
+		else
+			return 0;
 	}
 }
 
 class PeptideComparator implements Comparator<PeptideLine> {
 	public int compare(PeptideLine l, PeptideLine r) {
 		int diff = l.getStart() - r.getStart();
-		if (diff == 0)
-		{
-			//diff = (int)((l.getScore() - r.getScore()) * 10000);
+		if (diff == 0) {
+			// diff = (int)((l.getScore() - r.getScore()) * 10000);
 			diff = l.getEnd() - r.getEnd();
 			if (diff == 0)
 				diff = l.getIndex() - r.getIndex();
 		}
-		//return diff;
-		if(diff > 0) return 1;
-		else if(diff < 0) return -1;
-		else return 0;
-		
+		// return diff;
+		if (diff > 0)
+			return 1;
+		else if (diff < 0)
+			return -1;
+		else
+			return 0;
+
 	}
 }
 
 class PeptideDecoyComparator implements Comparator<PeptideLine> {
 	public int compare(PeptideLine l, PeptideLine r) {
-//		return (int)((r.getScore() - l.getScore()) * 10000);
-		int diff = (int)((r.getScore() - l.getScore()) * 10000);
-		if(diff > 0) return 1;
-		else if(diff < 0) return -1;
-		else return 0;
+		// return (int)((r.getScore() - l.getScore()) * 10000);
+		int diff = (int) ((r.getScore() - l.getScore()) * 10000);
+		if (diff > 0)
+			return 1;
+		else if (diff < 0)
+			return -1;
+		else
+			return 0;
 	}
 }

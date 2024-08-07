@@ -9,17 +9,18 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.StringWriter;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.prix.homepage.configuration.GlobalProperties;
 import com.prix.homepage.constants.PrixDataWriter;
 import com.prix.homepage.livesearch.dao.DataMapper;
 import com.prix.homepage.livesearch.dao.SearchLogMapper;
@@ -53,6 +54,8 @@ public class DbondProcessService {
 	private final DatabaseMapper databaseMapper;
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	private final GlobalProperties globalProperties;
+
 	public DbondProcessDto process(String id,
 			HttpServletRequest request, Map<String, String> paramsMap, MultipartFile[] multipartFiles) throws IOException {
 
@@ -75,8 +78,6 @@ public class DbondProcessService {
 		String fTolerance = "";
 		String minMM = "";
 		String maxMM = "";
-		String minIE = "";
-		String maxIE = "";
 		String modMap = "";
 		String multiStage = "";
 		String cysteinAlkylation = "";
@@ -108,14 +109,19 @@ public class DbondProcessService {
 		boolean failed = false;
 		String output = "";
 
-		if (request.getParameter("execute") == null) {
+		if (request.getParameter("execute") == null) // 진행률 rate 갱신하기 위해 리로드 될때 else로 이동
+		{
 			// final String dir = "/home/PRIX/data/";원래 이거임
-			final String dir = "C:/Users/KYH/Desktop/";// 임시
-			final String dbDir = "/usr/local/server/apache-tomcat-8.0.14/webapps/ROOT/config/";
+			// final String dbDir =
+			// "/usr/local/server/apache-tomcat-8.0.14/webapps/ROOT/config/";
 
-			LocalDate date = LocalDate.now();
-			String tempdate = String.valueOf(date);
-			logger.info(tempdate);
+			// 원래 이거로 해야할 것 같은데 너무 복잡하고 변경될 수도 있을 것 같아서 임시로 간단하게
+			// final String dbDir = PATH + "/usr/local/server/apache-tomcat-8.0.14/webapps/ROOT/config/";
+			final String dir = globalProperties.getPath() + "/home/PRIX/data/";
+			final String dbDir = globalProperties.getPath() + "/config/";
+
+			Date date = new Date();
+			String tempdate = String.valueOf(date.getTime());
 			logPath = dir + "modi_output_" + id + "_" + tempdate + ".log";
 			xmlPath = dir + "modi_input_" + id + "_" + tempdate + ".xml";
 			msPath = dir + "ms_" + id + "_" + tempdate;
@@ -132,9 +138,11 @@ public class DbondProcessService {
 			}
 			combinedList.addAll(Arrays.asList(multipartFiles));
 			// 컬렉션을 반복하면서 params냐 file이냐에 따라 다른 작업 수행
-			for (Object obj : combinedList) {
+			for (Object obj : combinedList) 
+			{
 				String name = "";
-				if (obj instanceof Map.Entry<?, ?>) {
+				if (obj instanceof Map.Entry<?, ?>) //file type이 아니면
+				{
 					// Map.Entry<String, String> 타입의 요소를 처리
 					Map.Entry<?, ?> entry = (Map.Entry<?, ?>) obj;
 					name = (String) entry.getKey();
@@ -187,12 +195,6 @@ public class DbondProcessService {
 							break;
 						case "frag_tolerance":
 							fTolerance = value;
-							break;
-						case "min_isotope":
-							minIE = value;
-							break;
-						case "max_isotope":
-							maxIE = value;
 							break;
 						case "min_modified_mass":
 							minMM = value;
@@ -284,7 +286,7 @@ public class DbondProcessService {
 							}
 							break;
 					}
-				} else if (obj instanceof MultipartFile) {
+				} else if (obj instanceof MultipartFile) {// file type이면
 					// MultipartFile 타입의 요소를 처리
 					MultipartFile file = (MultipartFile) obj;
 					name = file.getName();
@@ -293,7 +295,6 @@ public class DbondProcessService {
 					switch (name) {
 						case "ms_file":
 							msFile = file.getOriginalFilename();
-							;
 							if (file.getSize() > 209715200 * 2.5) {
 								failed = true;
 								output = "MS file size should not exceed 500MB.";
@@ -355,7 +356,8 @@ public class DbondProcessService {
 			} // for (Object obj : combinedList) end
 
 			// form으로 제출된 정보로 값 할당, 파일 작성, db 저장 및 로그 작성 과정이 정상적으로 완료되면 xml을 작섣한다
-			if (!failed) {
+			if (!failed) 
+			{
 
 				PrintStream ps = new PrintStream(new FileOutputStream(xmlPath), false, "UTF-8");
 				ps.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
@@ -497,13 +499,28 @@ public class DbondProcessService {
 						// -Xmx2000M -cp
 						// /usr/local/server/apache-tomcat-8.0.14/webapps/ROOT/WEB-INF/lib/engine.jar:/usr/local/server/apache-tomcat-8.0.14/webapps/ROOT/WEB-INF/lib/jdom.jar:/usr/local/server/apache-tomcat-8.0.14/webapps/ROOT/WEB-INF/lib/jrap_StAX_v5.2.jar:/usr/local/server/apache-tomcat-8.0.14/webapps/ROOT/WEB-INF/lib/xercesImpl.jar
 						// prix.Prix_", engine, xmlPath, logPath) };
-						String[] command = { "cmd.exe", "/c", "java -cp C:/Users/KYH/Desktop/Server.jar PrixUser", engine, xmlPath,
-								logPath };
+						// 윈도우용 클래스 경로 수정
+
+						// 원래 이 경로인데 복잡해서 밑에 임시 경로 사용
+						// String libPath = dir + "/usr/local/server/apache-tomcat-8.0.14/webapps/ROOT/WEB-INF/lib/";
+						String libPath = globalProperties.getPath() + "/lib/";
+
+						// JAR 파일 경로를 libPath를 이용해 동적으로 생성
+						String[] command = {
+							"cmd.exe", "/c", String.format(
+									"java -Xmx2000M -cp %sengine.jar;%sjdom.jar;%sjrap_StAX_v5.2.jar;%sxercesImpl.jar prix.Prix_%s %s > %s",
+									libPath, libPath, libPath, libPath, engine, xmlPath, logPath
+							)
+						};
+					
+						// 명령어 실행
 						Process process = runtime.exec(command);
 					}
 				}
 			}
-		} else {
+		}
+		 else //진행률 rate 표기 위해 리로드 될때
+		{
 
 			int prixIndex = -1;
 
@@ -539,7 +556,7 @@ public class DbondProcessService {
 				File file = new File(prixPath);
 				try {
 					fis = new FileInputStream(file);
-					prixDataWriter.replace(prixIndex, fis);
+					prixIndex = prixDataWriter.write("prix", prixPath, fis);
 				} catch (Exception e) {
 					logger.error(e.getMessage());
 				}
@@ -577,6 +594,7 @@ public class DbondProcessService {
 						.title(title).msIndex(msIndex).dbIndex(dbIndex).multiPath(multiPath).engine(engine)
 						.output(output)
 						.rate(rate)
+						.returnAddr("redirect:/dbond/result?file=" + prixIndex)
 						.build();
 				return processDto;
 			}
@@ -589,7 +607,7 @@ public class DbondProcessService {
 				.title(title).msIndex(msIndex).dbIndex(dbIndex).multiPath(multiPath).engine(engine)
 				.output(output)
 				.rate(rate)
-				.returnAddr("livesearch/process").build();
+				.returnAddr("livesearch/dbond_process").build();
 
 		return processDto;
 	}
