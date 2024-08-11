@@ -194,46 +194,30 @@ public class PtmsListController {
           }else{
             try {
               Double.parseDouble( paramsMap.get("mass") );
-              if(var.equals("1")){
-                if( paramsMap.get("residue").equals("N-term") ){
+              if( paramsMap.get("residue").equals("N-term") ){
                 if( paramsMap.get("position").equals("ANYWHERE") || paramsMap.get("position").endsWith("C_TERM") )
-                  addState= 0;
+                  addState= 4;
               }
               else if( paramsMap.get("residue").equals("C-term") ){
                 if( paramsMap.get("position").equals("ANYWHERE") || paramsMap.get("position").endsWith("N_TERM") )
-                  addState= 0;
+                  addState= 4;
               }
-              }
-              else{
-                addState= 0;
-              }
-              
             } catch (NumberFormatException e) {
               addState= 3;
             }			
           }
         }
         if(addState == 0){
-          String position = "ANYWHERE";
-          if(paramsMap.get("residue").equals("N-term")){
-            position = "ANY_N_TERM";
-          }else if(paramsMap.get("residue").equals("C-term")){
-            position = "ANY_C_TERM";
-          }else{
-            position = "ANYWHERE";
-          }
-
+          String position = paramsMap.get("position");
           String name = paramsMap.get("name");
           Double massDiff = Double.parseDouble(paramsMap.get("mass"));
           String residue = paramsMap.get("residue");
-
 
           try{
             modificationService.insert(id, name, massDiff, residue, position);
           }catch(Exception e){
             logger.error("Error inserting Modification : {}", e.getMessage());
           }
-
         }
       }
       //action이 submit이면 userModification에 해당 내역을 저장한다

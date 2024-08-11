@@ -417,10 +417,10 @@ function doSearch() {
 			<td>
 					<a th:href="'#protein' + ${iterStat.index}"><span th:text="${info?.name}"></span></a>
 			</td>
-			<tr th:if="${info != null && info.peptideLines != null && info.peptideLines.length > 0}">
+			<tr>
 				<td></td>
-				<td><span th:text="${info.description}"></span></td>
-			</tr>
+				<td><span th:text="${info.getDescription()}">dd</span></td>
+			</tr> 
 		</tr>
 	</th:block>
 
@@ -435,11 +435,7 @@ function doSearch() {
 			<font size="3"><b>Peptide hits</b></font>
 		</td>
 	</tr>
-	<!--  이 부분
-		<%
-	if (!isDBond)
-	{
-%> -->
+
 	<tr th:unless="${resultDto.isDBond}">
     <td>
         <div><a href="#in_depth">Check for in-depth search</a></div>
@@ -499,7 +495,7 @@ function doSearch() {
                         </tr>
                         <th:block th:each="peptide : ${info.peptideLines}">
                             <tr>
-                                <td align="center">&nbsp;<span th:text="${resultDto.summary.getSpectrum(peptide.getIndex())}">0</span>&nbsp;</td>
+                                <td align="center">&nbsp;<span th:text="${resultDto.summary.getSpectrum(peptide.getIndex()).getId()}">0</span>&nbsp;</td>
                                 <td align="right">&nbsp;<span th:text="${peptide.mass}">0</span>(<span th:text="${peptide.charge}">0</span>+)&nbsp;</td>
                                 <td align="center">&nbsp;<span th:text="${peptide.getMWCalc()}">0</span>&nbsp;</td>
                                 <td align="center">&nbsp;<span th:text="${peptide.getMWDelta()}">0</span>&nbsp;</td>
