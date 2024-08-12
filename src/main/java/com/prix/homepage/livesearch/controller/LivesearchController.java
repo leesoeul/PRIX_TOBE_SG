@@ -24,6 +24,9 @@ import java.lang.String;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,7 +68,10 @@ import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import org.springframework.core.io.Resource;
 
 /**
  * prix.hanyang.ac.kr/livesearch 페이지
@@ -557,7 +563,7 @@ public class LivesearchController {
 
     // dummy process dto
     ACTGProcessDto processDto = ACTGProcessDto.builder()
-        .rate(0)
+        .rate("0%")
         .failed(false)
         .finished(false)
         .output("")
@@ -571,6 +577,10 @@ public class LivesearchController {
     } catch (Exception e) {
       logger.error("process service error: {}", e.getMessage());
       e.printStackTrace();
+    }
+    System.out.println("CheeseGet");
+    if (processDto.isFinished()) {// 정상종료시 result페이지로 이동
+      return "redirect:/ACTG/result?index=" + processDto.getPrixIndex();
     }
 
     model.addAttribute("processDto", processDto);
@@ -596,7 +606,7 @@ public class LivesearchController {
       return "redirect:/login?url=ACTG/search";
 
     // dummy process dto
-    ACTGProcessDto processDto = ACTGProcessDto.builder().rate(0).failed(false).finished(false)
+    ACTGProcessDto processDto = ACTGProcessDto.builder().rate("0%").failed(false).finished(false)
         .output("").title("").processName("").build();
     // MultipartFile[] 배열로 변환
     MultipartFile[] multipartFiles = { peptideFile, mutationFile };
@@ -606,6 +616,7 @@ public class LivesearchController {
       logger.error("process service error: {}", e.getMessage());
       e.printStackTrace();
     }
+    System.out.println("CheesePost");
     if (processDto.isFinished()) {// 정상종료시 result페이지로 이동
       return "redirect:/ACTG/result?index=" + processDto.getPrixIndex();
     }
@@ -622,11 +633,42 @@ public class LivesearchController {
    */
   @GetMapping("/ACTG/result")
   public String ACTGResultPage(Model model, HttpServletRequest request, HttpSession session) {
-    ACTGResultDto actgResultDto = actgResultService.result(request, session);
 
+    ACTGResultDto actgResultDto = actgResultService.result(request, session);
+    String fileIndex = actgResultDto.getIndex();
+    /* String resultFileDownloadPath = "C:/ACTG_db/ACTG_db/log/" + fileIndex + ".zip"; */
+    String resultFileDownloadPath = "/ACTG/download?index=" + fileIndex;
+
+    model.addAttribute("resultFileDownloadPath", resultFileDownloadPath);
     model.addAttribute("resultDto", actgResultDto);
+    System.out.println("actgResultDto.getProteinDB()");
+    System.out.println(actgResultDto.getMethod());
+    System.out.println(actgResultDto.getProteinDB());
     return "livesearch/actg_result";
   }
+
+  @GetMapping("/ACTG/download")
+  @ResponseBody
+  public ResponseEntity<Resource> downloadFile(@RequestParam("index") String index) {
+    // Construct the file path
+    String filePath = "C:/ACTG_db/ACTG_db/log/" + index + ".zip";
+    File file = new File(filePath);
+
+    // Check if the file exists
+    if (!file.exists()) {
+        return ResponseEntity.notFound().build();
+    }
+
+    // Create a resource and set the headers for download
+    Resource resource = new FileSystemResource(file);
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + file.getName());
+
+    return ResponseEntity.ok()
+    .headers(headers)
+    .body(resource);
+  }
+
 
   @GetMapping("/history")
   public String history(Model model, HttpServletRequest request) {

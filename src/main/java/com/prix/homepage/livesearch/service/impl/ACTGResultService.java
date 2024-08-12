@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import com.prix.homepage.livesearch.dao.SearchLogMapper;
 import com.prix.homepage.livesearch.pojo.ACTGResultDto;
 import com.prix.homepage.livesearch.pojo.SearchLog;
+import com.prix.homepage.user.pojo.Account;
+import com.prix.homepage.user.service.AccountService;
 
 import java.io.*;
 import java.util.zip.*;
@@ -21,17 +23,21 @@ import lombok.AllArgsConstructor;
 public class ACTGResultService {
 
   private final SearchLogMapper searchLogMapper;
+  private final AccountService accountService;
 
   public ACTGResultDto result(HttpServletRequest request, HttpSession session) {
-    final String logDir = "/home/PRIX/ACTG_log/";
-    final String logDB = "/home/PRIX/ACTG_db/";
+    /* final String logDir = "/home/PRIX/ACTG_log/";
+    final String logDB = "/home/PRIX/ACTG_db/"; */
+    final String logDir = "C:/ACTG_db/ACTG_db/log/";
+    final String logDB = "C:/ACTG_db/ACTG_db/";
+    
 
     final String anony = "4";
     String id = String.valueOf(session.getAttribute("id"));
-    if (id == null) {
+    /* if (id == null) {
       session.setAttribute("id", anony);
       id = String.valueOf(session.getAttribute("id"));
-    }
+    } */
 
     String userName = null;
     String title = null;
@@ -65,11 +71,17 @@ public class ACTGResultService {
     }
     if (searchLog != null) {
       title = searchLog.getTitle();
-      userName = String.valueOf(searchLog.getUserId());
+      Integer userId = searchLog.getUserId();
+      if(userId == 4){
+        userName = "anonymous";
+      }
+      else{
+        Account account = accountService.getAccount(userId);
+        userName = account.getName(); 
+      }
       date = searchLog.getDate();
     }
-    userName = searchLogMapper.getUserNameById(userName);
-
+    
     String method = null;
     String IL = null;
     String proteinDB = null;
