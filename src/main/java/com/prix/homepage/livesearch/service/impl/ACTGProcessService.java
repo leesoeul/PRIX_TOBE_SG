@@ -1,5 +1,6 @@
 package com.prix.homepage.livesearch.service.impl;
 
+import java.io.InputStreamReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -77,11 +78,15 @@ public class ACTGProcessService {
     boolean failed = false;
     String output = "";
 
-    // 이게 원래 진짜임 2024
+    // 원본 주소
+    //(아래의 주소를 이용 환경에 맞게 변경해 주세요)
     // final String logDir = "/home/PRIX/ACTG_log/";
     // final String dbDir = "/home/PRIX/ACTG_db/";
-    final String logDir = "C:/Users/KYH/Desktop/ACTG/log/";
-    final String dbDir = "C:/Users/KYH/Desktop/ACTG/db/";
+
+    //결과 zip 파일 및 로그 저장 경로
+    final String logDir = "C:/ACTG_db/ACTG_db/log/";
+    //DB 주소
+    final String dbDir = "C:/ACTG_db/ACTG_db/";
 
     String processPath = logDir + processName;
 
@@ -275,23 +280,43 @@ public class ACTGProcessService {
       } // for (Object obj : combinedList)
 
       if (!failed) {
+        System.out.println("Reached cmd part");
 
         Runtime runtime = Runtime.getRuntime();
 
-        // 원래 이 코드임 2024
+        // 원본 코드
         // String[] command = { "/bin/bash", "-c",
         // "java -Xmx10G -jar
         // /usr/local/server/apache-tomcat-8.0.14/webapps/ROOT/ACTG/ACTG_Search.jar " +
         // logDir
         // + xmlPath + " " + logDir + processPath };
-        String[] command = { "cmd.exe", "/c",
-            "java -Xmx10G -jar C:/Users/KYH/Desktop/ACTG_Search.jar " + logDir + xmlPath + " " + logDir + processPath };
 
+
+        //아래 ACTG_Search.jar 실행 명령중에 -Xss2M은 원본 코드에 없습니다. 공간 부족으로 Stackoverflow가 발생하여 방지하고자 크기를 늘려 실행합니다.
+        String[] command = { "cmd.exe", "/c",
+            "java -Xss2M -Xmx10G -jar C:/Users/maus/Desktop/workFolder/PRIX_TOBE_SG/src/main/resources/static/actg/ACTG_Search.jar " + logDir + xmlPath + " " + logDir + processPath };
+            /* C:\Users\maus\Desktop\workFolder\PRIX_TOBE_SG\src\main\resources\static\actg\ACTG_Search.jar */
         Process process = runtime.exec(command);
+
+
+        //아래는 ACTG_Search.jar의 디버깅 코드입니다
+
+        /* BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+
+        String s = null;
+        while ((s = stdInput.readLine()) != null) {
+            System.out.println("Stdout: " + s);
+        }
+
+        while ((s = stdError.readLine()) != null) {
+            System.out.println("Stderr: " + s);
+        } */
       }
     } // if (request.getParameter("execute") == null)
     else // process에서 redirect 받으면서 새로고침 반복해서 일어나는데 이때 이 작업 수행
     {
+      System.out.println("Reached else statement");
       FileInputStream fis = new FileInputStream(processPath);
       StringWriter writer = new StringWriter();
       StringWriter allWriter = new StringWriter();
@@ -301,8 +326,10 @@ public class ACTGProcessService {
           line = writer.toString();
 
           if (line.indexOf("ERROR") >= 0 || line.indexOf("Exception") >= 0) {
+            System.out.println("failed");
             failed = true;
           } else if (line.startsWith("Elapsed Time")) {
+            System.out.println("finished");
             finished = true;
           }
 
@@ -332,31 +359,27 @@ public class ACTGProcessService {
       output = allWriter.toString();
 
       if (finished) {// 모든 작업이 정상 종료
-
+        System.out.println("reached finished");
         String prixIndex = processPath.replace("process_" + id + "_", "");
         prixIndex = prixIndex.replace(logDir, "");
         prixIndex = prixIndex.replace(".proc", "");
-        Integer prixIndexInt = Integer.parseInt(prixIndex);
-
-        // "insert into px_search_log (user_id, title, date, msfile, db, result, actg,
-        // engine) values
-        // (" + id + ", '" + title.replace("'", "\\\'") + "',now(), 0, 0,
-        // 0,'"+prixIndex+"' ,'ACTG')");
+        //Integer prixIndexInt = Integer.parseInt(prixIndex);
+        Integer prixFinalIndex = Integer.parseInt(prixIndex.substring(prixIndex.length() - 5));
         // date는 mybatis mapper xml에서 처리
         searchLogMapper.insert(
-            Integer.parseInt(id), title.replace("'", "\\'"), 0, 0, prixIndexInt, "ACTG");
+            Integer.parseInt(id), title.replace("'", "\\'"), 0, 0, prixFinalIndex, "ACTG");
 
         ACTGProcessDto processDto = ACTGProcessDto.builder().failed(failed).finished(finished).output(output)
-            .processName(processName).prixIndex(prixIndex).rate(Integer.parseInt(rate)).title(title).build();
-        logger.warn("processNAme2:~~~~~~~~~~~{}", processName);
+            .processName(processName).prixIndex(prixIndex).rate((rate)).title(title).build();
+        logger.warn("processName2in:~~~~~~~~~~~{}", processName);
 
         return processDto;
       }
 
     }
     ACTGProcessDto processDto = ACTGProcessDto.builder().failed(failed).finished(finished).output(output)
-        .processName(processName).prixIndex("").rate(Integer.parseInt(rate)).title(title).build();
-    logger.warn("processNAme2:~~~~~~~~~~~{}", processName);
+        .processName(processName).prixIndex("").rate((rate)).title(title).build();
+    logger.warn("processName2out:~~~~~~~~~~~{}", processName);
 
     return processDto;
   }

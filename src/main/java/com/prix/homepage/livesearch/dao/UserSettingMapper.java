@@ -1,6 +1,7 @@
 package com.prix.homepage.livesearch.dao;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.prix.homepage.livesearch.pojo.UserSetting;
@@ -8,7 +9,7 @@ import com.prix.homepage.livesearch.pojo.UserSetting;
 @Mapper
 @Repository
 public interface UserSettingMapper {
-    UserSetting find(Integer userId, String engine);
+    UserSetting find(@Param("userId") Integer userId, @Param("engine") String engine);
 
     Integer existsByUserId(Integer userId);
 

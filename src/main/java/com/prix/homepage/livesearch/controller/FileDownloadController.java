@@ -39,7 +39,8 @@ public class FileDownloadController {
   @Autowired
   private GlobalProperties globalProperties;
 
-  @GetMapping("/ACTG/download")
+  //Deprecated
+  @GetMapping("/ACTG/downloads")
   public void downloadFile(@RequestParam("index") String index, HttpServletResponse response, HttpSession session)
       throws IOException {
     String id = (String) session.getAttribute("id");
@@ -61,7 +62,8 @@ public class FileDownloadController {
         return;
       } else {
         String filename = index + ".zip";
-        String logDir = "/home/PRIX/ACTG_log/";
+        //String logDir = "/home/PRIX/ACTG_log/";
+        String logDir = "C:/ACTG_db/ACTG_db/log/";
 
         filename = new String(filename.getBytes("utf-8"));
 
