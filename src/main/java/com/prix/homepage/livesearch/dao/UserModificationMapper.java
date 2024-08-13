@@ -1,20 +1,21 @@
 package com.prix.homepage.livesearch.dao;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 @Mapper
 @Repository
 public interface UserModificationMapper {
 
-  void deleteByUserId(Integer userId);
+  void deleteByUserId(@Param("userId") Integer userId);
 
-  void deleteByUserIdVar0(String userId);
+  void deleteByUserIdVar0(@Param("userId") String userId);
 
-  Integer countModifications(Integer userId, Boolean variable, Boolean engine);
+  Integer countModifications(@Param("userId") Integer userId, @Param("variable") Boolean variable, @Param("engine") Boolean engine);
 
-  void deleteByUserIdAndModId(Integer userId, Boolean engine, String[] modIds);
+  void deleteByUserIdAndModId(@Param("userId") Integer userId, Boolean engine, String[] modIds);
 
-  void insertWithModIds(Integer userId, String[] modIds, Boolean var, Boolean engine);
+  void insertWithModIds(@Param("userId") Integer userId, String[] modIds, Boolean var, Boolean engine);
 
 }
