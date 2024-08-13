@@ -22,7 +22,7 @@
   <select id="getSearchLog" resultType="com.prix.homepage.livesearch.pojo.SearchLog">
     SELECT title, user_id, date
     FROM px_search_log
-    WHERE actg = #{index}
+    WHERE result = #{index}
   </select>
 
   <select id="getUserNameById" resultType="String">

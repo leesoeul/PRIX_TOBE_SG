@@ -23,6 +23,6 @@ public class ACTGProcessDto {
   String output;
   String prixIndex;
 
-  Integer rate;
+  String rate;
 
 }
