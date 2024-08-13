@@ -15,9 +15,10 @@ public class PrixDataWriter {
 	
 	static public int write(String type, String name, InputStream is) throws java.sql.SQLException, java.io.FileNotFoundException, java.io.UnsupportedEncodingException {
 		Connection conn = PrixConnector.getConnection();
-		if (conn == null)
+		if (conn == null){
+			System.out.println("conn == null");
 			return -1;
-
+		}
 		int index = -1;
 		String sql = "INSERT INTO px_data (type, name, content) values ('" + type + "', '" + name.replace("'", "\\\'") + "', ?)";
 		String result = "OK";

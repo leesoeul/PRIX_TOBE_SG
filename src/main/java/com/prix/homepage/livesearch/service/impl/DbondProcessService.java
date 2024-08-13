@@ -560,9 +560,8 @@ public class DbondProcessService {
 				} catch (Exception e) {
 					logger.error(e.getMessage());
 				}
-
 				// record history
-				searchLogMapper.insert(idInt, title.replace("'", "\\\'"), msIndex, dbIndex, prixIndex, engine);
+				searchLogMapper.insert(idInt, title.replace("'", "\\\'"), msIndex, dbIndex, String.valueOf(prixIndex), engine);
 				// delete files
 			} else if (line.startsWith("Processing")) {
 				int split = line.indexOf("/");

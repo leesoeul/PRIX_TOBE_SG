@@ -363,11 +363,10 @@ public class ACTGProcessService {
         String prixIndex = processPath.replace("process_" + id + "_", "");
         prixIndex = prixIndex.replace(logDir, "");
         prixIndex = prixIndex.replace(".proc", "");
-        //Integer prixIndexInt = Integer.parseInt(prixIndex);
-        Integer prixFinalIndex = Integer.parseInt(prixIndex.substring(prixIndex.length() - 5));
+        System.out.println(prixIndex);
         // date는 mybatis mapper xml에서 처리
         searchLogMapper.insert(
-            Integer.parseInt(id), title.replace("'", "\\'"), 0, 0, prixFinalIndex, "ACTG");
+            Integer.parseInt(id), title.replace("'", "\\'"), 0, 0, prixIndex, "ACTG");
 
         ACTGProcessDto processDto = ACTGProcessDto.builder().failed(failed).finished(finished).output(output)
             .processName(processName).prixIndex(prixIndex).rate((rate)).title(title).build();

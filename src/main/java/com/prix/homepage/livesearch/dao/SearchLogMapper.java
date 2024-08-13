@@ -13,7 +13,7 @@ public interface SearchLogMapper {
       String title,
       Integer msFile,
       Integer db,
-      Integer result,
+      String result,
       String engine);
 
   // 이거 db에선 result가 int인데 result.jsp에선 String fileName을
