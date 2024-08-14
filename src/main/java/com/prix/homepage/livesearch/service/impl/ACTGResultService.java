@@ -2,6 +2,8 @@ package com.prix.homepage.livesearch.service.impl;
 
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+
+import com.prix.homepage.configuration.GlobalProperties;
 import com.prix.homepage.livesearch.dao.SearchLogMapper;
 import com.prix.homepage.livesearch.pojo.ACTGResultDto;
 import com.prix.homepage.livesearch.pojo.SearchLog;
@@ -24,20 +26,16 @@ public class ACTGResultService {
 
   private final SearchLogMapper searchLogMapper;
   private final AccountService accountService;
+  private final GlobalProperties globalProperties;
 
   public ACTGResultDto result(HttpServletRequest request, HttpSession session) {
     /* final String logDir = "/home/PRIX/ACTG_log/";
     final String logDB = "/home/PRIX/ACTG_db/"; */
-    final String logDir = "C:/ACTG_db/ACTG_db/log/";
-    final String logDB = "C:/ACTG_db/ACTG_db/";
+    final String logDir = globalProperties.getActgLogDir();
+    final String logDB = globalProperties.getActgDbDir();
     
 
-    final String anony = "4";
     String id = String.valueOf(session.getAttribute("id"));
-    /* if (id == null) {
-      session.setAttribute("id", anony);
-      id = String.valueOf(session.getAttribute("id"));
-    } */
 
     String userName = null;
     String title = null;
