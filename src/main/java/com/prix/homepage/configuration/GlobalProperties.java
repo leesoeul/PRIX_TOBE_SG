@@ -13,4 +13,6 @@ import lombok.Setter;
 public class GlobalProperties {
     private String path;
     private String pathErr;
+    private String actgLogDir;
+    private String actgDbDir;
 }

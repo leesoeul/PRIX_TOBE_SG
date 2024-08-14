@@ -27,7 +27,7 @@ public class SearchLog {
 
   private Integer db;
 
-  private Integer result;
+  private String result;
 
   private String engine;
 

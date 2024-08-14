@@ -2,7 +2,7 @@ package com.prix.homepage.user.controller;
 
 import com.prix.homepage.user.service.EnzymeService;
 import com.prix.homepage.user.service.ModificationLogService;
-import com.prix.homepage.user.service.PrixDataWriter;
+import com.prix.homepage.constants.PrixDataWriter;
 import com.prix.homepage.user.service.SoftwareLogService;
 import com.prix.homepage.user.service.ModificationUserService;
 import com.prix.homepage.user.service.ClassificationService;
@@ -16,16 +16,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.attoparser.dom.Document;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -95,6 +91,7 @@ public class ManageController {
     private final ClassificationService classificationService;
     private final ModificationUserService modificationService;
     private final SoftwareLogService softwareLogService;
+    private final PrixDataWriter dataWriter;
 
     //Manage요청 받을시 (configuration에서 edit, unlink 버튼)
     @PostMapping("/admin/manage")
@@ -169,7 +166,7 @@ public class ManageController {
                     dbFile.replace('\\', '/');
                     
                     String dbPath = dbFile.substring(dbFile.lastIndexOf('/') + 1, dbFile.length());
-                    int index = PrixDataWriter.write("fasta", dbFile, file.getInputStream());
+                    int index = dataWriter.write("fasta", dbFile, file.getInputStream());
 
                     String dbName = request.getParameter("db_name");
                     if (dbName == null || dbName.length() == 0){

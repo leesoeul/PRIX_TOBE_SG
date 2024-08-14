@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.prix.homepage.configuration.GlobalProperties;
 import com.prix.homepage.livesearch.dao.SearchLogMapper;
 import com.prix.homepage.livesearch.pojo.ACTGProcessDto;
 
@@ -39,6 +40,7 @@ public class ACTGProcessService {
 
   private final SearchLogMapper searchLogMapper;
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final GlobalProperties globalProperties;
 
   public ACTGProcessDto process(String id,
       HttpServletRequest request, Map<String, String> paramsMap, MultipartFile[] multipartFiles) throws IOException {
@@ -78,15 +80,10 @@ public class ACTGProcessService {
     boolean failed = false;
     String output = "";
 
-    // 원본 주소
-    //(아래의 주소를 이용 환경에 맞게 변경해 주세요)
-    // final String logDir = "/home/PRIX/ACTG_log/";
-    // final String dbDir = "/home/PRIX/ACTG_db/";
-
     //결과 zip 파일 및 로그 저장 경로
-    final String logDir = "C:/ACTG_db/ACTG_db/log/";
+    final String logDir = globalProperties.getActgLogDir();
     //DB 주소
-    final String dbDir = "C:/ACTG_db/ACTG_db/";
+    final String dbDir = globalProperties.getActgDbDir();
 
     String processPath = logDir + processName;
 
@@ -363,11 +360,10 @@ public class ACTGProcessService {
         String prixIndex = processPath.replace("process_" + id + "_", "");
         prixIndex = prixIndex.replace(logDir, "");
         prixIndex = prixIndex.replace(".proc", "");
-        //Integer prixIndexInt = Integer.parseInt(prixIndex);
-        Integer prixFinalIndex = Integer.parseInt(prixIndex.substring(prixIndex.length() - 5));
+        System.out.println(prixIndex);
         // date는 mybatis mapper xml에서 처리
         searchLogMapper.insert(
-            Integer.parseInt(id), title.replace("'", "\\'"), 0, 0, prixFinalIndex, "ACTG");
+            Integer.parseInt(id), title.replace("'", "\\'"), 0, 0, prixIndex, "ACTG");
 
         ACTGProcessDto processDto = ACTGProcessDto.builder().failed(failed).finished(finished).output(output)
             .processName(processName).prixIndex(prixIndex).rate((rate)).title(title).build();
