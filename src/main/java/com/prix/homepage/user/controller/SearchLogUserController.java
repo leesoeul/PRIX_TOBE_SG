@@ -37,6 +37,9 @@ public class SearchLogUserController {
         for(SearchLogUser searchLog : searchLogDto){
             Integer id = searchLog.getUserId();
             String userName = searchLogService.findName(id);
+            if(id == 4){
+                userName = "anonymous";
+            }
             userNames.put(id, userName);
         }
         Map<Integer, String> msFiles = new HashMap<>();
