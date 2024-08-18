@@ -21,7 +21,8 @@ public class MySQL {
         this.db = var4;
 
         try {
-            Class.forName("org.gjt.mm.mysql.Driver").newInstance();
+            // Class.forName("org.gjt.mm.mysql.Driver").newInstance();
+            Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (Exception var6) {
             var6.printStackTrace();
         }
