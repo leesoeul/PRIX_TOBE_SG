@@ -8,27 +8,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pattern Match Result</title>
     <link rel="icon" th:href="@{/images/ci.gif}" type="image/gif" />
+
+    <style>
+      .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        flex-wrap: wrap;
+      }
+      .pagination button,
+      .pagination span {
+        margin: 0 3px;
+        padding: 5px 10px;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+        cursor: pointer;
+      }
+      .pagination button.active {
+        background-color: #007bff;
+        color: white;
+      }
+      .pagination button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+      .pagination span {
+        cursor: default;
+      }
+    </style>
   </head>
 
   <body>
     <li th:text=" ${dbType} +' Release : (' + ${date} + ')'"></li>
-    <div style="margin: 15px" th:utext="${result}"></div>
+    <div id="results"></div>
 
-    <br />
+    <div class="pagination" id="pagination"></div>
 
-    <!--
-      <script>
-        const source = new EventSource("/patternMatch/patternMatchResult");
-        
-        source.onmessage = function (event) {
-          document.getElementById("result").innerHTML += event.data;
-        };
-        
-        source.onerror = function () {
-          console.error("An error occurred while receiving updates.");
-          source.close();
-        };
-      </script>
-      -->
+    <script type="text/javascript" th:inline="javascript">
+      const allResults = /*[[${allResults}]]*/ [];
+
+      const pageSize = 500; // 한 페이지에 표시할 항목 수
+      let currentPage = 1;
+
+      function renderPage(page) {
+        const start = (page - 1) * pageSize;
+        const end = start + pageSize;
+        const pageResult = allResults.slice(start, end);
+
+        const resultsContainer = document.getElementById("results");
+        resultsContainer.innerHTML = "";
+        pageResult.forEach((result) => {
+          // HTML 콘텐츠를 innerHTML로 삽입
+          resultsContainer.innerHTML += result;
+        });
+
+        renderPagination();
+
+        if (currentPage != 1)
+          window.scrollTo({
+            top: document.body.scrollHeight,
+          });
+      }
+
+      function renderPagination() {
+        const totalPages = Math.ceil(allResults.length / pageSize);
+        const paginationContainer = document.getElementById("pagination");
+        paginationContainer.innerHTML = "";
+
+        const pagination = document.createElement("div");
+        pagination.className = "pagination";
+
+        // Previous button
+        const prevButton = document.createElement("button");
+        prevButton.textContent = "Previous";
+        prevButton.disabled = currentPage === 1;
+        prevButton.addEventListener("click", () => {
+          if (currentPage > 1) {
+            currentPage--;
+            renderPage(currentPage);
+          }
+        });
+        pagination.appendChild(prevButton);
+
+        // Page buttons
+        const startPage = Math.max(1, currentPage - 5);
+        const endPage = Math.min(totalPages, currentPage + 5);
+
+        for (let i = startPage; i <= endPage; i++) {
+          const pageButton = document.createElement("button");
+          pageButton.textContent = i;
+          pageButton.className = i === currentPage ? "active" : "";
+          pageButton.addEventListener("click", () => {
+            currentPage = i;
+            renderPage(currentPage);
+          });
+          pagination.appendChild(pageButton);
+        }
+
+        // Next button
+        const nextButton = document.createElement("button");
+        nextButton.textContent = "Next";
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.addEventListener("click", () => {
+          if (currentPage < totalPages) {
+            currentPage++;
+            renderPage(currentPage);
+          }
+        });
+        pagination.appendChild(nextButton);
+
+        paginationContainer.appendChild(pagination);
+      }
+      renderPage(currentPage);
+    </script>
   </body>
 </html>
