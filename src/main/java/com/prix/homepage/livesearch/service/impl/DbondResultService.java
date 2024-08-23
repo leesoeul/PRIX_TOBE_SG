@@ -41,7 +41,7 @@ public class DbondResultService {
 	public DbondResultDto result(String id,
 			HttpServletRequest request, HttpSession session) throws FileNotFoundException {
 
-		if (id == null)
+		if (id == null || id == "null")
 			id = "4";
 		Integer idInt = Integer.parseInt(id);
 
@@ -271,26 +271,6 @@ class IDComparator implements Comparator<ProteinInfo> {
 			return -1;
 		else
 			return 0;
-	}
-}
-
-class PeptideComparator implements Comparator<PeptideLine> {
-	public int compare(PeptideLine l, PeptideLine r) {
-		int diff = l.getStart() - r.getStart();
-		if (diff == 0) {
-			// diff = (int)((l.getScore() - r.getScore()) * 10000);
-			diff = l.getEnd() - r.getEnd();
-			if (diff == 0)
-				diff = l.getIndex() - r.getIndex();
-		}
-		// return diff;
-		if (diff > 0)
-			return 1;
-		else if (diff < 0)
-			return -1;
-		else
-			return 0;
-
 	}
 }
 

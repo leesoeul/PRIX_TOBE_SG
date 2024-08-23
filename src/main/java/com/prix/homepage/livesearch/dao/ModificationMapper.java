@@ -18,7 +18,7 @@ public interface ModificationMapper {
 
   void deleteById(Integer id);
 
-  List<Modification> selectModListNotInUserMod(Integer userId, String var, Boolean engine);
+  List<Modification> selectModListNotInUserMod(Integer userId, String variable, Boolean engine);
   
   List<Modification> selectModJoinClass(Integer userId, Boolean variable, Integer engine, String filter, String sortBy);
 

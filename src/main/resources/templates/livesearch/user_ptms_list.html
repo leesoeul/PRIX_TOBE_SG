@@ -129,8 +129,10 @@ function doSubmit() {
       <tr>
         <td class="grayTH">Site</td>
 		<td ><select id="residue" name="residue">
-			<option value="N-term">N-term</option>
-			<option value="C-term">C-term</option>
+			<th:block th:if="${var == '1'}">
+				<option value="N-term">N-term</option>
+				<option value="C-term">C-term</option>
+			</th:block>
 			<option value="A">A</option>
 			<option value="C">C</option>
 			<option value="D">D</option>
@@ -153,17 +155,18 @@ function doSubmit() {
 			<option value="Y">Y</option>
         </select></td>
       </tr>    
-
-<tr th:if="${var eq '1'}">
+<tr>
 	<td class="grayTH">Position</td>
 	<td>
-			<select id="position" name="position">
-					<option value="ANYWHERE" selected="selected">ANYWHERE</option>
+    <select id="position" name="position">
+			<option value="ANYWHERE" selected="selected">ANYWHERE</option>
+			<th:block th:if="${var == '1'}">
 					<option value="ANY_N_TERM">ANY_N_TERM</option>
 					<option value="ANY_C_TERM">ANY_C_TERM</option>
 					<option value="PROTEIN_N_TERM">PROTEIN_N_TERM</option>
 					<option value="PROTEIN_C_TERM">PROTEIN_C_TERM</option>
-			</select>
+			</th:block>
+	</select>
 	</td>
 </tr>
 
@@ -171,7 +174,7 @@ function doSubmit() {
       </tr>
 	  <tr>
 	    <td class="grayTH">&nbsp;</td>
-		<td align="right"><input name="btn145" type="submit" class="btnOrgSmall" value=" add " /></td>
+		<td align="right"><input name="btn145" type="submit" class="btnOrgSmall" value=" add "/></td>
 	  </tr>
     </tbody>
   </table>
@@ -190,7 +193,7 @@ function doSubmit() {
  <br/>
 
  <!-- User-defined modification list에 add to search list 용 -->
-<form name="mod_list" method="post"  th:action="@{/dbond/user_ptms_list}" onsubmit="return doSubmit();">
+<form name="mod_list" method="post"  th:action="@{/dbond/user_ptms_list}" onsubmit="doSubmit()">
 <input type="hidden" name="act" value="submit"/>
 <input type="hidden" name="var" th:value="${var}"/>
 <input type="hidden" name="engine" th:value="${engine}"/>

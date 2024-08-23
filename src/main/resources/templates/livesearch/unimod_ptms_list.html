@@ -161,9 +161,9 @@ function showFiltered() {
           opener.close();
           window.close();
       } else if (finished) {
-          //modplus/var_ptms_list 새로고침
+          //dbond/var_ptms_list 새로고침
           opener.location = 'var_ptms_list?var=' + varValue + '&engine=' + engineValue;
-          // (/modplus/search, 함수는 var_ptms.html또는 fix_ptms.html)
+          // (/dbond/dbond_search, 함수는 var_ptms.html또는 fix_ptms.html)
           // 부모부모 window의 함수를 호출해서 카운트를 갱신한다.
 					if(varValue === "1"){
 						window.opener.opener.loadVarMods(id, engineValue);
@@ -178,7 +178,7 @@ function showFiltered() {
 
 <body onload="handlePageLoad()">
 
-<form name="mod_list" method="post" th:action="@{/modplus/unimod_ptms_list}">
+<form name="mod_list" method="post" th:action="@{/dbond/unimod_ptms_list}">
 
   <input type="hidden" name="sort" th:value="${sortBy}"/>
   <input type="hidden" name="var" th:value="${var}"/>
