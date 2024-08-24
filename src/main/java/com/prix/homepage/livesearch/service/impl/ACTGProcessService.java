@@ -290,9 +290,10 @@ public class ACTGProcessService {
 
 
         //아래 ACTG_Search.jar 실행 명령중에 -Xss2M은 원본 코드에 없습니다. 공간 부족으로 Stackoverflow가 발생하여 방지하고자 크기를 늘려 실행합니다.
+        String jarDir = globalProperties.getActgJarDir();
+        String jarPath = jarDir + "ACTG_Search.jar";
         String[] command = { "cmd.exe", "/c",
-            "java -Xss2M -Xmx10G -jar C:/Users/maus/Desktop/workFolder/PRIX_TOBE_SG/src/main/resources/static/actg/ACTG_Search.jar " + logDir + xmlPath + " " + logDir + processPath };
-            /* C:\Users\maus\Desktop\workFolder\PRIX_TOBE_SG\src\main\resources\static\actg\ACTG_Search.jar */
+            "java -Xss2M -Xmx10G -jar " + jarPath + " " + logDir + xmlPath + " " + logDir + processPath };
         Process process = runtime.exec(command);
 
 
