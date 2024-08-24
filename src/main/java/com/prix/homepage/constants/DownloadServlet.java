@@ -41,6 +41,7 @@ public class DownloadServlet {
 
 			Integer dbPathInt = Integer.parseInt(summary.getDatabasePath());
 			dataResult = dataMapper.getNameContentById(dbPathInt);
+			if(dataResult == null) return;
 			InputStream isdbPath = new ByteArrayInputStream(dataResult.getContent());
 			summary.readProtein(isdbPath);
 

@@ -63,6 +63,8 @@ import com.prix.homepage.user.service.DatabaseService;
 import com.prix.homepage.user.service.EnzymeService;
 import com.prix.homepage.user.service.SearchLogUserService;
 
+import com.prix.homepage.constants.PeptideComparator;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -440,14 +442,41 @@ public class LivesearchController {
     logger.info("Proteins: " + resultDto.getProteins());
     logger.info("Max Proteins: " + resultDto.getMaxProteins());
 
+    // protein_hits 처리
     int num = 0;
     int maxProteins = resultDto.getMaxProteins();
     ProteinInfo[] proteins = resultDto.getProteins();
+    List<ProteinInfo> proteinHitsInfos = new ArrayList<>();
+    if (proteins != null)
+    {
+      for (int i = 0; i < proteins.length; i++)
+      {
+        if (maxProteins > 0 && num >= maxProteins)
+          break;
+  
+        ProteinInfo info = proteins[i];
+        if (info == null)
+          continue;
+        num++;
+  
+        PeptideLine[] peptides = info.getPeptideLines();
+        if (peptides == null || peptides.length == 0)
+          continue;
+        
+        proteinHitsInfos.add(info);
+      }
+    }
+    model.addAttribute("proteinHitsInfos", proteinHitsInfos);
+
+    // peptide_hits 처리
+    num = 0;
     boolean[][] coverageCodes = new boolean[maxProteins][];
     if (proteins != null) {
       coverageCodes = new boolean[proteins.length][];
     }
     List<Double> coveragePercentages = new ArrayList<>();
+    List<ProteinInfo> peptideHitsInfos = new ArrayList<>();
+
     if (proteins != null) {
       for (int i = 0; i < proteins.length; i++) {
         if (maxProteins > 0 && num >= maxProteins)
@@ -461,6 +490,9 @@ public class LivesearchController {
         if (peptides == null || peptides.length == 0)
           continue;
         num++;
+        
+        Comparator<PeptideLine> byPL = new PeptideComparator();
+        Arrays.sort(peptides, byPL);
 
         boolean[] code = info.getCoverageCode();
         coverageCodes[i] = code; // boolean 2차원 배열에 저장
@@ -472,10 +504,13 @@ public class LivesearchController {
         }
         double coveragePercentage = code.length == 0 ? 0 : (double) coverageCounts * 100 / code.length;
         coveragePercentages.add(coveragePercentage);
+        peptideHitsInfos.add(info);
       }
     }
     model.addAttribute("coverageCodes", coverageCodes);
     model.addAttribute("coveragePercentages", coveragePercentages);
+    model.addAttribute("peptideHitsInfos", peptideHitsInfos);
+
 
     boolean notauthorized = true;
     if (resultDto.getUserId() != null) {
@@ -824,18 +859,6 @@ public class LivesearchController {
       }
     }
     spectrumIndexArray.clear();
-
-    class PeptideComparator implements Comparator<PeptideLine> {
-      public int compare(PeptideLine l, PeptideLine r) {
-        int diff = l.getStart() - r.getStart();
-        if (diff == 0) {
-          diff = l.getEnd() - r.getEnd();
-          if (diff == 0)
-            diff = l.getIndex() - r.getIndex();
-        }
-        return diff;
-      }
-    }
 
     Comparator<PeptideLine> byPL = new PeptideComparator();
     Arrays.sort(peptides, byPL);

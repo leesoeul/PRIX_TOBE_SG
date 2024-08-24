@@ -209,7 +209,7 @@ function doSearch() {
 	
 		<tr>
 			<td><b>Variable Modifications</b></td>
-			<td th:if="${resultDto != null and resultDto.mods != null and resultDto.mods.length > 0} ">
+			<td th:if="${resultDto != null and resultDto.mods != null and resultDto.mods.length > 0} ">: 
 					<span th:if="${resultDto.mods.length ge 10}">
 							<a th:href="@{/modification(file=${resultDto.fileName}, type=0)}" target="_blank">
 									<span th:text="${resultDto.mods.length}"></span>
@@ -232,7 +232,7 @@ function doSearch() {
 	<!-- Fixed Modifications block -->
 	<tr>
 		<td><b>Fixed Modifications</b></td>
-		<td>
+		<td>: 
 	
 			<span th:if="${resultDto?.summary?.getFixedModifications() != null and #lists.size(resultDto.summary.getFixedModifications()) >= 10}">
 				<a th:href="@{/modification(file=${resultDto.fileName}, type=1)}" target="_blank" th:text="${#lists.size(resultDto.summary.getFixedModifications())}"></a>
@@ -409,19 +409,23 @@ function doSearch() {
 		<!--th align="left"><font size="2">Description</font></th-->
 	</tr>
 	<th:block th:if="${resultDto != null and resultDto.proteins != null}">
-		<tr th:each="info, iterStat : ${resultDto.proteins}" th:if="${info != null && (resultDto.maxProteins le 0 || iterStat.index lt resultDto.maxProteins)}">
-			<td>
-					<input type="checkbox" class="CHECK" name="protein_list"
-								th:value="${info?.getName()}" onclick="checkMutual('protein', this);"/>
-			</td>
-			<td>
-					<a th:href="'#protein' + ${iterStat.index}"><span th:text="${info?.name}"></span></a>
-			</td>
-			<tr th:if="${info != null && info.peptideLines != null && info.peptideLines.length > 0}">
-				<td></td>
-				<td><span th:text="${info.description}"></span></td>
-			</tr>
-		</tr>
+		<th:block th:each="info, iterStat : ${proteinHitsInfos}">
+			<th:block th:if="${info != null}">
+				<tr>
+					<td>
+						<input type="checkbox" class="CHECK" name="protein_list"
+									th:value="${info?.getName()}" onclick="checkMutual('protein', this);"/>
+					</td>
+					<td>
+							<a th:href="'#protein' + ${iterStat.index}"><span th:text="${info.name}">Protein Name</span></a>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><span th:text="${info.description}">Protein Description</span></td>
+				</tr> 
+			</th:block>
+		</th:block>
 	</th:block>
 
 
@@ -435,11 +439,7 @@ function doSearch() {
 			<font size="3"><b>Peptide hits</b></font>
 		</td>
 	</tr>
-	<!--  이 부분
-		<%
-	if (!isDBond)
-	{
-%> -->
+
 	<tr th:unless="${resultDto.isDBond}">
     <td>
         <div><a href="#in_depth">Check for in-depth search</a></div>
@@ -449,11 +449,11 @@ function doSearch() {
 </table>
 <!--form name="peptide_hits"-->
 <table border="0">
-  <th:block th:each="info, iterStat : ${resultDto.proteins}" th:if="${infoNames.size() > 0}">
-  	<th:block th:if="${maxProteins > 0 && iterStat.index >= maxProteins}">
+  <th:block th:each="info, iterStat : ${peptideHitsInfos}" th:if="${infoNames.size() > 0}">
+  	<th:block th:if="${info != null}">
       <th:block th:break="true"></th:block>
       	</th:block>
-        	<th:block th:if="${info != null && info.getPeptideLines() != null && info.getPeptideLines().length > 0}">
+        	<th:block th:if="${info.getPeptideLines() != null && info.getPeptideLines().length > 0}">
             <tr>
                 <td><a th:name="'protein' + ${iterStat.index}"><input type="checkbox" class="CHECK" name="peptide_list" th:value="${info.name}" onclick="checkMutual('peptide', this);"/></a>&nbsp;</td>
                 <td><span th:text="${iterStat.index + 1}">1</span>.&nbsp;&nbsp;</td>
@@ -499,7 +499,7 @@ function doSearch() {
                         </tr>
                         <th:block th:each="peptide : ${info.peptideLines}">
                             <tr>
-                                <td align="center">&nbsp;<span th:text="${resultDto.summary.getSpectrum(peptide.getIndex())}">0</span>&nbsp;</td>
+                                <td align="center">&nbsp;<span th:text="${resultDto.summary.getSpectrum(peptide.getIndex()).getId()}">0</span>&nbsp;</td>
                                 <td align="right">&nbsp;<span th:text="${peptide.mass}">0</span>(<span th:text="${peptide.charge}">0</span>+)&nbsp;</td>
                                 <td align="center">&nbsp;<span th:text="${peptide.getMWCalc()}">0</span>&nbsp;</td>
                                 <td align="center">&nbsp;<span th:text="${peptide.getMWDelta()}">0</span>&nbsp;</td>

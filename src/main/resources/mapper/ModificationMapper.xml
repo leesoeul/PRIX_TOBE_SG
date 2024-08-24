@@ -43,11 +43,12 @@
     SELECT id, name, mass_diff, residue, position
     FROM px_modification
     WHERE user_id = #{userId}
-    <if test='var.equals("1")'>
-        AND id NOT IN (
-            SELECT mod_id FROM px_user_modification WHERE user_id = #{userId} AND engine = #{engine}
-        )
+    <if test='variable.equals("1") == false'>
+      AND position = 'ANYWHERE'
     </if>
+    AND id NOT IN (
+      SELECT mod_id FROM px_user_modification WHERE user_id = #{userId} AND engine = #{engine}
+    )
   </select>
 
   <select id="selectModJoinClass" resultMap="ModificationResultMap" parameterType="java.util.Map">
@@ -57,28 +58,16 @@
     WHERE m.user_id = 0
     <!-- fixed modification이라면 -->
     <if test='variable != 1'>
-        <if test='engine == 0'>
-            AND (position = 'ANYWHERE'
-            OR (position = 'ANY_N_TERM' AND residue = 'N-term')
-            OR (position = 'ANY_C_TERM' AND residue = 'C-term'))
-        </if>
-        <if test='engine != 0'>
-            AND position = 'ANYWHERE'
-        </if>
+      AND (position = 'ANYWHERE')
     </if>
     <if test='filter.equals("default")'>
-        <if test='variable == 1'>
-            AND m.class IN (2, 3, 4, 5, 6, 13, 14)
-        </if>
-        <if test='variable != 1'>
-            AND m.class IN (2, 3, 4, 5, 6, 11, 13, 14)
-        </if>
+      AND m.class IN (2, 3, 4, 5, 6, 13, 14)
     </if>
     AND m.id NOT IN (
         SELECT mod_id FROM px_user_modification
         WHERE user_id = #{userId} AND engine = #{engine}
     )
-    <if test='sortBy != null and !sortBy.equals("")'>
+    <if test='sortBy != null and !sortBy.equals("") and sortBy.length() > 0'>
         ORDER BY
         <choose>
             <when test='sortBy.startsWith("class")'>c.${sortBy}</when>
