@@ -613,7 +613,6 @@ public class LivesearchController {
       logger.error("process service error: {}", e.getMessage());
       e.printStackTrace();
     }
-    System.out.println("CheeseGet");
     if (processDto.isFinished()) {// 정상종료시 result페이지로 이동
       return "redirect:/ACTG/result?index=" + processDto.getPrixIndex();
     }
@@ -651,7 +650,6 @@ public class LivesearchController {
       logger.error("process service error: {}", e.getMessage());
       e.printStackTrace();
     }
-    System.out.println("CheesePost");
     if (processDto.isFinished()) {// 정상종료시 result페이지로 이동
       return "redirect:/ACTG/result?index=" + processDto.getPrixIndex();
     }
@@ -676,9 +674,6 @@ public class LivesearchController {
 
     model.addAttribute("resultFileDownloadPath", resultFileDownloadPath);
     model.addAttribute("resultDto", actgResultDto);
-    System.out.println("actgResultDto.getProteinDB()");
-    System.out.println(actgResultDto.getMethod());
-    System.out.println(actgResultDto.getProteinDB());
     return "livesearch/actg_result";
   }
 

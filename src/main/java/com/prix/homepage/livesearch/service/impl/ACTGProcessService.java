@@ -277,44 +277,18 @@ public class ACTGProcessService {
       } // for (Object obj : combinedList)
 
       if (!failed) {
-        System.out.println("Reached cmd part");
 
         Runtime runtime = Runtime.getRuntime();
-
-        // 원본 코드
-        // String[] command = { "/bin/bash", "-c",
-        // "java -Xmx10G -jar
-        // /usr/local/server/apache-tomcat-8.0.14/webapps/ROOT/ACTG/ACTG_Search.jar " +
-        // logDir
-        // + xmlPath + " " + logDir + processPath };
-
-
-        //아래 ACTG_Search.jar 실행 명령중에 -Xss2M은 원본 코드에 없습니다. 공간 부족으로 Stackoverflow가 발생하여 방지하고자 크기를 늘려 실행합니다.
-        String jarDir = globalProperties.getActgJarDir();
-        String jarPath = jarDir + "ACTG_Search.jar";
+        String jarDir = globalProperties.getPrixRoot();
+        String jarPath = jarDir + "src/main/resources/static/actg/ACTG_Search.jar";
         String[] command = { "cmd.exe", "/c",
             "java -Xss2M -Xmx10G -jar " + jarPath + " " + logDir + xmlPath + " " + logDir + processPath };
         Process process = runtime.exec(command);
 
-
-        //아래는 ACTG_Search.jar의 디버깅 코드입니다
-
-        /* BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
-        BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-
-        String s = null;
-        while ((s = stdInput.readLine()) != null) {
-            System.out.println("Stdout: " + s);
-        }
-
-        while ((s = stdError.readLine()) != null) {
-            System.out.println("Stderr: " + s);
-        } */
       }
     } // if (request.getParameter("execute") == null)
     else // process에서 redirect 받으면서 새로고침 반복해서 일어나는데 이때 이 작업 수행
     {
-      System.out.println("Reached else statement");
       FileInputStream fis = new FileInputStream(processPath);
       StringWriter writer = new StringWriter();
       StringWriter allWriter = new StringWriter();
@@ -324,10 +298,8 @@ public class ACTGProcessService {
           line = writer.toString();
 
           if (line.indexOf("ERROR") >= 0 || line.indexOf("Exception") >= 0) {
-            System.out.println("failed");
             failed = true;
           } else if (line.startsWith("Elapsed Time")) {
-            System.out.println("finished");
             finished = true;
           }
 
@@ -357,11 +329,9 @@ public class ACTGProcessService {
       output = allWriter.toString();
 
       if (finished) {// 모든 작업이 정상 종료
-        System.out.println("reached finished");
         String prixIndex = processPath.replace("process_" + id + "_", "");
         prixIndex = prixIndex.replace(logDir, "");
         prixIndex = prixIndex.replace(".proc", "");
-        System.out.println(prixIndex);
         // date는 mybatis mapper xml에서 처리
         searchLogMapper.insert(
             Integer.parseInt(id), title.replace("'", "\\'"), 0, 0, prixIndex, "ACTG");
