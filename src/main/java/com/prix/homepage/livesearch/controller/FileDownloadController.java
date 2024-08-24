@@ -85,49 +85,4 @@ public class FileDownloadController {
       }
     }
   }
-
-  /**
-   * dbnd result에서 download results 클릭시 호출
-   * @param path
-   * @return
-   */
-  @GetMapping("/modmap")
-  public ResponseEntity<Resource> downloadFile(@RequestParam("path") Integer path, @RequestParam("name") String name) {
-    String msFile = "";
-    Integer rs = searchLogMapper.getMsFileByResult(path);
-    if(rs != null){
-      String rsForName = dataMapper.getNameById(rs);
-      if(rsForName != null){
-        msFile = rsForName;
-      }
-    }
-
-
-    String target="";
-    if( msFile.lastIndexOf('\\') != -1 ){
-      target = msFile.substring(msFile.lastIndexOf('\\')+1, msFile.lastIndexOf('.'));
-    }
-    else if( msFile.lastIndexOf('/') != -1 ){
-      target = msFile.substring(msFile.lastIndexOf('/')+1, msFile.lastIndexOf('.'));
-    }
-    else target = msFile.substring(0, msFile.lastIndexOf('.'));
-  
-    target += ".modmap.csv";
-    msFile = name;
-    // String fullPath = "E:/PRIX/data/" + msFile + ".modmap.csv"; 원래 이거인데 2024
-    String fullPath = globalProperties.getPath() + "/data/" + msFile + ".modmap.csv";
-
-    File file = new File(fullPath);
-    if (!file.exists()) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
-
-    Resource resource = new FileSystemResource(file);
-    HttpHeaders headers = new HttpHeaders();
-    headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + target);
-
-    return ResponseEntity.ok()
-        .headers(headers)
-        .body(resource);
-  }
 }

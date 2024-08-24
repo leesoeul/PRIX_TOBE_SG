@@ -527,52 +527,6 @@ function doSearch() {
         </th:block>
     </th:block>
 </table>
-<!--/form-->
-<th:block th:if="${resultDto != null and resultDto.summary != null and resultDto.summary.isMODMapRun()}">
-	<table border="0" width="100%">
-		<tr>
-				<td>
-						<font size="3"><b><a name="PTMAP">MODmap</a></b></font><font color="red">&nbsp;&nbsp;&nbsp;&nbsp;PTM Frequency Matrix</font>&nbsp;&nbsp;&nbsp;&nbsp;( <a href="/help#MODMAP" class="under">about matrix</a> )
-				</td>
-		</tr>
-		<tr>
-				<td>
-					<a th:href="@{/modmap(path=${resultDto.fileName}, name=${resultDto.summary.MODMapPath})}">Download results</a>
-				</td>
-		</tr>
-	</table>
-	<table style="BORDER-BOTTOM: #d9dddc 2px solid; BORDER-TOP: #d9dddc 2px solid;">
-		<tr>
-				<th class="grayTH"><font size="2">Delta&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">Nterm&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">A&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">C&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">D&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">E&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">F&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">G&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">H&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">I&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">K&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">L&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">M&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">N&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">P&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">Q&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">R&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">S&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">T&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">V&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">W&nbsp;&nbsp;</font></th>
-				<th class="grayTH"><font size="2">Y&nbsp;&nbsp;</font></th>
-		</tr>
-		<tr th:if="${resultDto != null and resultDto.summary != null}" th:each="i : ${#numbers.sequence(0, resultDto.summary.modMapCount - 1)}">
-				<td th:each="j : ${resultDto.summary.getModMap(i)}" align="center">
-						<span th:utext="${j == 0 ? 'b(' + j + ')' : (j > 1 ? '<font color=red><b>' + j + '</b></font>' : j)}"></span>
-				</td>
-		</tr>
-	</table>
-</th:block>
 
 <br>
 <div th:if="${!resultDto.isDBond}">
