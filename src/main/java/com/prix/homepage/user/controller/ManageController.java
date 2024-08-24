@@ -2,6 +2,7 @@ package com.prix.homepage.user.controller;
 
 import com.prix.homepage.user.service.EnzymeService;
 import com.prix.homepage.user.service.ModificationLogService;
+import com.prix.homepage.configuration.GlobalProperties;
 import com.prix.homepage.constants.PrixDataWriter;
 import com.prix.homepage.user.service.SoftwareLogService;
 import com.prix.homepage.user.service.ModificationUserService;
@@ -92,6 +93,7 @@ public class ManageController {
     private final ModificationUserService modificationService;
     private final SoftwareLogService softwareLogService;
     private final PrixDataWriter dataWriter;
+    private final GlobalProperties globalProperties;
 
     //Manage요청 받을시 (configuration에서 edit, unlink 버튼)
     @PostMapping("/admin/manage")
@@ -158,8 +160,12 @@ public class ManageController {
             return "redirect:/admin/configuration";
         }
 
+        //Prix Root folder
+        String prixRoot = globalProperties.getPrixRoot();
         try {
-            String root = "src/main/config/";
+            //Location where DB upload is stored
+            String localDBRoute = "src/main/config/";
+            String root = prixRoot + localDBRoute;
             if (request.getParameter("add_db") != null){
                 String dbFile = file.getOriginalFilename();
                 if(dbFile.length() > 0){
@@ -296,7 +302,8 @@ public class ManageController {
                 }
 
             } else if (request.getParameter("sftw_add") != null){
-                String sftw_root = "src/main/software_archive/";
+                String localSftwRoute = "src/main/software_archive/";
+                String sftw_root = prixRoot + localSftwRoute;
                 String sftwVersion = request.getParameter("sftw_version");
                 String sftwDate = request.getParameter("sftw_date");
                 String sftwName = request.getParameter("sftw_name");
