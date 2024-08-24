@@ -735,10 +735,12 @@ public class LivesearchController {
     model.addAttribute("msFiles", msFiles);
     model.addAttribute("dbNames", dbNames);
 
-    return "livesearch/history";
+    return "livesearch/historyModi";
   }
 
-  @GetMapping("/historyModi")
+  //Deprecated historyModi due to removal of Modplus from livesearch
+
+  /* @GetMapping("/historyModi")
   public String historyModi(Model model, HttpServletRequest request) {
     HttpSession session = request.getSession();
     Integer userId = (Integer) session.getAttribute("id");
@@ -767,7 +769,7 @@ public class LivesearchController {
     model.addAttribute("dbNames", dbNames);
 
     return "livesearch/historyModi";
-  }
+  } */
 
   /**
    * /protein
