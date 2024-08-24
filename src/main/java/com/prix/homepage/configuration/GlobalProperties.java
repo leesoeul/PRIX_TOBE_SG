@@ -15,4 +15,5 @@ public class GlobalProperties {
     private String pathErr;
     private String actgLogDir;
     private String actgDbDir;
+    private String actgJarDir;
 }

@@ -1,0 +1,2 @@
+folder used for storing ptms uploads and database uploads
+(Configuration page)
