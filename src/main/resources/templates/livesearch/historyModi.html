@@ -45,7 +45,7 @@
       </tr>
 
       <tr th:each="searchLog, stat : ${searchLogUsersDto}">
-        <td class="grayTD"><div align="center"><a th:href="@{${'/' + searchLog.engine + '/result'}(file=${searchLog.result})}" th:text="${stat.index + 1}"><a/></div></td>
+        <td class="grayTD"><div align="center"><a th:href="@{${'/' + searchLog.engine + '/result'}(index=${searchLog.result})}" th:text="${stat.index + 1}"><a/></div></td>
         <td class="grayTD"><div align="center" th:text="${searchLog.date}"></div></td>
         <td class="grayTD"><div align="center" th:text="${searchLog.title}"></div></td>
         <td class="grayTD"><div align="center" th:text="${msFiles[searchLog.msfile]}"></div></td>
