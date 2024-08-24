@@ -124,7 +124,9 @@
                         <tr
                           th:if="${#strings.startsWith(currentUri, '/livesearch') or 
                                   #strings.startsWith(currentUri, '/ACTG') or
-                                  #strings.startsWith(currentUri, '/dbond')}"
+                                  #strings.startsWith(currentUri, '/dbond') or
+                                  #strings.startsWith(currentUri, '/history') or
+                                  #strings.startsWith(currentUri, '/patternMatch')}"
                         >
                           <td>
                             <a th:href="@{/}">
