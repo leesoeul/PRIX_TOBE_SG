@@ -14,6 +14,9 @@ import com.prix.homepage.livesearch.patternMatch.PatternMatch;
 import com.prix.homepage.livesearch.pojo.PatternMatchDto;
 import com.prix.homepage.livesearch.service.PatternMatchService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 @AllArgsConstructor
 public class PatternMatchController {
@@ -21,8 +24,9 @@ public class PatternMatchController {
     private final PatternMatchService patternMatchService;
 
     @GetMapping("/patternMatch/patternMatchFrm")
-    public String patternMatchPage(Model model) {
-
+    public String patternMatchPage(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        
         // genbank update date
         String gd = "";
         // swiss_prot update date
