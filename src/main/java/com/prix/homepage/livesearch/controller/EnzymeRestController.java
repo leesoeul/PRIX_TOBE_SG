@@ -13,7 +13,7 @@ import com.prix.homepage.user.service.EnzymeService;
 import lombok.AllArgsConstructor;
 
 /**
- * modplus에서 Enzyme에 해당하는 enzyme list를 갱신하기 위한 rest controller
+ * dbond에서 Enzyme에 해당하는 enzyme list를 갱신하기 위한 rest controller
  */
 @RestController
 @AllArgsConstructor
