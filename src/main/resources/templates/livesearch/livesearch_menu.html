@@ -13,13 +13,6 @@
   <tr>
     <td height="10"></td>
   </tr>
-  <!--tr>
-      <td height="32"></td>
-    </tr>
-    <tr>
-      <td height="21" width="161" background="/images/submenu03_bk.gif" align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>S E A R C H</td>
-    </tr-->
-
   <tr>
     <td height="10"></td>
   </tr>
@@ -27,64 +20,47 @@
     <td height="5"></td>
   </tr>
   <tr>
-    <!-- on the construction -->
-    <!--<td height="21" valign="middle">&nbsp;&nbsp;&nbsp;&nbsp;<img src="/images/icon_5.gif" width="6" height="10">&nbsp;&nbsp;<a href="/dbond/dbond_search.jsp" class="menu">DBond</a></td>-->
     <td height="21" valign="middle">
-      &nbsp;&nbsp;&nbsp;&nbsp;<img
-        src="/images/icon_5.gif"
-        width="6"
-        height="10"
-      />&nbsp;&nbsp;DBond
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <img src="/images/icon_5.gif" width="6" height="10" />&nbsp;&nbsp;
+      <a th:href="@{/dbond/dbond_search}" class="menu"> DBond </a>
     </td>
   </tr>
   <tr>
     <td height="5"></td>
   </tr>
   <tr>
-    <!-- on the construction -->
-    <!--<td height="21" valign="middle">&nbsp;&nbsp;&nbsp;&nbsp;<img src="/images/icon_5.gif" width="6" height="10">&nbsp;&nbsp;<a href="/ACTG/search.jsp" class="menu">ACTG</a></td>-->
     <td height="21" valign="middle">
-      &nbsp;&nbsp;&nbsp;&nbsp;<img
-        src="/images/icon_5.gif"
-        width="6"
-        height="10"
-      />&nbsp;&nbsp;ACTG
-    </td>
-  </tr>
-  <td height="5"></td>
-  <tr>
-    <td height="21" valign="middle">
-      &nbsp;&nbsp;&nbsp;&nbsp;<img
-        src="/images/icon_5.gif"
-        width="6"
-        height="10"
-      />&nbsp;Pattern Match
-      <!--
-        <a href="/patternMatch/patternMatchFrm" class="menu">
-          &nbsp;Pattern Match
-        </a>
-        -->
-    </td>
-  </tr>
-  <td height="5"></td>
-  <tr>
-    <td height="21" valign="middle">
-      &nbsp;&nbsp;&nbsp;&nbsp;<img
-        src="/images/icon_5.gif"
-        width="6"
-        height="10"
-      />&nbsp;USE
-      <!--
-        <a href="/livesearch/USE" class="menu">&nbsp;USE</a>
-        -->
-    </td>
-  </tr>
+      &nbsp;&nbsp;&nbsp;&nbsp;
 
-  <!-- This menue was closed because of error
-    <tr>
-      <td height="21" valign="middle">&nbsp;&nbsp;&nbsp;&nbsp;<img src="/images/icon_5.gif" width="6" height="10">&nbsp;&nbsp;<a href="/by_UTRpept.jsp" class="menu">tUTR Search</a></td>
-    </tr>
-    -->
+      <img src="/images/icon_5.gif" width="6" height="10" />&nbsp;&nbsp;<a
+        th:href="@{/ACTG/search}"
+        class="menu"
+        >ACTG
+      </a>
+    </td>
+  </tr>
+  <td height="5"></td>
+  <tr>
+    <td height="21" valign="middle">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <img src="/images/icon_5.gif" width="6" height="10" />&nbsp;
+      <a th:href="@{/patternMatch/patternMatchFrm}" class="menu"
+        >Pattern Match
+      </a>
+    </td>
+  </tr>
+  <td height="5"></td>
+  <tr>
+    <td height="21" valign="middle">
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      <img src="/images/icon_5.gif" width="6" height="10" />&nbsp;<a
+        th:href="@{/livesearch/USE}"
+        class="menu"
+        >USE
+      </a>
+    </td>
+  </tr>
   <tr>
     <td height="100%" align="center" valign="bottom">&nbsp;</td>
   </tr>
