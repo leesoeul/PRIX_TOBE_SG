@@ -16,8 +16,8 @@ import javax.mail.internet.MimeMultipart;
 public class Mailer {
    private static String owner = "Lee Soeul";
    private static String owner_site = "PRIX";
-   private static String owner_email = "thdmfrhdwn@naver.com";
-   private static String cc_email = "thdmfrhdwn@naver.com";
+   private static String owner_email = "prix@hanyang.ac.kr";
+   private static String cc_email = "prix@hanyang.ac.kr";
 
    public Mailer() {
    }
@@ -69,7 +69,8 @@ public class Mailer {
 
    }
 
-   public void sendEmailToMe(String subject, String name, String affiliation, String title, String email, String instrument) {
+   public void sendEmailToMe(String subject, String name, String affiliation, String title, String email,
+         String instrument) {
       try {
          Properties props = new Properties();
          props.put("mail.transport.protocol", "smtp");
